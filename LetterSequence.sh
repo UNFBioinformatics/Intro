@@ -1,59 +1,5 @@
 #!/bin/bash
 
-#This is where you will write your LetterSequence.sh script.
-
-#Make sure to record your thoughts and instructions in your OWN words in the comments 
-#and to use the comments to show that you can explain your code.
-
-```bash
-#!/bin/bash
-
-
-# The goal of the game:
-# The computer shows the player a growing DNA letter sequence.
-# Each round, the computer adds one new random DNA base.
-# The player has to type the whole sequence back correctly.
-#
-# DNA letters used:
-# A = Adenine
-# T = Thymine
-# C = Cytosine
-# G = Guanine
-#
-# Expected user input:
-# The user should type the full DNA sequence they saw.
-# Example: If the computer shows A, then T, then G, the user should type ATG.
-# The user should not type spaces between the letters.
-#
-# Logic explanation:
-# I used a WHILE loop because the game needs to keep running until the player
-# either wins or gets the sequence wrong. Each time the loop repeats, it is a new round.
-#
-# I used a FOR loop because the script needs to show each DNA letter in the sequence
-# one at a time.
-#
-# I used IF/THEN/ELSE statements because the script has to make decisions.
-# It checks if the user typed only valid DNA letters, and then it checks if the
-# user's answer matches the computer's sequence.
-#
-# I used a CASE statement so each DNA letter can be matched with its full base name.
-# This makes the output more biology-related and easier to understand.
-#
-# Comparator explanation:
-# The main comparison is:
-# [[ "$guess_clean" == "$sequence" ]]
-# This checks if the player's answer is equal to the computer's DNA sequence.
-#
-# I also use:
-# [[ ! "$guess_clean" =~ ^[ATCG]+$ ]]
-# This checks if the user typed something that is NOT made of valid DNA letters.
-#
-# Uppercase/lowercase explanation:
-# If the user types the correct letters but uses lowercase, like "atg" instead of "ATG",
-# the script still counts it as correct. This is because the script converts the
-# user's answer to uppercase before comparing it to the computer's sequence.
-
-
 echo "Welcome to DNA Letter Sequence!"
 echo
 echo "The computer will show you a DNA sequence one letter at a time."
@@ -86,11 +32,12 @@ round=1
 
 while true
 do
-    clear
+    # I used blank lines instead of clear so this works better in GitHub.dev/Codespaces.
+    printf "\n\n\n"
     echo "Round $round"
     echo "Watch carefully..."
     sleep 1
-    clear
+    printf "\n\n\n"
 
     # Pick one random DNA letter from the letters array.
     random_index=$((RANDOM % 4))
@@ -123,7 +70,7 @@ do
         echo "DNA Letter: $current_letter"
         echo "Base Name: $base_name"
         sleep 1
-        clear
+        printf "\n\n"
         sleep 0.4
     done
 
@@ -131,7 +78,8 @@ do
     read -r guess
 
     # This removes spaces and changes lowercase letters to uppercase.
-    guess_clean=$(echo "$guess" | tr -d '[:space:]' | tr '[:lower:]' '[:upper:]')
+  guess_clean="${guess// /}"
+guess_clean="${guess_clean^^}"
 
     # This checks if the user typed something besides A, T, C, or G.
     if [[ ! "$guess_clean" =~ ^[ATCG]+$ ]]
@@ -145,7 +93,7 @@ do
         break
     fi
 
-    # This compares the user's answer to the computer's sequence.
+    # This compares the users answer to the computers sequence.
     if [[ "$guess_clean" == "$sequence" ]]
     then
         echo
@@ -157,7 +105,7 @@ do
         # This checks if the player reached the winning length.
         if [[ ${#sequence} -ge $win_length ]]
         then
-            clear
+            printf "\n\n\n"
             echo "You win!"
             echo "You correctly repeated a DNA sequence of ${#sequence} letters."
             echo "Final DNA sequence: $sequence"
@@ -177,5 +125,8 @@ do
         echo "Game over."
         break
     fi
+
 done
-```
+
+
+
