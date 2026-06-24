@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# The echo commands print messages to the screen. These lines explain the rules of the game to the player. The spaces are for easier reading 
+
 echo "Welcome to DNA Letter Sequence!"
 echo
 echo "The computer will show you a DNA sequence one letter at a time."
@@ -17,18 +19,28 @@ echo "Type your answer with no spaces, like ATCG."
 echo
 read -p "Press Enter to start..."
 
-# These are the possible DNA letters the computer can randomly choose.
+# This pauses the game until the user presses Enter. It gives the player time to read the instructions before the game begins.
+
+
+# These are the possible DNA letters the computer can randomly choose. This creates an array called letters. It stores the four possible DNA letters: A, T, C, and G.
 letters=("A" "T" "C" "G")
 
-# This variable stores the full DNA sequence as the game continues.
+# This variable stores the full DNA sequence as the game continues. As the game goes on, random DNA letters get added to this variable.
 sequence=""
 
 # The assignment says the player must get to at least 3 letters before winning.
 # I chose 5 letters because it is challenging but still reasonable.
 win_length=5
 
-# This keeps track of what round the player is on.
+# This keeps track of what round the player is on. This starts the game on round 1.
+#The round number increases every time the player gets the sequence correct.
 round=1
+
+#This starts a while loop that keeps running forever until a break command stops it.
+#The game stops when:
+#the player wins
+#the player types an invalid answer
+#the player gets the sequence wrong
 
 while true
 do
@@ -38,6 +50,8 @@ do
     echo "Watch carefully..."
     sleep 1
     printf "\n\n\n"
+#  Printf : This prints blank lines.
+# It helps space out the game instead of using the clear command.
 
     # Pick one random DNA letter from the letters array.
     random_index=$((RANDOM % 4))
@@ -113,7 +127,7 @@ guess_clean="${guess_clean^^}"
             echo "Nice job! You compared and matched the full sequence correctly."
             break
         fi
-
+# fi: This ends an if statement.
         round=$((round + 1))
 
     else
@@ -128,5 +142,5 @@ guess_clean="${guess_clean^^}"
 
 done
 
-
+# This ends the while loop.
 
