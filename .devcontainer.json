@@ -1,10 +1,14 @@
 {
-    "name": "RStudio Environment",
-    "image": "rocker/rstudio:latest",
-    "customizations": [
+  "name": "RStudio Environment",
+  "image": "rocker/rstudio:latest",
+  "customizations": {
+    "vscode": {
+      "extensions": [
         "REditorSupport.r",
         "quarto.quarto"
     ]
+    }
+  } 
 
   //comments in this file start with the double forward slash 
 
