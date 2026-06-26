@@ -1,8 +1,19 @@
 ---
-title: Startup in R with Project Quarto! 
+title: "sANEM'S R notebook"
+output: html_document
+---
+
+---
+title: Learning R and Quarto
 format: html
 ---
 ## Title 
+
+I see four main frames in RStudio. The top-left frame is the notebook editor where I can write text and code. The bottom-left frame is the Console, where R shows the output after code is run. The top-right frame shows the Environment and History, which keep track of objects and previous commands. The bottom-right frame shows Files, Plots, Packages, Help, and Viewer, which help organize files, graphs, and other RStudio tools.
+
+The command quarto preview MyRnotebook.qmd opened a website preview of my notebook. It showed my notebook as an HTML page with the title, written explanations, code, and output formatted like a webpage.
+
+The command quarto render MyRnotebook.qmd --to html created a final HTML version of my notebook. This file can be opened in a web browser and shows my title, written descriptions, code, and output all together in one finished document.
 
 The purpose of a Markdown file is to keep explanations for computational problems and the code we use to solve them next to each other in the same document. This is where you can write description about your project and the data you are working with. 
 
@@ -11,8 +22,7 @@ How many frames do you see in this space and what you they do?
 Next up: Let's make a space for writing code that R can understand: 
 
 ```{r}
-install.packages("rmarkdown") 
-
+# install.packages("rmarkdown", repos = "https://cloud.r-project.org")
 #The pound sign controls titles outside of the code sections; it allows you to make comments when you are *INSIDE* code spaces 
 
 #Our first piece of code. Lets say hello: 
@@ -29,4 +39,3 @@ NOTE: The grave accent is the key at the top left of the keyboard, NOT an apostr
 ```{r second}
 #We started another piece of code! Look how we can go back and forth between writing explainations and writing code! 
 summary(rnorm(100)) 
-```
