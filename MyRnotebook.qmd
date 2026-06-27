@@ -1,0 +1,39 @@
+---
+title: Changed Text in the title line 
+format: html
+---
+## Title Changed text in title line 
+
+The purpose of a Markdown file is to keep explanations for computational problems and the code we use to solve them next to each other in the same document. This is where you can write description about your project and the data you are working with. 
+
+How many frames do you see in this space and what you they do? 
+
+I see 4 frames in this space The first frame is explorer, which shows the projects folder and files. The Editor lets the user edit the code. The terminal frame runs the program and shows ouputs. The panel on the right is the ai frame, allowing the use to buld code with the assitacne of ai.
+
+
+Step C II: The command took this file and put it into an HtML file that is in the left explorer frame.
+
+The output pasted different numbers for the min. 1st qu, Median, mean, 3rd Qu, and the max; however, these numbers are changing every time you run the code. This is ilkely because of rnorm(100). This is likely a radom command that chooses random numbers up to 100.
+
+Next up: Let's make a space for writing code that R can understand: 
+
+```{r}
+install.packages("rmarkdown") 
+
+#The pound sign controls titles outside of the code sections; it allows you to make comments when you are *INSIDE* code spaces 
+
+#Our first piece of code. Lets say hello: 
+print("Hello, World!")
+```
+
+## Instructions
+
+We are outside of the code because the code chunk starts with ```{r} and ends with the same ``` mark. Only things inbetween the three accent marks (they are calle 'grave' marks) is seen to be code by the computer. 
+
+NOTE: The grave accent is the key at the top left of the keyboard, NOT an apostrophe. It also has the tilde (~) mark on it. 
+
+
+```{r second}
+#We started another piece of code! Look how we can go back and forth between writing explainations and writing code! 
+summary(rnorm(100)) 
+```
