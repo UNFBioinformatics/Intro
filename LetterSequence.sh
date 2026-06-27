@@ -1,75 +1,85 @@
 ```bash
 #!/bin/bash
 
-# LetterSequence.sh
-# This is a memory game using DNA letters.
-# The computer shows a sequence of letters, then the player repeats it.
-# I used A, T, C, and G because those are DNA letters, so this connects to biology.
+#This is where you will write your LetterSequence.sh script.
 
-letters=("A" "T" "C" "G")
-sequence=""
-round=1
-win_length=5
+#Make sure to record your thoughts and instructions in your OWN words in the comments 
+#and to use the comments to show that you can explain your code.
+# ==============================================================================
+# Script Name: LetterSequence.sh
+# Author: Krush Patel
+# Course: UNF Bioinformatics
+# ==============================================================================
+
+BASES=("A" "T" "C" "G")
+SEQUENCE=""
+TARGET_WIN_STREAK=6
+CURRENT_ROUND=1
+GAME_WON=true
+
+# NOTE ON CASE-SENSITIVITY: 
+# BASH string comparisons are case-sensitive. To prevent case issues, 
+# this script converts the user's input to uppercase using '${USER_INPUT^^}'.
+# That means if the correct answer is ATCG and the user types atcg, it still counts.
 
 clear
-echo "Welcome to Letter Sequence!"
-echo "Watch the DNA letters and repeat the full sequence."
-echo "Letters can be A, T, C, or G."
-echo "Get 5 rounds correct to win."
-sleep 4
+echo "===================================================="
+echo "      WELCOME TO THE DNA SEQUENCE MEMORY GAME       "
+echo "===================================================="
+echo "Match a sequence of $TARGET_WIN_STREAK bases to declare evolutionary victory!"
+echo "Press ENTER to start..."
+read -r
 
-# I chose a while loop because the game needs to keep going
-# until the player wins or makes a mistake.
-while [ $round -le $win_length ]
-do
+# I chose a while loop because the game needs to continue round by round
+# until the player either reaches the winning streak or makes a mistake.
+while [ $CURRENT_ROUND -le $TARGET_WIN_STREAK ]; do
+    
+    RANDOM_INDEX=$(( RANDOM % 4 ))
+    SEQUENCE="${SEQUENCE}${BASES[$RANDOM_INDEX]}"
+    
+    echo "----------------------------------------------------"
+    echo "Round $CURRENT_ROUND: Prepare your mind..."
+    sleep 1.5
     clear
-    echo "Round $round"
-    echo "Watch carefully..."
-    sleep 2
 
-    # RANDOM chooses a random number.
-    # % 4 makes the number 0, 1, 2, or 3 so it matches the four DNA letters.
-    random_number=$((RANDOM % 4))
-    next_letter=${letters[$random_number]}
-
-    # Add the new letter to the sequence.
-    sequence="${sequence}${next_letter}"
-
-    # This for loop shows each letter one at a time.
-    for (( i=0; i<${#sequence}; i++ ))
-    do
+    # I used a for loop here because each character in the sequence
+    # needs to be shown one at a time before the player answers.
+    for (( i=0; i<${#SEQUENCE}; i++ )); do
+        CHARACTER="${SEQUENCE:$i:1}"
+        echo -e "\n\n\t\t\t [ $CHARACTER ] \n\n"
+        sleep 1.0
         clear
-        echo "${sequence:$i:1}"
-        sleep 1
-        clear
-        sleep 0.5
+        sleep 0.2
     done
 
-    echo "Type the full sequence:"
-    read player_guess
+    # This is where the player types the sequence they remember.
+    echo "Your turn! Type the sequence and press ENTER:"
+    read -r USER_INPUT
 
-    # This makes lowercase answers uppercase.
-    # So if the correct answer is ATC and the user types atc, it still counts.
-    player_guess=$(echo "$player_guess" | tr '[:lower:]' '[:upper:]')
+    # Convert the player's input to uppercase.
+    USER_INPUT_UPPER="${USER_INPUT^^}"
 
-    # This if statement compares the player answer to the correct sequence.
-    # The = comparator checks if the two letter sequences match.
-    if [ "$player_guess" = "$sequence" ]
-    then
-        echo "Correct!"
-        echo "The sequence was: $sequence"
-        round=$((round + 1))
-        sleep 2
+    # This if statement compares the player's answer to the correct sequence.
+    # The = comparator checks whether the two letter sequences match.
+    if [ "$USER_INPUT_UPPER" = "$SEQUENCE" ]; then
+        echo -e "\nCORRECT! Your sequence alignment is flawless."
+        CURRENT_ROUND=$(( CURRENT_ROUND + 1 ))
+        sleep 1.5
+        clear
     else
-        echo "Game over!"
-        echo "You typed: $player_guess"
-        echo "The correct sequence was: $sequence"
-        exit 0
+        echo -e "\nGAME OVER! Mutation detected."
+        echo "The correct sequence was: $SEQUENCE"
+        echo "You made it to Round $CURRENT_ROUND."
+        GAME_WON=false
+        break
     fi
 done
 
-clear
-echo "You win!"
-echo "You repeated the full sequence:"
-echo "$sequence"
+# This final if statement checks whether the player won the game.
+if [ "$GAME_WON" = true ]; then
+    echo "===================================================="
+    echo "CONGRATULATIONS! You achieved a streak of $TARGET_WIN_STREAK!"
+    echo "You are a Master Bioinformatician."
+    echo "===================================================="
+fi
 ```
