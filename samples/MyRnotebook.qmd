@@ -2,11 +2,16 @@
 title: Startup in R with Project Quarto! 
 format: html
 ---
-## Title 
+## Cat 
+
 
 The purpose of a Markdown file is to keep explanations for computational problems and the code we use to solve them next to each other in the same document. This is where you can write description about your project and the data you are working with. 
 
 How many frames do you see in this space and what you they do? 
+
+There is 4 spaces which indicate number of indentations.
+The command line created a new file called MyRnotebook.html.
+Numbers are printed out and these output are not the same every time the second code is run. The number is different because rnorm(100) generates random values from normal distribution each time the second code is run.
 
 Next up: Let's make a space for writing code that R can understand: 
 
@@ -19,7 +24,7 @@ install.packages("rmarkdown")
 print("Hello, World!")
 ```
 
-## Instructions
+## Dog
 
 We are outside of the code because the code chunk starts with ```{r} and ends with the same ``` mark. Only things inbetween the three accent marks (they are calle 'grave' marks) is seen to be code by the computer. 
 
