@@ -11,7 +11,7 @@ How many frames do you see in this space and what you they do?
 I see 4 frames in this space The first frame is explorer, which shows the projects folder and files. The Editor lets the user edit the code. The terminal frame runs the program and shows ouputs. The panel on the right is the ai frame, allowing the use to buld code with the assitacne of ai.
 
 
-Step C II: The command took this file and put it into an HtML file that is in the left explorer frame.
+Step C II: The command took this file and put it into an HtML file that is in the left explorer frame.This out put has the data in this file, as well as having more commands. such as section, dive, and h2.
 
 The output pasted different numbers for the min. 1st qu, Median, mean, 3rd Qu, and the max; however, these numbers are changing every time you run the code. This is ilkely because of rnorm(100). This is likely a radom command that chooses random numbers up to 100.
 
