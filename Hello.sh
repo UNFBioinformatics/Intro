@@ -6,3 +6,4 @@
 #Then save the file and run it in the terminal to see the result.'
 
 #Code goes here: 
+echo "Hello world, my name is Hashim!"
