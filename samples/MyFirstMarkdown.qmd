@@ -140,20 +140,20 @@ For the following tasks, put your answers in the code chunk below each question.
 
 1. What are the key variables in diaTask? Hint: Use the head function and then write the key variables as comments below your code. 
 
-```{r question1}
+head(diatask)
 
 ```
 
 2. Use a combination of nrow() and head() to display ALL of the rows of the diatask dataframe.  
 
-```{r question2}
+head(diatask, n=nrow(diatask))
 
 ```
 
 3.Use a mathematical formula to display all of the rows of diatask where the diamond price is less than $750. 
 
 
-```{r question3}
+diatask[diatask$price < 750, ]
 
 ```
 
@@ -167,9 +167,14 @@ HINT: You may not be "seeing" all the rows by default. I left a piece of code fo
 
 B. Now write your code to display the dataframe with the correct records.  
 
+premium_diamonds <- diatask[grep('Premium", diatask$cut), ]
+ideal_dimonds <- diatask[grep("Ideal", diatask$cut),]
+sparkles <- rbind (premium_diamonds, ideal_diamonds)
+sparkles
+
 C. Below your code, write a comment to tell me if you got the same number of records (rows) that you expected from part A.  
 
-```{r question4}
+Yes, the number of rows matches my count
 
 ```
 
@@ -178,7 +183,7 @@ C. Below your code, write a comment to tell me if you got the same number of rec
 HINT: Copy and paste the code, and then just change the piece you need to update! 
 
 
-```{r question5}
+ggplot(data = diatask, aes(x = cut, y = price, color = cut)) + geom_point(size = 4)
 
 ```
 
@@ -186,14 +191,14 @@ HINT: Copy and paste the code, and then just change the piece you need to update
 
 HINT: Look up a function that you can add-on to make this easier. 
 
-```{r question6}
+ggplot(data = diatask, aes(x = cut, y = price, color = cut)) + geom_point(size = 4) + theme_classic()
 
 ```
 
 7. Change the diatask command so that it contains the carat of the diamonds too, and name it diasize. 
 
 
-```{r question7}
+diasize <- diamonds[80:100, c(1, 2, 7)]
 
 ```
 
@@ -201,14 +206,14 @@ HINT: Look up a function that you can add-on to make this easier.
 
 HINT: Copy and paste the code, and then just change the piece you need to update! 
 
-```{r question8}
+ggplot(data = diasize, aes(x = carat, y = price, color =cut)) + geom_point(size = 4)
 
 ```
 
 9. Why are the plots for diatask and diasize insufficient to make a conclusion about the relationships between cut and price or carat and price? 
 
 ```{r question9}
-## Write your answer as a comment here
+Sample Size is what you need to consider. Not the other variables that wont be driving the changes.
 ```
 
 10. Create your own plots for either cut OR carat on the x-axis, with price still on the y-axis. Make sure to construct the dataset so that you can make a strong conclusion about how your chosen independent variable affects price. 
@@ -217,10 +222,11 @@ Write a response in the comments: what did you do to construct the dataset and w
 
 HINT: Copy and paste the code, and then just change the piece you need to update! 
 
-```{r question10}
+big_data <- diamonds[1:1000,]
+ggplot(data = big_data, aes(x = carat, y = price , color = cut)) + geom_point()
 
 
-```
+I constructed a larger data set using 1000 rows getting accurate distribution 
 
 
 ## Notes on grep attempts: 
