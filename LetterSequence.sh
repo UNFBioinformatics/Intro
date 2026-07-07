@@ -47,5 +47,22 @@ do
     sleep 3
     clear
 
+
     echo "type the sequence:"
     read answer
+
+     if [ "$answer" == "$sequence" ]
+    then
+        echo "correct"
+        sleep 2
+        round=$((round+1))
+    else
+        echo "wrong"
+        echo "it was: $sequence"
+        echo "game over"
+        exit
+    fi
+
+done
+
+echo "you win!"
