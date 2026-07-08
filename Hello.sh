@@ -6,3 +6,5 @@
 #Then save the file and run it in the terminal to see the result.'
 
 #Code goes here: 
+
+echo "hello world, my name is nevil"
