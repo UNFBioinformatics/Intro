@@ -11,7 +11,7 @@ We had a couple 'chunks' of text, code, text, code, etc, but we didn't have anyt
 If we go a little farther with the tools available in R, and grab a dataset, R might make itself more worthwhile! 
 
 
-##Let's view a dataset 
+## Let's view a dataset 
 There's a really handy sample dataset about diamonds that comes along with one of R's most useful plotting tools!
 
 The tool is called ggplot, so I'll show you how to get the toolset and the dataset with a simple command. 
@@ -21,6 +21,8 @@ The tool is called ggplot, so I'll show you how to get the toolset and the datas
 #To read some pieces of code that other people have already written, we can borrow those codebooks from the R library. 
 
 #Here, we borrow some instructions for making plots, which also includes the sample dataset called 'diamonds', by calling up the code using the 'library' function:  
+install.packages("ggplot2")
+# I had to install everytime i opened the codespace otherwise it couldn't find any of the functions?
 library(ggplot2)
 
 #This is like checking out a codebook from the library - you get to keep it at hand as long as you're working in this space.
@@ -83,22 +85,33 @@ dia2
 #Much like the 'MATCH' function in excel, the grep function in R returns the index of the matches. 
 #Consider this grep function, which searches for the word 'Premium' in the dataframe 'dia2'. Where does it say the matches are? 
 matches <- grep("Premium", dia2$cut)
+# grep("Premium",dia2$cut) prints:
+# [1] 2 4 because "Premium" is found in the second and fourth rows of dia2$cut
 matches
+# stores the above. matches prints [1] 2 4
 
 #You should see all of the row numbers returned. So how do we get the information in the rows returned, instead of just which rows have a match? 
 
 #We might try to just use the returned indexes to grab rows: 
 dia2[matches,]
+# prints a tibble of rows 2 and 4 from dia2
+# A tibble: 2 × 2
+#  cut     price
+#  <ord>   <int>
+# 1 Premium   326
+# 2 Premium   334
 
 #That works! 
 
 #You could also try using the combine function we saw earlier, because we got more than one row number back: 
 dia2[c(matches),]
+# prints the same tibble as above
 
 #That works too!
 
 #Finally, let's see if we can stuff the function inside the dataframe to select the right rows, alll in one line of code: 
 dia2[grep("Premium", dia2$cut), ]
+# prints the same tibble Again
 
 #I hope you can see that there are LOTS of ways to do things 'right', not just LOTS of ways to get it a little wrong. 
 
@@ -110,7 +123,11 @@ dia2[grep("Premium", dia2$cut), ]
 
 stud3 <- grepl("Premium", dia2$cut)
 stud3
+# prints 
+# [1] FALSE  TRUE FALSE  TRUE FALSE FALSE FALSE FALSE FALSE FALSE
 dia2[stud3,]
+# prints the 2x2 tibble, ie rows of dia2 that are true according to the index created by grepl
+
 
 #Ah! Both booleans from grepl and indexes from grep work!
 
@@ -130,6 +147,7 @@ ggplot(data = dia, aes(x = cut, y = price, color = cut)) +
 #For the TASKS, I've created a subset of diamonds called diatask with this command: 
 
 diatask <- diamonds[80:100, c(2,7)]
+# creates a df by pulling rows 80:100 and colums 2 (cut) and 7 (price)
 #print(diatask, n = 20) 
 
 ```
@@ -141,20 +159,30 @@ For the following tasks, put your answers in the code chunk below each question.
 1. What are the key variables in diaTask? Hint: Use the head function and then write the key variables as comments below your code. 
 
 ```{r question1}
+head(diatask)
 
+# cut (variable 2) aka diatask$cut
+# price (variable 7) aka diatask$price
 ```
 
 2. Use a combination of nrow() and head() to display ALL of the rows of the diatask dataframe.  
 
 ```{r question2}
-
+nrow(diatask)
+# [1] 21
+head(diatask)
+head(diatask,n=nrow(diatask))
+# ?? why do you want me to use head? head seems to max out at 10 rows?
+print(diatask,n=21)
+?head
 ```
 
 3.Use a mathematical formula to display all of the rows of diatask where the diamond price is less than $750. 
 
 
 ```{r question3}
-
+diatask[diatask$price<=750,]
+# prints an 11x2 tibble. all prices == 554
 ```
 
 4. In R, there is a function that does the same thing as the '>>' redirection in bash, i.e. it APPENDS data. The R function is called rbind(). 
@@ -170,7 +198,11 @@ B. Now write your code to display the dataframe with the correct records.
 C. Below your code, write a comment to tell me if you got the same number of records (rows) that you expected from part A.  
 
 ```{r question4}
-
+?rbind
+sparkles <- diamonds[grep(c("Premium","Ideal"),diamonds$cut),]
+head(sparkles)
+nrow(sparkles)
+# nrow = 13791
 ```
 
 5. Use ggplot to display the information from the diatask dataframe.
@@ -179,7 +211,11 @@ HINT: Copy and paste the code, and then just change the piece you need to update
 
 
 ```{r question5}
+diatask
 
+ggplot(diatask, aes(x=cut, y=price, color=cut)) +
+geom_point(alpha=0.8,size=4) +
+theme_classic()
 ```
 
 6. How do you remove the ugly grey gridlines from the ggplot? 
@@ -187,14 +223,18 @@ HINT: Copy and paste the code, and then just change the piece you need to update
 HINT: Look up a function that you can add-on to make this easier. 
 
 ```{r question6}
-
+# I default to theme_classic() which removes the background, gridlnes, and gives the x and y axes solid black lines. theme_void() removes the above plus axis lines. theme_minimal() removes the background and axis lines but keeps gridlines
 ```
 
 7. Change the diatask command so that it contains the carat of the diamonds too, and name it diasize. 
 
 
 ```{r question7}
+head(diamonds,n=1)
+# carat is col 1
 
+diasize <- diamonds[80:100,c(1,2,7)]
+print(diasize,n=nrow(diasize))
 ```
 
 8. Show the plot of your new dataset, diasize, with carat on the x-axis and price on the y-axis. 
@@ -202,13 +242,17 @@ HINT: Look up a function that you can add-on to make this easier.
 HINT: Copy and paste the code, and then just change the piece you need to update! 
 
 ```{r question8}
-
+ggplot(diasize,aes(x=carat,y=price,color=cut)) + geom_point(alpha=0.8,size=4) + theme_classic()
 ```
 
 9. Why are the plots for diatask and diasize insufficient to make a conclusion about the relationships between cut and price or carat and price? 
 
 ```{r question9}
 ## Write your answer as a comment here
+
+# diatask: cut is ordinal data and is thus not well suited to a scatter plot which is designed to plot num x num
+
+# diasize: there's only two price values, so it lumps them together. I think this one is better than the previous though.
 ```
 
 10. Create your own plots for either cut OR carat on the x-axis, with price still on the y-axis. Make sure to construct the dataset so that you can make a strong conclusion about how your chosen independent variable affects price. 
@@ -218,8 +262,9 @@ Write a response in the comments: what did you do to construct the dataset and w
 HINT: Copy and paste the code, and then just change the piece you need to update! 
 
 ```{r question10}
+ggplot(diasize,aes(x=carat,y=cut,color=price)) + geom_point(alpha=0.8,size=4) + theme_classic()
 
-
+# this more clearly shows higher carat diamonds tend to be more valuable regardless of cut
 ```
 
 
