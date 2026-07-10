@@ -40,3 +40,5 @@ NOTE: The grave accent is the key at the top left of the keyboard, NOT an apostr
 #We started another piece of code! Look how we can go back and forth between writing explainations and writing code! 
 summary(rnorm(100)) 
 ```
+
+closing i hope?
