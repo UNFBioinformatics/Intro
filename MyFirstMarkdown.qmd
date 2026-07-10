@@ -286,3 +286,4 @@ ggplot(diasize,aes(x=carat,y=cut,color=price)) + geom_point(alpha=0.8,size=4) + 
 3) You can use e.g. column names to tell grep where to look for the pattern: 
 
   grep("Good", diamonds$cut)
+
