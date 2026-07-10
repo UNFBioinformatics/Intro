@@ -1,0 +1,42 @@
+---
+title: Changed Titled 1 :) 
+format: html
+---
+## Changed Title 2 :))
+
+The purpose of a Markdown file is to keep explanations for computational problems and the code we use to solve them next to each other in the same document. This is where you can write description about your project and the data you are working with. 
+
+### How many frames do you see in this space and what you they do? 
+
+Are the cells the frames?? if so, two. First is installing the RMarkdown package, but not loading it?? and printing text. Second is generating summary statistics for a set of 100 values sampled from a normal distribution
+
+### Assignment prompts
+quarto preview MyRnotebook.qmd opened an html webpage of the knit rmarkdown file. Then I closed it and could not open it again. Sad.
+Oh, nevermind killing the preview with Ctrl+C and entering the above command again brought it back. Over the river and through the woods.
+
+summary(rnorm(100)) prints the five number summary of 100 random values pulled from a normal distribution. They are different across consecutive runs because the function pulls values at random every time it's run. 
+
+---
+
+Next up: Let's make a space for writing code that R can understand: 
+
+```{r}
+install.packages("rmarkdown") 
+
+#The pound sign controls titles outside of the code sections; it allows you to make comments when you are *INSIDE* code spaces 
+
+#Our first piece of code. Lets say hello: 
+print("Hello, World!")
+```
+
+## Instructions
+
+We are outside of the code because the code chunk starts with ```{r} and ends with the same ``` mark. Only things inbetween the three accent marks (they are calle 'grave' marks) is seen to be code by the computer. 
+
+NOTE: The grave accent is the key at the top left of the keyboard, NOT an apostrophe. It also has the tilde (~) mark on it. 
+
+
+```{r second}
+#We started another piece of code! Look how we can go back and forth between writing explainations and writing code! 
+summary(rnorm(100)) 
+```
