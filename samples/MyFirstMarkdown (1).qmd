@@ -141,20 +141,21 @@ For the following tasks, put your answers in the code chunk below each question.
 1. What are the key variables in diaTask? Hint: Use the head function and then write the key variables as comments below your code. 
 
 ```{r question1}
-
+head (diatask)
+#The key variables in diatask are cut and price.
 ```
 
 2. Use a combination of nrow() and head() to display ALL of the rows of the diatask dataframe.  
 
 ```{r question2}
-
+head(diatask, n = nrow(diatask))
 ```
 
 3.Use a mathematical formula to display all of the rows of diatask where the diamond price is less than $750. 
 
 
 ```{r question3}
-
+diatask[diatask$price < 750, ]
 ```
 
 4. In R, there is a function that does the same thing as the '>>' redirection in bash, i.e. it APPENDS data. The R function is called rbind(). 
@@ -170,7 +171,19 @@ B. Now write your code to display the dataframe with the correct records.
 C. Below your code, write a comment to tell me if you got the same number of records (rows) that you expected from part A.  
 
 ```{r question4}
+# I expect sparkles to have 10 rows.
 
+print(diatask, n = nrow(diatask))
+
+premium_rows <- diatask[grep("Premium", diatask$cut), ]
+ideal_rows <- diatask[grep("Ideal", diatask$cut), ]
+
+sparkles <- rbind(premium_rows, ideal_rows)
+
+sparkles
+nrow(sparkles)
+
+# Yes, sparkles has 10 rows, which matches my prediction.
 ```
 
 5. Use ggplot to display the information from the diatask dataframe.
@@ -179,7 +192,8 @@ HINT: Copy and paste the code, and then just change the piece you need to update
 
 
 ```{r question5}
-
+ggplot(data = diatask, aes(x = cut, y = price, color = cut)) +
+  geom_point(alpha = 0.8, size = 4)
 ```
 
 6. How do you remove the ugly grey gridlines from the ggplot? 
@@ -187,14 +201,20 @@ HINT: Copy and paste the code, and then just change the piece you need to update
 HINT: Look up a function that you can add-on to make this easier. 
 
 ```{r question6}
+ggplot(data = diatask, aes(x = cut, y = price, color = cut)) +
+  geom_point(alpha = 0.8, size = 4) +
+  theme_classic()
 
+# I removed the grey gridlines by adding theme_classic().
 ```
 
 7. Change the diatask command so that it contains the carat of the diamonds too, and name it diasize. 
 
 
 ```{r question7}
+diasize <- diamonds[80:100, c("carat", "cut", "price")]
 
+head(diasize)
 ```
 
 8. Show the plot of your new dataset, diasize, with carat on the x-axis and price on the y-axis. 
@@ -202,13 +222,19 @@ HINT: Look up a function that you can add-on to make this easier.
 HINT: Copy and paste the code, and then just change the piece you need to update! 
 
 ```{r question8}
-
+ggplot(data = diasize, aes(x = carat, y = price, color = cut)) +
+  geom_point(alpha = 0.8, size = 4) +
+  theme_classic()
 ```
 
 9. Why are the plots for diatask and diasize insufficient to make a conclusion about the relationships between cut and price or carat and price? 
 
 ```{r question9}
-## Write your answer as a comment here
+# The diatask and diasize plots only use 21 rows from the full diamonds
+# dataset. This is too small a subset to make a strong conclusion.
+# The rows were also selected by position, not randomly, so they may not
+# represent the full dataset. Price may also be related to other variables,
+# such as color, clarity, cut, and carat.
 ```
 
 10. Create your own plots for either cut OR carat on the x-axis, with price still on the y-axis. Make sure to construct the dataset so that you can make a strong conclusion about how your chosen independent variable affects price. 
@@ -218,7 +244,22 @@ Write a response in the comments: what did you do to construct the dataset and w
 HINT: Copy and paste the code, and then just change the piece you need to update! 
 
 ```{r question10}
+carat_price <- diamonds[, c("carat", "price")]
 
+ggplot(data = carat_price, aes(x = carat, y = price)) +
+  geom_point(alpha = 0.1, size = 1) +
+  geom_smooth(method = "lm", se = FALSE) +
+  theme_classic()
+
+# I used all rows from the diamonds dataset and selected the carat and
+# price variables. Using the full dataset gives much stronger evidence
+# than using only 21 rows.
+#
+# I found that diamonds with larger carat values generally have higher
+# prices. I was not surprised by the overall relationship, but I was
+# surprised that diamonds with similar carat values can still have very
+# different prices. This suggests that other diamond characteristics also
+# affect price.
 
 ```
 
