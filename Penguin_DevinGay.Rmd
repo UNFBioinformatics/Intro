@@ -1,0 +1,19 @@
+---
+title: Computing Exercise 9: Penguins in R
+---
+
+## Penguins innit
+
+``` {r libraries}
+
+library(rmarkdown)
+library(ggplot2)
+install.packages("palmerpenguins")
+library(palmerpenguins)
+```
+
+``` {r penguinhelp}
+head(penguins)
+nrow(penguins)
+```
+
