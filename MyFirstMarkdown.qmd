@@ -290,3 +290,5 @@ ggplot(diasize,aes(x=carat,y=cut,color=price)) + geom_point(alpha=0.8,size=4) + 
 ``` {r quit}
 q()
 ```
+
+hopefully commited?
