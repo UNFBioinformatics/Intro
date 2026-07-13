@@ -203,7 +203,7 @@ penguins %>%
   theme(axis.text.x = element_text(angle = 0))
 ```
 
-Adelie live exclusively in Torgersen Island, but some of them live in Dream Island. Dream island ::: incremental
+Adelie live exclusively in Torgersen Island, but some of them live in Dream Island. Dream island is
 shared between the Chinstrap and Adelie populations. Biscoe Island is also shared by Adelie
 and Gentoo. No island is exclusive to one population. 
 
