@@ -1,0 +1,212 @@
+---
+title: "Exploring the Palmer Penguins"
+author: "Luis Ponce"
+output: html_document
+---
+
+```{r setup, include=TRUE}
+# Load all libraries needed for this project
+library(palmerpenguins)  # provides the 'penguins' dataset
+library(dplyr)           # data wrangling (filter, group_by, summarise, etc.)
+library(ggplot2)         # data visualization
+library(knitr)           # nicer table rendering 
+```
+
+## Introduction
+
+The Palmer Penguins dataset was collected and made available by Dr. Kristen
+Gorman and the Palmer Station Long Term Ecological Research (LTER) Network,
+part of the US Long Term Ecological Research Network based in Antarctica.
+The data include physical measurements and other observations for three
+penguin species — Adelie, Chinstrap, and Gentoo — recorded at three islands
+in the Palmer Archipelago near Antarctica: Biscoe, Dream, and Torgersen.
+
+This dataset was originally used to examine how body size and shape vary across penguin species, sexes, and
+populations, and how these physical traits relate to ecological factors
+such as dietary niche. The original 2014 study (https://doi.org/10.1371/journal.pone.0090081) used measurements like flipper
+length, body mass, and bill dimensions, along with blood isotope data, to
+explore differences between species and sexes and to understand foraging
+ecology in these penguins.
+
+The objective is to use the `penguins` dataset to answer some
+introductory questions:
+
+-How large is this dataset, and how is it structured?
+* Are males and females equally represented in the data?
+* Are all three species and all three islands equally represented?
+* Which physical measurements best distinguish male penguins from female
+  penguins?
+* Which physical measurements best distinguish the three species from one
+  another?
+* Which islands are home to which species?
+
+## Exploratory Analysis
+
+```{r explore-setup}
+# Explores the structure of the dataset
+str(penguins)
+```
+
+### How many data columns are in `penguins`?
+
+```{r num-columns}
+# ncol() gives the number of columns (variables) in the dataset. 
+ncol(penguins)
+```
+
+The dataset contains several columns, including species, island, bill
+length and depth, flipper length, body mass, sex, and year of collection.
+
+### How many penguins do we have data for?
+344; 152 Adelie, 124 Gentoo, and 68 Chinstrap.
+```{r num-rows}
+# nrow() gives the number of rows of individual penguin observations
+nrow(penguins)
+```
+
+### Do we have equal representation of males and females?
+
+```{r sex-breakdown}
+# table() with useNA shows counts per sex, including any missing (NA) values
+# This is important because some penguins have NA for sex - a straightforward
+# grep() or == comparison could silently drop or mishandle these rows
+table(penguins$sex, useNA = "ifany")
+```
+
+```{r male-female-split}
+# Create a dataframe with only male penguins
+# NOTE: filter() with == "male" will naturally exclude NA sex values,
+# which is what we want - we don't want NAs miscategorized as male
+pmale <- penguins %>% filter(sex == "male")
+
+# Create a dataframe with only female penguins
+pfemale <- penguins %>% filter(sex == "female")
+
+# Double check the counts add up sensibly (they won't sum to nrow(penguins)
+# because of the NA sex entries we intentionally excluded from both)
+nrow(pmale)
+nrow(pfemale)
+nrow(penguins) - nrow(pmale) - nrow(pfemale)  # number of penguins with unknown sex
+```
+
+Males and females are fairly evenly represented overall, but there are a
+small number of penguins with missing sex data. Those individuals were
+purposely excluded from both `pmale` and `pfemale` rather than being
+incorrectly categorized into one group.
+
+### Do we have equal representation of each species?
+
+```{r species-breakdown}
+# Count how many observations belong to each species
+table(penguins$species)
+```
+
+```{r species-split}
+# Create separate dataframes for each species
+pAdel <- penguins %>% filter(species == "Adelie")
+pChin <- penguins %>% filter(species == "Chinstrap")
+pGen  <- penguins %>% filter(species == "Gentoo")
+
+nrow(pAdel)
+nrow(pChin)
+nrow(pGen)
+```
+
+Species representation is not perfectly balanced: Adelie penguins(152) have the
+most observations, while Chinstrap penguins (68) have the fewest.
+
+### Do we have equal representation of each island?
+
+```{r island-breakdown}
+# Count how many observations come from each island
+table(penguins$island)
+```
+
+```{r island-split}
+# Create separate dataframes for each island
+iBis   <- penguins %>% filter(island == "Biscoe")
+iDream <- penguins %>% filter(island == "Dream")
+iTorg  <- penguins %>% filter(island == "Torgersen")
+
+nrow(iBis)
+nrow(iDream)
+nrow(iTorg)
+```
+
+Island representation is also uneven: Biscoe has the most observations,
+while Torgersen has the fewest. This makes sense biologically, since not
+every species was observed on every island.
+
+## Data Visualization
+
+### What distinguishes male and female penguins?
+
+```{r sex-boxplot}
+# Boxplot comparing body mass between sexes, faceted by species
+# so we aren't confounding species differences with sex differences
+penguins %>%
+  filter(!is.na(sex)) %>%
+  ggplot(aes(x = sex, y = body_mass_g, fill = sex)) +
+  geom_boxplot(alpha = 0.8) +
+  facet_wrap(~ species) +
+  scale_fill_manual(values = c("female" = "#E69F00", "male" = "#56B4E9")) +
+  labs(
+    title = "Body Mass by Sex, Within Each Species",
+    x = "Sex",
+    y = "Body Mass (g)"
+  ) +
+  theme_minimal(base_size = 13) +
+  theme(legend.position = "none")
+```
+
+First, body mass; there was a clear difference between males and females. 
+This was observable across all 3 species of penguines. Males were in most cases heavier than the females.
+
+### What distinguishes the three species?
+
+```{r species-scatter}
+# Scatterplot of bill length vs. bill depth, colored by species
+# This combination is known to strongly separate the three species
+penguins %>%
+  filter(!is.na(bill_length_mm)) %>%
+  ggplot(aes(x = bill_length_mm, y = bill_depth_mm, color = species, shape = species)) +
+  geom_point(size = 2.5, alpha = 0.8) +
+  scale_color_manual(values = c("Adelie" = "#E69F00", "Chinstrap" = "#009E73", "Gentoo" = "#0072B2")) +
+  labs(
+    title = "Bill Length vs. Bill Depth by Species",
+    x = "Bill Length (mm)",
+    y = "Bill Depth (mm)",
+    color = "Species",
+    shape = "Species"
+  ) +
+  theme_minimal(base_size = 13)
+```
+
+Their bills dimensions is accurate way to distinguish between the three species. 
+Adelie have short and deep bills, Gentoo have long and shallow bills, and Chinstrap 
+longer and deep bills. 
+### Which species inhabit each island?
+
+```{r island-species-bar}
+# Bar chart showing counts of each species observed on each island
+penguins %>%
+  ggplot(aes(x = island, fill = species)) +
+  geom_bar(position = "dodge") +
+  scale_fill_manual(values = c("Adelie" = "#E69F00", "Chinstrap" = "#009E73", "Gentoo" = "#0072B2")) +
+  labs(
+    title = "Penguin Species Counts by Island",
+    x = "Island",
+    y = "Number of Penguins",
+    fill = "Species"
+  ) +
+  theme_minimal(base_size = 13) +
+  theme(axis.text.x = element_text(angle = 0))
+```
+
+Adelie live exclusively in Torgersen Island, but some of them live in Dream Island. Dream island ::: incremental
+shared between the Chinstrap and Adelie populations. Biscoe Island is also shared by Adelie
+and Gentoo. No island is exclusive to one population. 
+
+
+
+:::
