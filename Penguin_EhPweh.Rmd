@@ -1,0 +1,116 @@
+---
+title: "Palmer Penguins Data Analysis"
+author: "Eh Pweh"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+# Load required libraries
+library(palmerpenguins)
+library(dplyr)
+library(ggplot2)
+```
+
+# Introduction
+
+The Palmer Penguins dataset contains measurements from penguins living on three islands in Antarctica. It was collected to help researchers study differences between penguin species. In this project, I will examine how species, sex, and island location differ and determine which physical measurements best separate the penguins.
+
+# Exploratory Analysis
+
+```{r}
+# Counts the number of columns
+ncol(penguins)
+
+# Counts the number of penguins (rows)
+nrow(penguins)
+
+# Count the number males and females
+table(penguins$sex)
+
+# Create a dataframe containing only males
+pmale <- filter(penguins, sex == "male")
+
+# Create a dataframe containing only females
+pfemale <- filter(penguins, sex == "female")
+
+# Count each species of penguin
+table(penguins$species)
+
+# Create a species dataframes
+pAdel <- filter(penguins, species == "Adelie")
+pChin <- filter(penguins, species == "Chinstrap")
+pGen <- filter(penguins, species == "Gentoo")
+
+# Count penguins on each island
+table(penguins$island)
+
+# Create a island dataframes
+iBis <- filter(penguins, island == "Biscoe")
+iDream <- filter(penguins, island == "Dream")
+iTorg <- filter(penguins, island == "Torgersen")
+```
+
+The tables above summarize the number of penguins by sex, species, and island. Separate dataframes were created to make future analyses easier.
+
+# Data Visualization
+
+## Male vs Female Penguins
+
+The following scatterplot compares body mass and flipper length while coloring points by sex.
+
+```{r}
+ggplot(penguins,
+       aes(x = flipper_length_mm,
+           y = body_mass_g,
+           color = sex)) +
+  geom_point(size = 3) +
+  labs(
+    title = "Body Mass vs Flipper Length by Sex",
+    x = "Flipper Length (mm)",
+    y = "Body Mass (g)",
+    color = "Sex"
+  ) +
+  theme_classic() +
+  theme(plot.title = element_text(hjust = 0.5))
+```
+
+## Penguin Species Comparison
+
+This boxplot compares bill length among the three penguin species.
+
+```{r}
+ggplot(penguins,
+       aes(x = species,
+           y = bill_length_mm,
+           fill = species)) +
+  geom_boxplot() +
+  labs(
+    title = "Bill Length by Species",
+    x = "Species",
+    y = "Bill Length (mm)"
+  ) +
+  theme_bw() +
+  theme(plot.title = element_text(hjust = 0.5))
+```
+
+## Species by Island
+
+This bar chart shows which penguin species inhabit each island.
+
+```{r}
+ggplot(penguins,
+       aes(x = island,
+           fill = species)) +
+  geom_bar(position = "dodge") +
+  labs(
+    title = "Penguin Species Found on Each Island",
+    x = "Island",
+    y = "Number of Penguins"
+  ) +
+  theme_classic() +
+  theme(plot.title = element_text(hjust = 0.5))
+```
+
+# Conclusion
+
+After exploring the data, I found that body mass, flipper length, and bill measurements help distinguish different penguin species. Male penguins also tend to have larger measurements than females. The graphs also show that the three species are distributed differently across the islands
