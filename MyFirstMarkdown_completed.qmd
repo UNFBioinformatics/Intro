@@ -1,0 +1,258 @@
+---
+title: "Working with Data in R!"
+format: html
+---
+
+## Introduction
+
+In the last exercise, we learned that the purpose of a Markdown file is to keep explanations for computational problems and the code we use to solve them next to each other in the same document.
+
+We had a couple of chunks of text, code, text, and code, but we did not have anything very interesting to look at.
+
+If we go a little farther with the tools available in R and use a dataset, R can become much more useful.
+
+## Let's view a dataset
+
+There is a handy sample dataset about diamonds that comes with one of R's most useful plotting packages.
+
+The package is called **ggplot2**, so the following code loads the package and its `diamonds` dataset.
+
+```{r ExploreDIAMONDS}
+# Load ggplot2, which includes the example dataset named diamonds.
+library(ggplot2)
+
+# Display the first six rows.
+head(diamonds)
+
+# Display the first ten rows.
+head(diamonds, n = 10)
+
+# Count the number of rows in the complete dataset.
+nrow(diamonds)
+```
+
+## Let's navigate a dataset
+
+In lecture, we saw how to find values in a data frame by specifying rows and columns with this syntax:
+
+```text
+dataframe[rows, columns]
+```
+
+You can also put functions inside the row and column positions. The function used in the example is the combine function, `c()`.
+
+```text
+dataframe[c(1, 3, 5, 7, 9), ]
+```
+
+This returns the odd-numbered rows below 10 and keeps every column.
+
+The `grep()` function can search for patterns inside data. Usually, we want to return complete rows that match the pattern.
+
+```{r DiaDataFrames}
+# These two lines are intentionally commented out because they do not
+# specify the column that grep() should search or the data-frame dimension
+# that should be returned. Leaving them active would stop the document.
+#
+# diamonds[grep("Good", diamonds)]
+# stud <- diamonds[grep("Good", diamonds)]
+
+# Search the cut column and use the returned row positions to subset diamonds.
+stud2 <- diamonds[grep("^Good$", diamonds$cut), ]
+stud2
+
+# Create a smaller data frame containing rows 1 through 10
+# and only the cut and price columns.
+dia <- diamonds[1:10, c("cut", "price")]
+dia
+
+# The more common R assignment style places the object name on the left.
+dia2 <- diamonds[1:10, c("cut", "price")]
+dia2
+
+# grep() returns the row positions where "Premium" occurs.
+matches <- grep("^Premium$", dia2$cut)
+matches
+
+# Use those positions to retrieve complete rows.
+dia2[matches, ]
+
+# c(matches) also works, although c() is unnecessary because
+# matches is already a vector.
+dia2[c(matches), ]
+
+# Put grep() directly inside the row position.
+dia2[grep("^Premium$", dia2$cut), ]
+
+# grepl() returns TRUE or FALSE for each value.
+stud3 <- grepl("^Premium$", dia2$cut)
+stud3
+dia2[stud3, ]
+
+# Plot the smaller data frame.
+ggplot(data = dia, aes(x = cut, y = price, color = cut)) +
+  geom_point(alpha = 0.8, size = 4)
+
+# Create the data frame used for Tasks 1 through 6.
+# R uses one-based indexing, so this contains rows 80 through 100.
+diatask <- diamonds[80:100, c(2, 7)]
+
+# Display every row so the records can be inspected.
+print(diatask, n = nrow(diatask))
+```
+
+## Tasks
+
+### 1. Identify the key variables in `diatask`
+
+```{r question1}
+head(diatask)
+
+# The key variables are cut and price.
+# cut describes the quality category of the diamond's cut.
+# price gives the diamond's price in US dollars.
+```
+
+### 2. Display all rows of `diatask`
+
+```{r question2}
+head(diatask, n = nrow(diatask))
+```
+
+### 3. Display rows where price is below $750
+
+```{r question3}
+diatask[diatask$price < 750, ]
+```
+
+### 4. Create `sparkles` with only Premium and Ideal diamonds
+
+```{r question4}
+# By inspecting diatask, sparkles should contain 10 rows:
+# 6 Premium diamonds and 4 Ideal diamonds.
+
+premium_diamonds <- diatask[grep("^Premium$", diatask$cut), ]
+ideal_diamonds <- diatask[grep("^Ideal$", diatask$cut), ]
+
+sparkles <- rbind(premium_diamonds, ideal_diamonds)
+
+sparkles
+nrow(sparkles)
+
+# Yes. The result contains the 10 rows that I expected.
+```
+
+### 5. Plot the information in `diatask`
+
+```{r question5}
+ggplot(data = diatask, aes(x = cut, y = price, color = cut)) +
+  geom_point(alpha = 0.8, size = 4) +
+  labs(
+    title = "Diamond Price by Cut",
+    x = "Cut",
+    y = "Price (US dollars)"
+  )
+```
+
+### 6. Remove the grey gridlines
+
+```{r question6}
+ggplot(data = diatask, aes(x = cut, y = price, color = cut)) +
+  geom_point(alpha = 0.8, size = 4) +
+  labs(
+    title = "Diamond Price by Cut",
+    x = "Cut",
+    y = "Price (US dollars)"
+  ) +
+  theme_classic()
+```
+
+### 7. Add carat and create `diasize`
+
+```{r question7}
+diasize <- diamonds[80:100, c("carat", "cut", "price")]
+
+head(diasize)
+```
+
+### 8. Plot carat against price
+
+```{r question8}
+ggplot(data = diasize, aes(x = carat, y = price, color = cut)) +
+  geom_point(alpha = 0.8, size = 4) +
+  labs(
+    title = "Diamond Price by Carat",
+    x = "Carat",
+    y = "Price (US dollars)",
+    color = "Cut"
+  ) +
+  theme_classic()
+```
+
+### 9. Explain why the two small plots are insufficient
+
+```{r question9}
+# The plots use only 21 consecutive rows from a dataset containing many
+# thousands of diamonds. This small, nonrandom subset does not represent
+# the full range of cuts, carat values, or prices. Its prices are also
+# concentrated around only a few values. Therefore, the plots are useful
+# for practicing R, but they are not sufficient for a reliable general
+# conclusion about the relationship between cut and price or between
+# carat and price. Because the data are observational, the plots also
+# show association rather than proving that one variable causes price.
+```
+
+### 10. Construct a stronger plot
+
+```{r question10}
+# I used all rows of the diamonds dataset instead of only rows 80 through
+# 100. This gives the plot a much broader and more representative range
+# of carat and price values.
+
+carat_price <- diamonds[, c("carat", "price")]
+
+nrow(carat_price)
+
+ggplot(data = carat_price, aes(x = carat, y = price)) +
+  geom_point(alpha = 0.12, size = 0.7) +
+  geom_smooth(
+    method = "lm",
+    formula = y ~ x,
+    se = FALSE,
+    linewidth = 1
+  ) +
+  labs(
+    title = "Diamond Price Increases with Carat",
+    subtitle = "All observations in the ggplot2 diamonds dataset",
+    x = "Carat",
+    y = "Price (US dollars)"
+  ) +
+  theme_classic()
+
+# I used the complete dataset so the conclusion would not depend on one
+# small block of rows. I was not surprised that larger diamonds generally
+# had higher prices, but I was surprised by how much prices varied among
+# diamonds with similar carat values. This suggests that other variables,
+# such as cut, color, and clarity, also help explain price. The plot shows
+# a strong positive association, but it does not by itself prove causation.
+```
+
+## Notes on `grep()` attempts
+
+1. The pattern must match the values in the data. R is case-sensitive, so `"ideal"` is not the same as `"Ideal"`.
+
+2. Use correct data-frame and function syntax:
+
+```r
+dataframe[rows, columns]
+function(argument)
+variable <- dataframe[1:100, ]
+```
+
+3. Tell `grep()` which column to search:
+
+```r
+grep("^Good$", diamonds$cut)
+```
+
+The `^` and `$` symbols require the whole value to match the word exactly.
