@@ -1,0 +1,405 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
+---
+
+title: "Exploring the Palmer Penguins"
+author: "Melissa Braflat"
+output: html_document
+---------------------
+
+```{r setup, include=FALSE}
+# Set options for all code chunks in this document.
+knitr::opts_chunk$set(
+  echo = TRUE,
+  message = FALSE,
+  warning = FALSE
+)
+
+# Load the packages needed for this project.
+library(palmerpenguins)
+library(ggplot2)
+
+# Load the Palmer Penguins dataset.
+penguins <- palmerpenguins::penguins
+```
+
+# Introduction
+
+The Palmer Penguins dataset contains measurements from three penguin species observed in the Palmer Archipelago in Antarctica. The three species are Adelie, Chinstrap, and Gentoo penguins. The dataset contains information about each penguin's species, island, bill length, bill depth, flipper length, body mass, sex, and the year in which the observation was recorded.
+
+The data were collected through research connected to the Palmer Station Long Term Ecological Research program. A related research article is Gorman, Williams, and Fraser (2014), which examined ecological differences and sexual dimorphism among Antarctic penguins.
+
+In this analysis, I hope to determine whether males and females are represented equally, whether species and islands are represented equally, which measurements best distinguish males from females, which measurements distinguish the three species, and which species were observed on each island.
+
+# Exploratory Analysis
+
+## Number of columns and penguins
+
+```{r dataset-size}
+# Count the number of columns in the dataset.
+number_of_columns <- ncol(penguins)
+
+# Count the number of rows, which represent individual penguin observations.
+number_of_penguins <- nrow(penguins)
+
+number_of_columns
+number_of_penguins
+
+# Display the names of all variables.
+names(penguins)
+```
+
+The dataset contains `r number_of_columns` columns and `r number_of_penguins` penguin observations.
+
+Each row represents one penguin observation, while each column contains a different type of information about that penguin.
+
+## Representation of males and females
+
+```{r sex-counts}
+# Count the number of male, female, and missing sex values.
+sex_counts <- table(
+  penguins$sex,
+  useNA = "ifany"
+)
+
+sex_counts
+```
+
+The table shows that male and female penguins are represented in nearly equal numbers, but the counts are not exactly the same. Some observations also have missing sex information.
+
+```{r male-female-dataframes}
+# Create a data frame containing only male penguins.
+# Exact matching is important because "male" is also part of the word "female".
+pmale <- penguins[
+  !is.na(penguins$sex) & penguins$sex == "male",
+]
+
+# Create a data frame containing only female penguins.
+pfemale <- penguins[
+  !is.na(penguins$sex) & penguins$sex == "female",
+]
+
+# Check the number of rows in each new data frame.
+nrow(pmale)
+nrow(pfemale)
+
+# View the first few rows.
+head(pmale)
+head(pfemale)
+```
+
+The `pmale` data frame contains `r nrow(pmale)` male penguins.
+
+The `pfemale` data frame contains `r nrow(pfemale)` female penguins.
+
+## Representation of each species
+
+```{r species-counts}
+# Count the number of penguins from each species.
+species_counts <- table(penguins$species)
+
+species_counts
+```
+
+The species are not represented equally. Adelie penguins have the most observations, Gentoo penguins have the second-largest number, and Chinstrap penguins have the fewest observations.
+
+```{r species-dataframes}
+# Create a data frame containing only Adelie penguins.
+pAdel <- penguins[
+  penguins$species == "Adelie",
+]
+
+# Create a data frame containing only Chinstrap penguins.
+pChin <- penguins[
+  penguins$species == "Chinstrap",
+]
+
+# Create a data frame containing only Gentoo penguins.
+pGen <- penguins[
+  penguins$species == "Gentoo",
+]
+
+# Check the number of rows in each data frame.
+nrow(pAdel)
+nrow(pChin)
+nrow(pGen)
+
+# View the first few rows.
+head(pAdel)
+head(pChin)
+head(pGen)
+```
+
+The new species data frames contain:
+
+* `pAdel`: `r nrow(pAdel)` Adelie penguins
+* `pChin`: `r nrow(pChin)` Chinstrap penguins
+* `pGen`: `r nrow(pGen)` Gentoo penguins
+
+## Representation of each island
+
+```{r island-counts}
+# Count the number of penguins observed on each island.
+island_counts <- table(penguins$island)
+
+island_counts
+```
+
+The islands are not represented equally. Biscoe Island has the most observations, Dream Island has the second-most, and Torgersen Island has the fewest.
+
+```{r island-dataframes}
+# Create a data frame containing only penguins from Biscoe Island.
+iBis <- penguins[
+  penguins$island == "Biscoe",
+]
+
+# Create a data frame containing only penguins from Dream Island.
+iDream <- penguins[
+  penguins$island == "Dream",
+]
+
+# Create a data frame containing only penguins from Torgersen Island.
+iTorg <- penguins[
+  penguins$island == "Torgersen",
+]
+
+# Check the number of rows in each data frame.
+nrow(iBis)
+nrow(iDream)
+nrow(iTorg)
+
+# View the first few rows.
+head(iBis)
+head(iDream)
+head(iTorg)
+```
+
+The new island data frames contain:
+
+* `iBis`: `r nrow(iBis)` observations from Biscoe Island
+* `iDream`: `r nrow(iDream)` observations from Dream Island
+* `iTorg`: `r nrow(iTorg)` observations from Torgersen Island
+
+# Data Visualization
+
+## Measurements that distinguish male and female penguins
+
+Body mass and flipper length are useful measurements for comparing male and female penguins. Because the three species differ in overall size, males and females should be compared within each species.
+
+```{r sex-body-mass-plot, fig.width=10, fig.height=6}
+# Create a boxplot comparing body mass by sex within each species.
+ggplot(
+  data = penguins,
+  aes(
+    x = sex,
+    y = body_mass_g,
+    fill = sex
+  )
+) +
+  geom_boxplot(
+    na.rm = TRUE,
+    width = 0.65,
+    alpha = 0.8,
+    show.legend = FALSE
+  ) +
+  facet_wrap(~ species) +
+  labs(
+    title = "Body Mass of Male and Female Penguins",
+    subtitle = "Comparisons are shown separately for each species",
+    x = "Sex",
+    y = "Body mass (grams)"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(
+      face = "bold",
+      size = 16
+    ),
+    plot.subtitle = element_text(
+      size = 11
+    ),
+    strip.text = element_text(
+      face = "bold"
+    ),
+    panel.grid.minor = element_blank()
+  )
+```
+
+The boxplots show that male penguins generally have greater body mass than female penguins within each species. There is some overlap between males and females, but body mass provides a clear general distinction.
+
+```{r sex-flipper-plot, fig.width=10, fig.height=6}
+# Create a boxplot comparing flipper length by sex within each species.
+ggplot(
+  data = penguins,
+  aes(
+    x = sex,
+    y = flipper_length_mm,
+    fill = sex
+  )
+) +
+  geom_boxplot(
+    na.rm = TRUE,
+    width = 0.65,
+    alpha = 0.8,
+    show.legend = FALSE
+  ) +
+  facet_wrap(~ species) +
+  labs(
+    title = "Flipper Length of Male and Female Penguins",
+    subtitle = "Comparisons are shown separately for each species",
+    x = "Sex",
+    y = "Flipper length (millimeters)"
+  ) +
+  theme_classic() +
+  theme(
+    plot.title = element_text(
+      face = "bold",
+      size = 16
+    ),
+    plot.subtitle = element_text(
+      size = 11
+    ),
+    strip.text = element_text(
+      face = "bold"
+    ),
+    axis.text.x = element_text(
+      angle = 20,
+      hjust = 1
+    )
+  )
+```
+
+Male penguins also generally have longer flippers than female penguins within each species. Body mass and flipper length therefore appear to be two of the clearest measurements for distinguishing males and females.
+
+## Measurements that distinguish the penguin species
+
+Bill length and bill depth can be examined together to compare the three species.
+
+```{r species-bill-plot, fig.width=9, fig.height=6}
+# Create a scatterplot comparing bill length and bill depth.
+ggplot(
+  data = penguins,
+  aes(
+    x = bill_length_mm,
+    y = bill_depth_mm,
+    color = species,
+    shape = species
+  )
+) +
+  geom_point(
+    size = 2.5,
+    alpha = 0.75,
+    na.rm = TRUE
+  ) +
+  labs(
+    title = "Bill Measurements Distinguish Penguin Species",
+    subtitle = "Bill length and bill depth form different patterns for each species",
+    x = "Bill length (millimeters)",
+    y = "Bill depth (millimeters)",
+    color = "Species",
+    shape = "Species"
+  ) +
+  theme_classic() +
+  theme(
+    plot.title = element_text(
+      face = "bold",
+      size = 16
+    ),
+    plot.subtitle = element_text(
+      size = 11
+    ),
+    legend.position = "bottom",
+    legend.title = element_text(
+      face = "bold"
+    )
+  )
+```
+
+The three species form visibly different groups. Adelie penguins generally have shorter bills. Chinstrap penguins generally have longer and deeper bills. Gentoo penguins tend to have shallower bills.
+
+Bill length and bill depth together distinguish the species more clearly than either measurement alone.
+
+## Penguin species found on each island
+
+A grouped bar chart can show which species were observed on each island.
+
+```{r island-species-counts}
+# Create a frequency table of island and species combinations.
+island_species_counts <- as.data.frame(
+  table(
+    penguins$island,
+    penguins$species
+  )
+)
+
+# Rename the columns.
+names(island_species_counts) <- c(
+  "island",
+  "species",
+  "count"
+)
+
+# Remove combinations with zero observations.
+island_species_counts <- island_species_counts[
+  island_species_counts$count > 0,
+]
+
+island_species_counts
+```
+
+```{r island-species-plot, fig.width=9, fig.height=6}
+# Create a grouped bar chart showing species counts on each island.
+ggplot(
+  data = island_species_counts,
+  aes(
+    x = island,
+    y = count,
+    fill = species
+  )
+) +
+  geom_col(
+    position = "dodge",
+    width = 0.7
+  ) +
+  labs(
+    title = "Penguin Species Observed on Each Island",
+    subtitle = "The species are not distributed equally across the three islands",
+    x = "Island",
+    y = "Number of penguins",
+    fill = "Species"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(
+      face = "bold",
+      size = 16
+    ),
+    plot.subtitle = element_text(
+      size = 11
+    ),
+    legend.position = "bottom",
+    legend.title = element_text(
+      face = "bold"
+    ),
+    panel.grid.minor = element_blank(),
+    axis.text.x = element_text(
+      face = "bold"
+    )
+  )
+```
+
+The graph shows that Biscoe Island contains Adelie and Gentoo penguins. Dream Island contains Adelie and Chinstrap penguins. Torgersen Island contains only Adelie penguins in this dataset.
+
+# Conclusion
+
+The Palmer Penguins dataset contains `r nrow(penguins)` observations and `r ncol(penguins)` variables. Male and female penguins are represented in nearly equal numbers among the observations with recorded sex, although some sex values are missing.
+
+The species and island groups are not represented equally. Adelie penguins have the greatest number of observations, while Chinstrap penguins have the fewest.
+
+Body mass and flipper length help distinguish male and female penguins. Bill length and bill depth provide a clear distinction among Adelie, Chinstrap, and Gentoo penguins.
+
+The island analysis also shows that the species were observed at different combinations of island sites.
+
