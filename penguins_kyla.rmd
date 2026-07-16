@@ -1,0 +1,8 @@
+---
+title: Palmer penguins
+author: Kyla Sanders
+output: html_document
+---
+```
+library(palmerpenguins)
+```
