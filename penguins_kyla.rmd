@@ -6,3 +6,15 @@ output: html_document
 ```
 library(palmerpenguins)
 ```
+```
+echo he data was collected previously to study the Antartic Palmer Archipelago’s penguin’s foraging behavior and its relationship with environmental variability. Years later, this data set is introduce as an introductory dataset for teaching data exploration and visualization. In this analysis, we hope to identify differientiating characteristics of the varying Palmer Penguins. We will look at bill length, bill depth, flipper length, and body mass of the Adelie, Chinstrap, and Gentoo penguins. Next, the sex differences amongst the species using the previously mention quantitative variables. A t-test will be preformed to confirm differientiating data. Moreover, to visualize differientiating data from the bill length and bill depth, a cluster plot will be built.
+```
+``` 
+echo "How many data sets are in "penguins"?"
+ncol(palmerpenguins)
+```
+```
+echo "How many penguins do we have data for?"
+nrow(palmerpenguins)
+```
+echo "Do we have the same amount of male and female penguins?
