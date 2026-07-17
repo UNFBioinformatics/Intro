@@ -1,0 +1,106 @@
+---
+Title: Penguin Dataset Analysis
+Author: Erricka Fryer
+Output: html document
+---
+
+
+'''{r seteup, include=FALSE}
+#Download and insert libraries
+library(palmerpenguins)
+library(tidyverse)
+library(ggplot2)
+'''
+
+
+
+# Introduction
+
+The Palmer Penguins dataset contains measurements from penguins observed in the Palmer Archipelago in Palmer Station obtained by researchers in the Palmer Station, Antarctica, Long-Term Ecological Research (PAL-LTER) Program's.
+The dataset included three penuin species that were closely related; Adélie, Chinstrap, and Gentoo. They analyzed the year, species, island, sex, bill length and depth, flipper length,and body mass were gathered during field studies. 
+Overall, they examined whether sex, species, and island, and how it reflects ecological pressures in the penguins.  
+
+# Exploratory Analysis 
+
+# Dataset Size
+
+'''{r}
+
+# Counts number of columns in penguins dataset
+ncol(penguins)
+
+# Counts total number of rows (observations) in penguins dataset
+nrow(penguins)
+
+# Counts number of males and females based on sex
+table(penguins$sex, use NA = "ifany")
+
+# Create new data frame for only male penguins
+pmale <- filter(sex == "male")
+
+# Create new data frame for only female penguins
+pfemale <- filter(sex == "female")
+
+# Count penguins by species
+table(penguins$species)
+
+# Create data frame for species 
+pAdel <- filter(species == "Adelie")
+pChi <- filter(species == "Chinstrap")
+pGen <- filter(species == "Gentoo")
+
+# Count penguins by island
+table(penguins$island)
+
+# Create data frame for island
+iBis <- filter(island == "Biscoe")
+iDream <- filter(island == "Dream")
+iTorg <- filter(island == "Torgersen")
+''' 
+
+The tables separate and filter the number of penguins by sex, species, and island. 
+
+# Data Visualization
+# Measurements that separate female and male penguins
+
+Body mass and flipper length will be used because they are useful when comparing female and male penguins because the three species from three different islands all differ in overall size. 
+
+'''{r}
+
+# Boxplot analyzing bill length across sex based on species
+ggplot(penguins, 
+    aes(x = flipper_length_m, y = body_mass_g, fill = sex)) + 
+geom_point(size = 3) + 
+labs (
+      title = "Body Mass vs Flipper Length within each species based on sex", 
+      x = "flipper length (m)",
+      y = "body mass (g)", 
+      fill = "sex"
+) + 
+theme_classic() +
+theme(plot.title = element (hjust = 0.5))
+'''
+
+# Species by island
+Bar chart that demonstrates the penguins that inhabit each island
+
+'''{r}
+
+ggplot(penguins, 
+    aes( x = island, y = number of penguins, fill = species)) +
+  geom_bar(position = "dodge") + 
+labs(
+title = "Penguin Species Observed on Each Island", 
+x = "Island", 
+y = "Number of Penguins", 
+fill = "Species" 
+) + 
+theme_classic() +
+theme(plot.title = element (hjust = 0.5))
+''' 
+
+# Conclusion
+
+The Palmer Penguins dataset observed a 8 different variables and 344 individual penguins. It was found that female and male penguins were not equally represented as there are 165 females and 168 males with 11 remaining penguins being unrecorded. Species and island were also uneven. 
+However, body mass and flipper length did help to distinguish between male and females from different species and islands. It was noted that there 152 Adelie penguins, 68 Chinstrap penguins, and 125 Gentoo penguins. Overall, the penguin species and sex are not evenly distributed
+and that males are larger overall when compared to females. 
