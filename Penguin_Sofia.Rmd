@@ -1,0 +1,37 @@
+---
+title: "Exploring the Palmer Penguins Dataset"
+author: "Sofia"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+# Setup chunk for loading required libraries
+knitr::opts_chunk$set(echo = TRUE)
+
+# Load the required packages
+library(palmerpenguins)  # The Palmer Penguins dataset package
+library(tidyverse)       # For data manipulation and visualization
+```
+## Introduction
+
+The `palmerpenguins` dataset contains size measurements, clutch observations, and blood isotope ratios for three penguin species observed at the Palmer Station Long-Term Ecological Research (LTER) site in Antarctica. Collected by Dr. Kristen Gorman, this data tracks Adélie, Chinstrap, and Gentoo penguins across three islands in the Palmer Archipelago: Biscoe, Dream, and Torgersen. 
+
+The dataset acts as a modern, high-quality alternative to the classic Iris dataset for teaching data science principles. By examining this data, we hope to explore ecological and morphological questions, such as:
+* **Species Differentiation:** How reliably can we distinguish between the three penguin species based on their physical traits like bill length, bill depth, and flipper length?
+* **Sexual Dimorphism:** Do male and female penguins display significant variations in body mass within or across different species?
+* **Islands & Habitats:** Does the geographic distribution across the islands correlate with specific species populations or physical variations?
+
+---
+
+## Exploratory Data Analysis
+
+```{r exploratory-analysis}
+# Initial exploration of the 'penguins' dataframe
+
+# Take a quick peek at the structure and first few rows of the data
+glimpse(penguins)
+
+# Generate quick summary statistics for all variables
+summary(penguins)
+```
