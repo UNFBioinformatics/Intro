@@ -61,3 +61,46 @@ iDream <- penguins %>%
 iTorg <- penguins %>% 
   filter(island == "Torgersen")
 ```
+---
+
+## Data Visualization
+
+```{r data-visualization, warning=FALSE, message=FALSE}
+# 1. Distinguishing Male vs. Female Penguins (Boxplot)
+# Bill depth and body mass tend to show clear separation between sexes.
+ggplot(data = drop_na(penguins, sex), aes(x = sex, y = body_mass_g, fill = sex)) +
+  geom_boxplot(alpha = 0.7) +
+  labs(
+    title = "Body Mass Distribution by Sex",
+    x = "Sex",
+    y = "Body Mass (g)"
+  ) +
+  theme_minimal() +
+  scale_fill_brewer(palette = "Set2")
+
+# 2. Distinguishing Penguin Species (Scatter Plot)
+# Plotting bill length vs. flipper length cleanly separates the species.
+ggplot(data = penguins, aes(x = bill_length_mm, y = flipper_length_mm, color = species)) +
+  geom_point(size = 2.5, alpha = 0.8) +
+  labs(
+    title = "Species Differentiation by Bill and Flipper Length",
+    x = "Bill Length (mm)",
+    y = "Flipper Length (mm)",
+    color = "Species"
+  ) +
+  theme_light() +
+  scale_color_viridis_d(option = "plasma")
+
+# 3. Species Distribution Across Islands (Bar Plot)
+# Shows exactly which species inhabit which island sites.
+ggplot(data = penguins, aes(x = island, fill = species)) +
+  geom_bar(position = "dodge") +
+  labs(
+    title = "Species Counts Across Antarctic Island Sites",
+    x = "Island",
+    y = "Number of Penguins",
+    fill = "Species"
+  ) +
+  theme_classic() +
+  scale_fill_dark()
+```
