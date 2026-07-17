@@ -4,6 +4,7 @@ author: "Sofia"
 date: "`r Sys.Date()`"
 output: html_document
 ---
+
 ```{r setup, include=FALSE}
 # Setup chunk for loading required libraries
 knitr::opts_chunk$set(echo = TRUE)
@@ -26,6 +27,7 @@ nrow(penguins)
 table(penguins$sex, useNA = "ifany")
 
 # Create a dataframe containing only male penguins using exact matching
+# Exact matching avoids capturing "female" inside a partial string search like grep
 pmale <- penguins %>% 
   filter(sex == "male")
 
@@ -63,6 +65,13 @@ iDream <- penguins %>%
 iTorg <- penguins %>% 
   filter(island == "Torgersen")
 ```
+Dataset Dimensions: The penguins dataset consists of 8 columns (variables) tracking data across 344 individual penguins.
+
+Sex Representation: We do not have perfectly equal representation between sexes, though they are close. There are 168 males and 165 females, along with 11 individuals whose sex was not recorded (NA). (Note: Exact matching via filter(sex == "male") was used instead of grep, because a standard grep for "male" would mistakenly pull in "female" records as well!)
+
+Species Representation: The species are not equally represented. Adélie penguins are the most abundant in this dataset with 152 observations, followed by Gentoo with 124, and Chinstrap with 68.
+
+Island Representation: Island populations are also unequal. Biscoe Island has the highest representation with 168 penguins, Dream Island has 124, and Torgersen Island has the fewest with 52.
 ---
 
 ## Data Visualization
