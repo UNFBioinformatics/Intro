@@ -11,7 +11,8 @@ knitr::opts_chunk$set(echo = TRUE)
 # Load the required packages
 library(palmerpenguins)  # The Palmer Penguins dataset package
 library(tidyverse)       # For data manipulation and visualization
-```The palmerpenguins dataset contains size measurements, clutch observations, and blood isotope ratios for three penguin species observed at the Palmer Station Long-Term Ecological Research (LTER) site in Antarctica. Collected by Dr. Kristen Gorman, this data tracks Adélie, Chinstrap, and Gentoo penguins across three islands in the Palmer Archipelago: Biscoe, Dream, and Torgersen.
+```
+The palmerpenguins dataset contains size measurements, clutch observations, and blood isotope ratios for three penguin species observed at the Palmer Station Long-Term Ecological Research (LTER) site in Antarctica. Collected by Dr. Kristen Gorman, this data tracks Adélie, Chinstrap, and Gentoo penguins across three islands in the Palmer Archipelago: Biscoe, Dream, and Torgersen.
 
 By examining this data, we hope to explore ecological and morphological questions, such as how reliably we can distinguish between the three penguin species based on physical traits, whether they display sexual dimorphism, and how populations differ across islands.
 # Count the number of columns (variables) in the dataset
