@@ -12,26 +12,51 @@ knitr::opts_chunk$set(echo = TRUE)
 # Load the required packages
 library(palmerpenguins)  # The Palmer Penguins dataset package
 library(tidyverse)       # For data manipulation and visualization
-```
-## Introduction
 
-The `palmerpenguins` dataset contains size measurements, clutch observations, and blood isotope ratios for three penguin species observed at the Palmer Station Long-Term Ecological Research (LTER) site in Antarctica. Collected by Dr. Kristen Gorman, this data tracks Adélie, Chinstrap, and Gentoo penguins across three islands in the Palmer Archipelago: Biscoe, Dream, and Torgersen. 
+# Count the number of columns (variables) in the dataset
+ncol(penguins)
 
-The dataset acts as a modern, high-quality alternative to the classic Iris dataset for teaching data science principles. By examining this data, we hope to explore ecological and morphological questions, such as:
-* **Species Differentiation:** How reliably can we distinguish between the three penguin species based on their physical traits like bill length, bill depth, and flipper length?
-* **Sexual Dimorphism:** Do male and female penguins display significant variations in body mass within or across different species?
-* **Islands & Habitats:** Does the geographic distribution across the islands correlate with specific species populations or physical variations?
+# Count the number of rows (individual penguins) in the dataset
+nrow(penguins)
 
----
+# Count how many penguins fall into each sex category (including missing data)
+table(penguins$sex, useNA = "ifany")
 
-## Exploratory Data Analysis
+# Create a dataframe containing only male penguins using exact matching
+pmale <- penguins %>% 
+  filter(sex == "male")
 
-```{r exploratory-analysis}
-# Initial exploration of the 'penguins' dataframe
+# Create a dataframe containing only female penguins using exact matching
+pfemale <- penguins %>% 
+  filter(sex == "female")
 
-# Take a quick peek at the structure and first few rows of the data
-glimpse(penguins)
+# Count the number of observations for each penguin species
+table(penguins$species)
 
-# Generate quick summary statistics for all variables
-summary(penguins)
+# Subset the data to isolate Adélie penguins
+pAdel <- penguins %>% 
+  filter(species == "Adelie")
+
+# Subset the data to isolate Chinstrap penguins
+pChin <- penguins %>% 
+  filter(species == "Chinstrap")
+
+# Subset the data to isolate Gentoo penguins
+pGen <- penguins %>% 
+  filter(species == "Gentoo")
+
+# Count how many penguins were observed on each island
+table(penguins$island)
+
+# Subset the data to isolate penguins from Biscoe Island
+iBis <- penguins %>% 
+  filter(island == "Biscoe")
+
+# Subset the data to isolate penguins from Dream Island
+iDream <- penguins %>% 
+  filter(island == "Dream")
+
+# Subset the data to isolate penguins from Torgersen Island
+iTorg <- penguins %>% 
+  filter(island == "Torgersen")
 ```
