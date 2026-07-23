@@ -140,19 +140,23 @@ For the following tasks, put your answers in the code chunk below each question.
 
 1. What are the key variables in diaTask? Hint: Use the head function and then write the key variables as comments below your code. 
 
+```{r}
 head(diatask)
 
-# Key Variables : carat, cut, color, clarity, depth, table, price, x , y, z
+# Key Variables: cut and price
+```
 
 2. Use a combination of nrow() and head() to display ALL of the rows of the diatask dataframe.  
 
+```{r}
 head(diatask, n=nrow(diatask))
+```
 
 3.Use a mathematical formula to display all of the rows of diatask where the diamond price is less than $750. 
 
-
+```{r}
 diatask[diatask$price < 750, ]
-
+```
 
 4. In R, there is a function that does the same thing as the '>>' redirection in bash, i.e. it APPENDS data. The R function is called rbind(). 
 
@@ -164,16 +168,19 @@ HINT: You may not be "seeing" all the rows by default. I left a piece of code fo
 
 B. Now write your code to display the dataframe with the correct records.  
 
+# I expect sparkles to have 35342 rows.
 premium_diamonds <- diatask[grep('Premium", diatask$cut), ]
 ideal_dimonds <- diatask[grep("Ideal", diatask$cut),]
+
 sparkles <- rbind (premium_diamonds, ideal_diamonds)
+
 sparkles
 print(sparkles, n = nrow(sparkles))
+nrow(sparkles)
 
 C. Below your code, write a comment to tell me if you got the same number of records (rows) that you expected from part A.  
 
-Yes, the number of rows matches my count
-
+# Yes, I got the same number of records that I expected.
 
 5. Use ggplot to display the information from the diatask dataframe.
 
