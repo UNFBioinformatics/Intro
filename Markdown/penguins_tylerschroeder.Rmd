@@ -1,0 +1,118 @@
+---
+title: Penguins R Data
+format: html
+Author: Tyler Schroeder
+---
+# Introduction 
+The palmer penguins are a set of penguins inhabiting an Antarctic Penninsula called the Palmer Archepelago. The penguins were wild 
+and inhabited the islands near Palmer Research Base and Anvers Island. The data set defines bill length, bill depth, flipper length, weight, sex, and the location they were
+found at of 3 species of penguins. 
+
+
+I took this from AI because it just would not work at all to try and find the data set. Like at all. 
+```{r setup, include=FALSE}
+# 1. Set global options for the document
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+
+# 2. Load the libraries directly
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(palmerpenguins)
+
+# 3. Explicitly load the dataframe
+data("penguins")
+```
+
+
+
+# Exploratory analysis 
+
+This is a large file with lots of data, so we must define the amount of data there actually is. 
+``` {r counting rows}
+nrow(penguins) 
+ncol(penguins)
+#there are 344 penguins that were surveyed in this data set. This means there are 344 data rows.
+#there are 8 data columns, which means we have eight sets of data for each penguin to use. 
+```
+
+The following displays how many males and females there are in the data set. Some penguins were not sexed. These will be excluded from 
+this data set. 
+``` {r counting sexes of penguins} 
+# We will put the males, females, and NA penguins into seprate data packages. 
+pmale <- penguins[which(penguins$sex == "male") ,]
+pfemale <- penguins[grep("female",penguins$sex) ,]
+pSexNA <- penguins[is.na (penguins$sex) ,]
+
+#the which function gives an exact match when using ==, and it kept counting all the penguins as male. 
+#in the dataframe, the sexes for 11 penguins were not entered, so you cannot count it normally. 
+#so we have to use is.na 
+#We will count the amount in each. 
+
+nrow(pmale)
+nrow(pfemale)
+nrow(pSexNA)
+
+```
+
+So, there are 168 male penguins, 165 females, and 11 which were not sexed. 
+The sexes of the penguins are split pretty evenly, so they are represented well, however the NA sexes for some 
+of them can make it difficult to use. 
+
+The following displays how many of each penguin there are on the islands. 
+
+``` {r species count}
+pAdel <- penguins[grep("Adelie",penguins$species) ,]
+pChin <- penguins[grep("Chinstrap",penguins$species) ,]
+pGen <- penguins[grep("Gentoo",penguins$species) ,]
+
+#This saves each species into a separate data container 
+
+nrow(pAdel)
+nrow(pChin)
+nrow(pGen)
+
+```
+
+We have 152 Adelie penguins, 68 Chinstrap penguins, and 124 Gentoo penguins. 
+
+The following displays how many penguins were on each island. 
+
+``` {r island counting}
+iBis <- penguins[grep("Biscoe",penguins$island) ,]
+iDream <- penguins[grep("Dream",penguins$island) ,]
+iTorg <- penguins[grep("Torgersen",penguins$island) ,]
+
+#this saves the amount of penguins on each island to a separate data file.
+
+nrow(iBis)
+nrow(iDream)
+nrow(iTorg) 
+
+```
+
+There were 168 penguins on Biscoe Island, 124 on Dream Island, and 52 on Torgersen Island. 
+
+# Figures 
+
+The following figures represent the characterisitcs that destinguish the sexes of each penguin which is size, and the species on each island. 
+Figure 1 is a jitter plot. 
+
+``` {r jitter plot} 
+pSexes <- rbind(pmale, pfemale) 
+ggplot(pSexes, aes(x = sex, y = body_mass_g, color = sex)) +
+geom_jitter(width = 1, height = 1, alpha = 1.0, size = 1) + theme_minimal()
+```
+Figure 1. Penguin sexes vs body mass in grams. Males seem to fall into 
+the larger end of the dataset, while females seem to be smaller.
+This suggests sexual dimorphism, but all species are plotted together.
+
+Figure 2 is counting plot, and represents the amount of species on each island. 
+
+``` {r island info}
+plot_data <- bind_rows(pmale, pfemale)
+ggplot(plot_data, aes(x = species, y = island, color = species)) +
+geom_point( position = position_jitter(width = 0.2, height = 0.2), shape = 2, size = 1, stroke = 0.8) + labs(x = "Species", y = "Island",) + theme_minimal()
+```
+The graph suggests that Chinstrap and Gentoo penguins are endemic in this archepelago to Dream and Biscoe island respectively. 
+
