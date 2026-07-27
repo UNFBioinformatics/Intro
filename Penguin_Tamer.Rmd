@@ -39,25 +39,15 @@ guiding questions:
 ## Load the Data
 
 ```{r load-data}
-# Read the raw penguin measurements from the "penguins (2)" sheet of the 
-# provided workbook. The workbook also contains helper sheets (a pivot 
-# table, pre-computed averages, and leftover scratch columns) that we 
-# don't need here, so we select only the true per-penguin columns.
-penguins <- read_excel(
-  "penguins_Tamer_A_Redux.xlsx",
-  sheet = "penguins (2)"
-) %>%
-  select(rowid, species, island, bill_length_mm, bill_depth_mm,
-         flipper_length_mm, body_mass_g, sex, year) %>%
-  mutate(
-    species = factor(species),
-    island  = factor(island),
-    sex     = factor(sex)
-  )
+# Load libraries and dataset
+library(palmerpenguins)
+library(tidyverse)
 
-# Quick check that the data loaded as expected
+# Assign built-in dataset directly
+data("penguins")
+
+# Quick check that the data loaded properly
 head(penguins)
-```
 
 ## Exploratory Analysis
 
