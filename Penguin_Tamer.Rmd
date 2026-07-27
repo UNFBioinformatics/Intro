@@ -1,0 +1,287 @@
+---
+title: "Exploring the Palmer Penguins: Sex, Species, and Island Differences"
+author: "Tamer"
+output: html_document
+---
+
+```{r setup, include=TRUE, message=FALSE, warning=FALSE}
+# Load all libraries needed for this project
+library(readxl)          # reads the .xlsx data file
+library(tidyverse)       # includes dplyr (data wrangling) and ggplot2 (plotting)
+library(knitr)           # for nicely formatted tables with kable()
+```
+
+## Introduction
+
+The Palmer Penguins dataset was collected and made available by the Palmer Station Long Term Ecological Research (LTER) Program,
+part of a research network. The data
+describe three penguin species -- Adelie, Chinstrap, and Gentoo -- observed
+on three islands (Biscoe, Dream, and Torgersen) in the Palmer Archipelago,
+Antarctica. For each penguin, researchers recorded physical measurements
+such as bill length, bill depth, flipper length, and body mass, along with
+sex, species, island, and the year of observation.
+
+This dataset was featured in a 2014 study,
+which examined how body size and shape relate to sex and ecological factors
+like foraging behavior and isotopic (diet-related) signatures across the
+threepenguin species.
+
+In this exploration, I want to use these measurements to answer a few
+guiding questions:
+
+* How many penguins and how many variables does this dataset contain?
+* Are males and females represented equally in the data?
+* Are all three species and all three islands represented equally?
+* Which physical measurements best distinguish males from females?
+* Which physical measurements best distinguish the three species from one another?
+* Which islands are home to which species?
+
+## Load the Data
+
+```{r load-data}
+# Read the raw penguin measurements from the "penguins (2)" sheet of the 
+# provided workbook. The workbook also contains helper sheets (a pivot 
+# table, pre-computed averages, and leftover scratch columns) that we 
+# don't need here, so we select only the true per-penguin columns.
+penguins <- read_excel(
+  "penguins_Tamer_A_Redux.xlsx",
+  sheet = "penguins (2)"
+) %>%
+  select(rowid, species, island, bill_length_mm, bill_depth_mm,
+         flipper_length_mm, body_mass_g, sex, year) %>%
+  mutate(
+    species = factor(species),
+    island  = factor(island),
+    sex     = factor(sex)
+  )
+
+# Quick check that the data loaded as expected
+head(penguins)
+```
+
+## Exploratory Analysis
+
+```{r explore-basics}
+# Look at the overall structure of the dataset: number of rows/columns, 
+# variable names, and data types
+str(penguins)
+```
+
+### How many data columns are in `penguins`?
+
+```{r ncol}
+# ncol() counts the number of columns (variables) in the dataframe
+ncol(penguins)
+```
+
+There are `r ncol(penguins)` columns in the `penguins` dataframe.
+
+### How many penguins do we have data for?
+
+```{r nrow}
+# nrow() counts the number of rows (individual penguins) in the dataframe
+nrow(penguins)
+```
+
+There are `r nrow(penguins)` penguins recorded in the dataset.
+
+### Do we have equal representation of males and females?
+
+```{r sex-split}
+# table() with useNA shows counts for male, female, AND any missing (NA) 
+# sex values -- important because 'sex' has some NAs that a naive grep() 
+# or subset on "male" would either miss or (worse) accidentally match, 
+# since the string "female" contains the substring "male" inside it!
+table(penguins$sex, useNA = "ifany")
+
+# Build pmale using an EXACT equality check (not grep/string matching),
+# so that "female" rows are never mistakenly captured as "male"
+pmale <- penguins %>% filter(sex == "male")
+
+# Build pfemale the same safe way
+pfemale <- penguins %>% filter(sex == "female")
+
+# Compare counts
+nrow(pmale)
+nrow(pfemale)
+```
+
+The counts of male and female penguins are very close (`r nrow(pmale)`
+males vs. `r nrow(pfemale)` females), so representation is nearly, but not
+perfectly, balanced. There are also a handful of penguins with missing
+(`NA`) sex data that fall into neither group. Note the care taken above:
+since the string `"female"` literally contains `"male"` as a substring,
+a careless `grep("male", ...)` search would incorrectly pull female
+penguins into the male group. Using an exact `==` comparison avoids that
+trap entirely.
+
+### Do we have equal representation of each species?
+
+```{r species-split}
+# Count how many penguins belong to each species
+table(penguins$species)
+
+# Split into three separate dataframes, one per species
+pAdel <- penguins %>% filter(species == "Adelie")
+pChin <- penguins %>% filter(species == "Chinstrap")
+pGen  <- penguins %>% filter(species == "Gentoo")
+
+nrow(pAdel)
+nrow(pChin)
+nrow(pGen)
+```
+
+Species representation is not balanced: Adelie penguins are the most
+numerous (`r nrow(pAdel)`), followed by Gentoo (`r nrow(pGen)`), with
+Chinstrap the least represented (`r nrow(pChin)`).
+
+### Do we have equal representation of each island?
+
+```{r island-split}
+# Count how many penguins were observed on each island
+table(penguins$island)
+
+# Split into three separate dataframes, one per island
+iBis   <- penguins %>% filter(island == "Biscoe")
+iDream <- penguins %>% filter(island == "Dream")
+iTorg  <- penguins %>% filter(island == "Torgersen")
+
+nrow(iBis)
+nrow(iDream)
+nrow(iTorg)
+```
+
+Island representation is also unbalanced: Biscoe has the most observations
+(`r nrow(iBis)`), Dream is next (`r nrow(iDream)`), and Torgersen has the
+fewest (`r nrow(iTorg)`).
+
+## Data Visualization
+
+### What measured values most clearly distinguish male and female penguins?
+
+```{r sex-boxplot}
+# A boxplot comparing body mass between sexes, faceted by species since
+# body size varies a lot by species -- this helps isolate the sex effect
+penguins %>%
+  filter(!is.na(sex)) %>%
+  ggplot(aes(x = sex, y = body_mass_g, fill = sex)) +
+  geom_boxplot(outlier.alpha = 0.6) +                 # style function 1: transparency on outliers
+  facet_wrap(~species) +
+  scale_fill_manual(values = c("female" = "#E69F00", "male" = "#0072B2")) + # style function 2: custom color palette
+  labs(
+    title = "Body Mass by Sex, Split by Species",
+    subtitle = "Males tend to be heavier than females within each species",
+    x = "Sex",
+    y = "Body Mass (g)",
+    fill = "Sex"
+  ) +
+  theme_minimal(base_size = 13)
+```
+
+Body mass shows a clear separation between males and females within every
+species, with males consistently heavier -- making it one of the better
+single measurements for distinguishing sex.
+
+```{r sex-scatter}
+# A scatterplot of bill length vs. bill depth, colored by sex, to see if 
+# bill shape also separates the sexes
+penguins %>%
+  filter(!is.na(sex)) %>%
+  ggplot(aes(x = bill_length_mm, y = bill_depth_mm, color = sex, shape = sex)) +
+  geom_point(size = 2, alpha = 0.7) +                  # style function 1: point transparency
+  facet_wrap(~species) +
+  scale_color_manual(values = c("female" = "#E69F00", "male" = "#0072B2")) + # style function 2: custom colors
+  labs(
+    title = "Bill Length vs. Bill Depth by Sex",
+    subtitle = "Bill dimensions also separate males and females within each species",
+    x = "Bill Length (mm)",
+    y = "Bill Depth (mm)",
+    color = "Sex",
+    shape = "Sex"
+  ) +
+  theme_minimal(base_size = 13)
+```
+
+### What measured values most clearly distinguish each species?
+
+```{r species-scatter}
+# Flipper length vs. bill length tends to separate species very cleanly
+penguins %>%
+  filter(!is.na(species)) %>%
+  ggplot(aes(x = flipper_length_mm, y = bill_length_mm, color = species, shape = species)) +
+  geom_point(size = 2.5, alpha = 0.8) +
+  scale_color_brewer(palette = "Dark2") +               # style function: colorblind-friendly palette
+  labs(
+    title = "Flipper Length vs. Bill Length by Species",
+    subtitle = "Species form clearly separated clusters",
+    x = "Flipper Length (mm)",
+    y = "Bill Length (mm)",
+    color = "Species",
+    shape = "Species"
+  ) +
+  theme_minimal(base_size = 13)
+```
+
+```{r species-violin}
+# A violin plot of body mass by species shows the full distribution shape, 
+# not just a summary, which is useful when distributions might be skewed
+penguins %>%
+  filter(!is.na(species)) %>%
+  ggplot(aes(x = species, y = body_mass_g, fill = species)) +
+  geom_violin(trim = FALSE, alpha = 0.8) +               # style function 1: don't trim tails, add transparency
+  geom_boxplot(width = 0.1, fill = "white", outlier.shape = NA) + # overlay a slim boxplot for reference
+  scale_fill_brewer(palette = "Dark2") +                 # style function 2: consistent colorblind-friendly palette
+  labs(
+    title = "Body Mass Distribution by Species",
+    subtitle = "Gentoo penguins are notably heavier than Adelie and Chinstrap",
+    x = "Species",
+    y = "Body Mass (g)"
+  ) +
+  theme_minimal(base_size = 13) +
+  theme(legend.position = "none")
+```
+
+Flipper length and bill length together separate the three species into
+distinct clusters, and body mass clearly sets Gentoo penguins apart from
+the other two species, which overlap more with each other.
+
+### Which penguin species inhabit each island?
+
+```{r island-bar}
+# A stacked/filled bar chart showing the proportion of each species per island
+penguins %>%
+  filter(!is.na(species)) %>%
+  ggplot(aes(x = island, fill = species)) +
+  geom_bar(position = "fill", color = "white") +         # style function 1: white outlines between bars
+  scale_fill_brewer(palette = "Dark2") +                 # style function 2: colorblind-friendly palette
+  labs(
+    title = "Species Composition by Island",
+    subtitle = "Biscoe and Dream host multiple species; Torgersen is Adelie-only",
+    x = "Island",
+    y = "Proportion of Penguins",
+    fill = "Species"
+  ) +
+  theme_minimal(base_size = 13)
+```
+
+```{r island-count-bar}
+# A grouped count bar chart shows raw sample sizes per island/species, 
+# complementing the proportion view above
+penguins %>%
+  filter(!is.na(species)) %>%
+  ggplot(aes(x = island, fill = species)) +
+  geom_bar(position = position_dodge(preserve = "single"), color = "black") + # style function 1: dodge + outline
+  scale_fill_brewer(palette = "Dark2") +               # style function 2: colorblind-friendly palette
+  labs(
+    title = "Penguin Counts by Island and Species",
+    x = "Island",
+    y = "Number of Penguins",
+    fill = "Species"
+  ) +
+  theme_minimal(base_size = 13)
+```
+
+Torgersen island is home only to Adelie penguins, Dream island hosts both
+Adelie and Chinstrap penguins, and Biscoe island hosts both Adelie and
+Gentoo penguins -- so island alone doesn't determine species, but it does
+rule some species in or out at each site.
