@@ -141,20 +141,21 @@ For the following tasks, put your answers in the code chunk below each question.
 1. What are the key variables in diaTask? Hint: Use the head function and then write the key variables as comments below your code. 
 
 ```{r question1}
-
+head(diatask)
+#cut and price
 ```
 
 2. Use a combination of nrow() and head() to display ALL of the rows of the diatask dataframe.  
 
 ```{r question2}
-
+head(diatask, n = nrow(diatask))
 ```
 
 3.Use a mathematical formula to display all of the rows of diatask where the diamond price is less than $750. 
 
 
 ```{r question3}
-
+subset(diatask, price < 750)
 ```
 
 4. In R, there is a function that does the same thing as the '>>' redirection in bash, i.e. it APPENDS data. The R function is called rbind(). 
@@ -170,7 +171,13 @@ B. Now write your code to display the dataframe with the correct records.
 C. Below your code, write a comment to tell me if you got the same number of records (rows) that you expected from part A.  
 
 ```{r question4}
-
+#there should be 10 rows in 'sparkles'
+print(diatask)
+premium  <- diatask[diatask$cut== "Premium", ]
+ideal <- diatask[diatask$cut== "Ideal", ]
+sparkles <- rbind(premium, ideal)
+print(sparkles)
+#yes I got 10 for both
 ```
 
 5. Use ggplot to display the information from the diatask dataframe.
@@ -179,7 +186,9 @@ HINT: Copy and paste the code, and then just change the piece you need to update
 
 
 ```{r question5}
-
+q5 <-ggplot(data = diatask, aes(x = cut, y = price, color = cut)) +
+  geom_point(alpha = 0.8, size =4)
+ggsave("q5.png", plot = q5)
 ```
 
 6. How do you remove the ugly grey gridlines from the ggplot? 
@@ -187,6 +196,9 @@ HINT: Copy and paste the code, and then just change the piece you need to update
 HINT: Look up a function that you can add-on to make this easier. 
 
 ```{r question6}
+q6 <-ggplot(data = diatask, aes(x = cut, y = price, color = cut)) +
+  geom_point(alpha = 0.8, size =4) + theme(panel.grid = element_blank())
+ggsave("q6.png", plot = q6)
 
 ```
 
@@ -194,7 +206,7 @@ HINT: Look up a function that you can add-on to make this easier.
 
 
 ```{r question7}
-
+diasize <- diamonds[80:100, c(1,2,7)]
 ```
 
 8. Show the plot of your new dataset, diasize, with carat on the x-axis and price on the y-axis. 
@@ -202,7 +214,9 @@ HINT: Look up a function that you can add-on to make this easier.
 HINT: Copy and paste the code, and then just change the piece you need to update! 
 
 ```{r question8}
-
+q8 <-ggplot(data = diasize, aes(x = carat, y = price, color = cut)) +
+  geom_point(alpha = 0.8, size =4) + theme(panel.grid = element_blank())
+ggsave("q8.png", plot = q8)
 ```
 
 9. Why are the plots for diatask and diasize insufficient to make a conclusion about the relationships between cut and price or carat and price? 
@@ -218,8 +232,12 @@ Write a response in the comments: what did you do to construct the dataset and w
 HINT: Copy and paste the code, and then just change the piece you need to update! 
 
 ```{r question10}
-
-
+my_data <- diamonds[diamonds[, 3] == "E", c(1, 2, 3, 7)]
+my_data <- head(my_data, 1000)
+q10 <-ggplot(data = my_data, aes(x = carat, y = price, color = cut)) +
+  geom_point(alpha = 0.8, size =4) + theme(panel.grid = element_blank())
+ggsave("q10.png", plot = q10)
+head(diamonds)
 ```
 
 
