@@ -222,7 +222,7 @@ ggsave("q8.png", plot = q8)
 9. Why are the plots for diatask and diasize insufficient to make a conclusion about the relationships between cut and price or carat and price? 
 
 ```{r question9}
-## Write your answer as a comment here
+## The plots do not account for other factors, especially carat, which strongly affects price. Therefore, they cannot show whether price differences are caused by cut or diamond size.
 ```
 
 10. Create your own plots for either cut OR carat on the x-axis, with price still on the y-axis. Make sure to construct the dataset so that you can make a strong conclusion about how your chosen independent variable affects price. 
