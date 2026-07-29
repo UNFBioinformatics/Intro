@@ -1,0 +1,30 @@
+---
+title: "My First R Notebook!"
+format: html
+---
+## Exploring my first R notebook! 
+
+When i opened the notebook file, I saw many frames on my screen and on the left side frame I saw folders in the repository, the middle showed what notebook I am working on, and the bottom shows the comman line where I can type commands. I also saw an output/R interactive area where code results can show after I run them. Lastly, there is also a section on the right where I can build/ask with a AI agent 
+When I ran the command quarto preview MyRnotebook.qmd, it created a preview webpage of my notebook. The preview showed my title, written explanations, code, and code output together as an HTML page.
+When I ran the second code cell, the output appeared next to or below the code. The output was similar to the preview because both showed results from the same notebook. However, the numbers can change because the code uses rnorm(100) which creates random numbers every time it runs.
+Next up: Let's make a space for writing code that R can understand: 
+```{r}
+install.packages("rmarkdown") 
+
+#The pound sign controls titles outside of the code sections; it allows you to make comments when you are *INSIDE* code spaces 
+
+#Our first piece of code. Lets say hello: 
+print("Hello, World!")
+```
+
+## Instructions
+
+We are outside of the code because the code chunk starts with ```{r} and ends with the same ``` mark. Only things inbetween the three accent marks (they are calle 'grave' marks) is seen to be code by the computer. 
+
+NOTE: The grave accent is the key at the top left of the keyboard, NOT an apostrophe. It also has the tilde (~) mark on it. 
+
+
+```{r second}
+#We started another piece of code! Look how we can go back and forth between writing explainations and writing code! 
+summary(rnorm(100)) 
+```
