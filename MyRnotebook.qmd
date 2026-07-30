@@ -1,0 +1,37 @@
+---
+title: My First R notebook
+format: html
+---
+## Sidney's R notebook
+I see three frames in my workspace.
+The Left frame is the editor where I write text and code. 
+The bottom frame is the terminal where Quarto commands and installation messages appear. 
+The right frame is the R interactive window where the output from each code chunk is displayed. 
+The purpose of a Markdown file is to keep explanations for computational problems and the code we use to solve them next to each other in the same document. This is where you can write description about your project and the data you are working with. 
+
+How many frames do you see in this space and what you they do? 
+When I ran the quarto preview MyRnotebook.qmd, it opened a live HTML webpage showing my notebook. It displayed my updated title, text and code output. Everytime I saved the .qmd file, the preview refreshed automatically. 
+When I ran second chunk using Run Cell, the output appeared in the R interactive window. The numbers were different from the preview because rnorm(100) generated random values each time it runs. The preview only updates when the file is saved, but Run Cell re-runs the code immediately producing a new random results. 
+
+Next up: Let's make a space for writing code that R can understand: 
+
+```{r}
+install.packages("rmarkdown") 
+
+#The pound sign controls titles outside of the code sections; it allows you to make comments when you are *INSIDE* code spaces 
+
+#Our first piece of code. Lets say hello: 
+print("Hello, World!")
+```
+
+## Instructions
+
+We are outside of the code because the code chunk starts with ```{r} and ends with the same ``` mark. Only things inbetween the three accent marks (they are calle 'grave' marks) is seen to be code by the computer. 
+
+NOTE: The grave accent is the key at the top left of the keyboard, NOT an apostrophe. It also has the tilde (~) mark on it. 
+
+
+```{r second}
+#We started another piece of code! Look how we can go back and forth between writing explainations and writing code! 
+summary(rnorm(100)) 
+```
