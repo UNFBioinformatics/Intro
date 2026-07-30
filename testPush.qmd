@@ -1,1 +1,15 @@
+---
+title: Startup in R with Project Quarto! 
+format: html
+---
+## Test Title
 
+The purpose of a Markdown file is to keep explanations for computational problems and the code we use to solve them next to each other in the same document. This is where you can write description about your project and the data you are working with. 
+
+```{r}
+install.packages("rmarkdown") 
+
+#The pound sign controls titles outside of the code sections; it allows you to make comments when you are *INSIDE* code spaces 
+
+print("Testing 1, 2, 3!")
+```
