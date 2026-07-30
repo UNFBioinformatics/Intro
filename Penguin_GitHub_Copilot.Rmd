@@ -1,0 +1,32 @@
+---
+title: "Palmer Penguins Exploratory Report"
+author: "GitHub Copilot"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+# Load required libraries for the Palmer Penguins project
+library(palmerpenguins)
+library(tidyverse)
+```
+
+## Introduction
+
+The Palmer Penguins dataset describes three penguin species (Adelie, Chinstrap, and Gentoo) collected on islands in the Palmer Archipelago, Antarctica. The data come from field work aimed at understanding ecological and morphological differences among penguins, including traits like bill length, bill depth, flipper length, body mass, sex, and island location.
+
+From examining this dataset, I hope to answer questions such as:
+- How do measurements like bill length and flipper length vary across species?
+- Are there measurable differences in body mass between male and female penguins?
+- Does island location appear to influence penguin morphology?
+
+This dataset is commonly used to teach data visualization and exploratory data analysis while also providing real ecological insight from the peer-reviewed research on penguin biology.
+
+## Exploratory Analysis
+
+```{r exploratory}
+# Start exploring the penguins dataset
+penguins %>%
+  glimpse()
+
+summary(penguins)
+```
