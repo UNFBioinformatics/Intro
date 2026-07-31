@@ -1,0 +1,178 @@
+---
+title: "Exploring the Palmer Penguins Dataset"
+author: "Lexi Love"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(palmerpenguins)
+library(ggplot2)
+```
+
+# Introduction
+The Palmer penguins datasets contains measurements collected from Adelie, Chinstrap, and Gentoo penguins living in Biscoe, Dream, and Torgersen islands near Palmer station in Antartica. 
+Researchers collected information about each penguin, including its species, sex, bill measurement, flipper length and body mass.
+I will explore the palmer penguins dataset to compare male and female penguins, examine differences between the three species, and determine which species are found on each island. 
+I also hope to identify patterns in the penguins physical characterstics by creating tables and graphs. 
+
+# Exploratory Analysis
+
+This section explores the Palmer Penguins dataset by examining the number of variables, the number of penguins, and how the data are distributed by sex, species, and island.
+
+## Number of Columns
+
+```{r}
+# Count the number of columns
+ncol(penguins)
+```
+## Number of Penguins
+
+Next, I will determine how many penguins are included in the dataset.
+
+```{r}
+# Count the number of penguins
+nrow(penguins)
+```
+## Male vs. Female Representation
+
+This code checks whether there are equal numbers of male and female penguins.
+
+```{r}
+# Count males and females
+table(penguins$sex)
+```
+## Male Penguin Dataframe
+
+This creates a new dataframe containing only male penguins.
+
+```{r}
+# Create dataframe of male penguins
+pmale <- penguins[which(penguins$sex == "male"), ]
+```
+
+## Female Penguin Dataframe
+
+This creates a new dataframe containing only female penguins.
+
+```{r}
+# Create dataframe of female penguins
+pfemale <- penguins[which(penguins$sex == "female"), ]
+```
+
+## Do we have equal representation of each Species?
+
+This code counts the number of penguins in each species. 
+
+```{r}
+# Count the number of penguins in each species
+table(penguins$species)
+```
+
+## Create a dataframe of Adelie penguins
+
+This dataframe contains only Adelie penguins.
+
+```{r}
+# Create a dataframe containing only Adelie penguins
+pAdel <- penguins[penguins$species == "Adelie", ]
+```
+
+## Create a dataframe of Chinstrap penguins
+
+This dataframe contains only Chinstrap penguins.
+
+```{r}
+# Create a dataframe containing only Chinstrap penguins
+pChin <- penguins[penguins$species == "Chinstrap", ]
+```
+
+## Create a dataframe of Gentoo penguins
+
+This dataframe contains only Gentoo penguins.
+
+```{r}
+# Create a dataframe containing only Gentoo penguins
+pGen <- penguins[penguins$species == "Gentoo", ]
+```
+
+## Do we have equal representation of each island?
+
+Finally, I will determine how many penguins are found on each island.
+
+```{r}
+# Count the number of penguins on each island
+table(penguins$island)
+```
+
+## Create a dataframe of Biscoe Island penguins
+
+This dataframe contains only penguins from Biscoe Island.
+
+```{r}
+# Create a dataframe containing only Biscoe Island penguins
+iBis <- penguins[penguins$island == "Biscoe", ]
+```
+
+## Create a dataframe of Dream Island penguins
+
+This dataframe contains only penguins from Dream Island.
+
+```{r}
+# Create a dataframe containing only Dream Island penguins
+iDream <- penguins[penguins$island == "Dream", ]
+```
+
+## Create a dataframe of Torgersen Island penguins
+
+This dataframe contains only penguins from Torgersen Island.
+
+```{r}
+# Create a dataframe containing only Torgersen Island penguins
+iTorg <- penguins[penguins$island == "Torgersen", ]
+```
+
+# Data Visualization
+
+This section will use graphs to explore differences between penguin sex, species, and island location.
+
+## Male vs. Female Penguins
+
+The scatterplot below compares flipper length and body mass for male and female penguins. These measurements help show how the two groups differ.
+
+```{r}
+#Create a scatter plot comparing male and female penguins
+ggplot(data = penguins[!is.na(penguins$sex), ], aes(x = flipper_length_mm, y = body_mass_g, color = sex))+
+    geom_point(size = 3, alpha = 0.8) + labs(title = "Male vs. Female Penguins", 
+    x = "Flipper Length (mm)", y = "Body Mass (g)", color = "Sex" ) +
+    theme_minimal() + theme(plot.title = element_text(face = "bold"), legend.position = "bottom")
+```
+
+This graph shows that male penguins generally have longer flippers and greater body mass than female penguins, although there is some overlap.
+
+
+## Penguin Species Comparison
+
+The boxplot below compares bill length among the three penguin species and I chose bill length because its one of the measurements that helps distinguish the species.
+
+```{r}
+# Create a boxplot comparing bill length by species
+ggplot(data = penguins, aes(x = species, y = bill_length_mm, fill = species)) + 
+    geom_boxplot() + labs(title = "Bill Length by Penguin Species", x = "Species", y = "Bill Length (mm)")+
+    theme_minimal() + theme(plot.title = element_text(face = "bold"), legend.position = "none")
+```
+
+This graph shows that bill length differs among the three penguin species, making it a useful measurement for distinguishing them.
+
+## Penguin Species on Each Island 
+
+The bar chart below shows which penguin species are found on each Antarctic island.
+
+```{r}
+# Create a bar chart showing penguin species on each island
+ggplot(data = penguins, aes(x = island, fill = species)) + 
+    geom_bar(position = "dodge") + labs(title = "Penguin Species on Each Island", x = "Island", y = "Number of Penguins", fill = "Species")+
+    theme_minimal() + theme(plot.title = element_text(face = "bold"), legend.position = "right")
+```
+
+This graph shows that Adelie penguins are found on all three islands, Chinstrap penguins are found only on Dream Island,
+and Gentoo penguins are found only on Biscoe Island. 
