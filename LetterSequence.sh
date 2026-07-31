@@ -1,5 +1,5 @@
 #!/bin/bash
-
+'''
 #This is where you will write your LetterSequence.sh script.
 echo "Welcome to the DNA Letter Sequencing Game where you will learn how to code and modify genetic sequences!"
 echo
@@ -84,6 +84,7 @@ break
 fi
 
 done
+'''
 
 #Make sure to record your thoughts and instructions in your OWN words in the comments 
 #and to use the comments to show that you can explain your code.
