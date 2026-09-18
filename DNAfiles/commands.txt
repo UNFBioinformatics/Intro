@@ -1,0 +1,18 @@
+    1  pwd
+    2  ls
+    3  cd DNAfiles
+    4  ls
+    5  echo "Alexandra Ramirez" > README
+    6  echo "Dataset: a" >> README 
+    7  cat README
+    8  grep "^#CHROM" header.vcf > VariantsHeader_Filea.vcf
+    9  grep -v "^#" DNApractice-Lab2a.vcf >> VariantsHeader_Filea.vcf 
+   10  head -3 VariantsHeader_Filea.vcf
+   11  wc -l DNApractice-Lab2a.vcf > allVara.txt
+   12  cat allVara.txt
+   13  awk '$3=="." && $8 ~ /(^|;)AC=2(;|$)/' DNApractice-Lab2a.vcf > BestVariants_Groupa.vcf
+   14  wc -l BestVariants_Groupa.vcf
+   15  head BestVariants_Groupa.vcf 
+   16  echo "Variants with no ID and AC=2: 12" >> README 
+   17  cat README
+   18  history > commands.txt
