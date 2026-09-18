@@ -18,6 +18,9 @@ then
 elif [ $1 == 'pig' ]
 then
     echo OINK
+elif [ $1 == 'jaguar' ]
+then
+    echo Duuuval
 elif [ $1 == 'coelacanth' ]
 then
     echo SEE-YA-LATER
