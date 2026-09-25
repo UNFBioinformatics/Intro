@@ -1,13 +1,11 @@
-#!/bin/bash
+ls#!/bin/bash
 
 i=0
 
-while true  
-
-do  
+while true      
+do
         hand=$(( (RANDOM % 10) +1 ))
         echo $hand
         sleep 5
               
 done
-

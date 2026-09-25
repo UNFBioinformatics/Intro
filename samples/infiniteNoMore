@@ -1,15 +1,18 @@
 #!/bin/bash
-#line 1 is the "shebang" denoting what program should read the file. Line 3 defines the i variable as 0
+#line 1 is the "shebang" denoting what program should read the file. Line 3 defines the i variable as 0 and line 4 defines the loops variable as 0
 i=0
-#line 5 begins a while loop that is always true (infinite)
-while true  
-#line 7 begins a do command, telling the program what to do when the while condition is true (which is always, in this case)
+loops=0
+#line 6 begins a while loop that is true for as long as the returned value of the i variable is not equal to six and the number of loops has not reached 10
+while [ "$i" -ne 6 ] && [ "$loops" -ne 10 ]       
+#line8 begins a do command, telling the program what to do when the while condition is true
 do  
- #line 9 defines the variable "hand" as a random % plus 1
-        hand=$(( (RANDOM % 10) +1 ))
-        #line 11 tells the program to "echo" or return the hand variable
-        echo $hand
-        #line 13 tells the program to become inactive for 5 units of time
-        sleep 5 
- #line 15 completes the while loop by telling the program it is done 
-done 
+ #line 10 defines the variable "i" as a random number between 1 and 10 plus 1
+        i=$(( (RANDOM % 10) +1 ))
+        #line 12 defines the variable "loops" as the current value of loops plus 1
+        loops=$((loops + 1))
+        #line 14 tells the program to "echo" or return the i variable
+        echo $i
+        #line 16 tells the program to become inactive for 1 unit of time
+        sleep 1
+ #line 18 completes the while loop by telling the program it is done 
+done
