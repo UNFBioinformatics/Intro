@@ -1,38 +1,33 @@
 #!/bin/bash
 
-# Initialize the loop counter.
+# Making the variable i to start at 0
 i=0
 
-# Initialize the hand variable.
-hand=0
+# Making a new variable called generate to start at 0
+generate=0
 
-# Continue looping until hand equals 6.
-while [ $hand -ne 6 ]
-
-# Start the loop.
+# When a number not equal to 6 shows up, the statement is true..
+while [ $generate -ne 6 ]
+# When the statement is true, we want to generate a random number from 1 to 6. 
 do
-    # Generate a random number between 1 and 10.
-    hand=$(( (RANDOM % 10) + 1 ))
+    generate=$((RANDOM % 6 + 1))
 
-    # Print the generated number.
-    echo $hand
-
-    # Increase the loop counter by one.
+    # Once the number is echoed, we want to generate the next number by adding 1 to i. 
     ((i++))
 
-    # Check whether the loop has run 10 times.
+    # If I is equal to 10, then we have generated 10 numbers and we want to stop the loop. 
     if [ $i -eq 10 ]
-
-    # Begin the conditional statement.
+    # To stop the loop, we want to make the number generator generate a 6. 
     then
-        # Force the exit condition to 6.
-        hand=6
-
-    # End the conditional statement.
+        # Force generate to 6
+        generate=6
+    # Close the if/then loop. 
     fi
+    
+ # Once a random number was generated, we want to echo that number which is defined as the generate variable. 
+    echo $generate
 
-    # Reduce the delay to make the loop run faster.
-    sleep 0.1
-
-# End the loop.
+# Make the numbers generate faster by waiting for 0.5 unit of time instead of 1. 
+sleep 0.5
+# End the code. 
 done
