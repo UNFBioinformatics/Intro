@@ -1,0 +1,15 @@
+#!/bin/bash
+#line 1 is the "shebang" denoting what program should read the file. Line 3 defines the i variable as 0
+i=0
+#line 5 begins a while loop that is always true (infinite)
+while true  
+#line 7 begins a do command, telling the program what to do when the while condition is true (which is always, in this case)
+do  
+ #line 9 defines the variable "hand" as a random % plus 1
+        hand=$(( (RANDOM % 10) +1 ))
+        #line 11 tells the program to "echo" or return the hand variable
+        echo $hand
+        #line 13 tells the program to become inactive for 5 units of time
+        sleep 5 
+ #line 15 completes the while loop by telling the program it is done 
+done 
