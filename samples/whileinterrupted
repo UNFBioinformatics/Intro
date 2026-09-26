@@ -5,14 +5,14 @@ i=1
 while read -r line  
 #line 6 begins a do command, telling the program what to do when the while condition is true
 do  
-#line 9 defines an if statement that is true as long as the value of the i variable is less than the number at position 2 of the command line arguement.
+#line 9 defines an if statement that is true as long as the value of the i variable is less than the number at position 1 of the command line arguement.
     if [ "$i" -lt "$1" ] ;
     #lines 11-14 tells the program to "echo" or return the line variable, then sleep for 1 unit of time, and finally increment the value of the i variable by 1 as long as the if statement is true
     then
         echo $line
         sleep 1
         ((i++))
-    #lines 16-18 tells the program to echo a message about who made the script if the value of the i variable is equal to the number at position 2 of the command line arguement
+    #lines 16-18 tells the program to echo a message about who made the script if the value of the i variable is equal to the number at position 1 of the command line arguement
     elif [ "$i" -eq "$1" ] ;
     then
     echo "This script was made by Waspinator. Meow!"
