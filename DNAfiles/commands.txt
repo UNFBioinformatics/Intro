@@ -1,0 +1,87 @@
+    1  cat infinite.sh
+    2  cd sample
+    3  cdsamples
+    4  cd samples
+    5  cd startup_files/libs
+    6  cat infinite.sh
+    7  ls
+    8  cd ~
+    9  cd intro
+   10  ls
+   11  cd '/workspaces/Intro/samples'
+   12  ls
+   13  cat infinite.sh
+   14  infinite.sh
+   15  chmod +x infinite.sh
+   16  bash infinite.sh
+   17  bash infiniteNoMore
+   18  bash infiniteNoMore
+   19  cd samples
+   20  bash infiniteNoMore
+   21  bash infinite.sh
+   22  clear
+   23  bash infinite.sh
+   24  clear
+   25  bash infinite.sh
+   26  bash infiniteNoMore
+   27  clear
+   28  bash infiniteNoMore
+   29  copy while.sh
+   30  while.sh > whileinterrupted
+   31  bash whileinterrupted 
+   32  bash whileinterrupted
+   33  bash while.sh
+   34  ls
+   35  bash While.sh
+   36  cd DNAfiles
+   37  ..
+   38  cd ..
+   39  ls
+   40  cd DNAfiles
+   41  ls
+   42  tail 1 header.vcf
+   43  tail header.cf 1
+   44  tail header.vcf 1
+   45  grep #CHROM header.vcf
+   46  grep "#CHROM" header.vcf
+   47  grep "#CHROM" header.vc | >> DNApractice-Lab2f.vcf
+   48  grep "#CHROM" header.vcf | >> DNApractice-Lab2f.vcf
+   49  cat DNApractice-Lab2f.vcf
+   50  clear
+   51  head DNApractice-Lab2f.vcf
+   52  tail DNApractice-Lab2f.vcf
+   53  grep "#CHROM" DNApractice-Lab2f.vcf
+   54  grep "#CHROM" header.vcf
+   55  grep "#CHROM" header.vcf | >> DNApractice-Lab2f.vcf
+   56  grep "#CHROM" DNApractice-Lab2f.vcf
+   57  clear
+   58  cp DNApractice-Lab2f.vcf VariantsHeader_Filef.vcf
+   59  clear
+   60  wc -l VariantsHeader_Filef.vcf 
+   61  wc -l VariantsHeader_Filef.vcf | > allVarf.txt
+   62  wc -1 VariantsHeader_Filef.vcf > allVarf.txt
+   63  wc -l VariantsHeader_Filef.vcf | >>allVarf.txt
+   64  wc -l VariantsHeader_Filef.vcf | >>
+   65  wc -l VariantsHeader_Filef.vcf | >allVarf.txt
+   66  980 > allVarf.txt
+   67  clear
+   68  echo "980" | >allVarf.txt
+   69  wc -l VariantsHeader_Filef.vcf 
+   70  wc -l VariantsHeader_Filef.vcf | >>allVarf.txt
+   71  wc -l VariantsHeader_Filef.vcf >> allVarf.txt
+   72  grep " . " VariantsHeader_Filef.vcf 
+   73  grep "." VariantsHeader_Filef.vcf 
+   74  clear
+   75  grep -v "rs" VariantsHeader_Filef.vcf 
+   76  grep -v "rs" VariantsHeader_Filef.vcf > BestVariants_Groupf.vcf
+   77  grep "AC=2" BestVariants_Groupf.vcf 
+   78  -i 1d BestVariants_Groupf.vcf 
+   79  sed -i 2d BestVariants_Groupf.vcf 
+   80  cp BestVariants_Groupf.vcf >> README 
+   81  cp BestVariants_Groupf.vcf >> /workspaces/Intro/DNAfiles/README
+   82  ls
+   83  cp BestVariants_Groupf.vcf >> README
+   84  echo BestVariants_Groupf.vcf >> README
+   85  sed -i 3d README
+   86  cat BestVariants_Groupf.vcf >> README
+   87  history > commands.txt
