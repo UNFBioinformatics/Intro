@@ -21,6 +21,12 @@ then
 elif [ $1 == 'jaguar' ]
 then
     echo Duuuval
+elif [ $1 == 'zebra' ]
+then
+    echo NEIGHzzzz
+elif [ $1 == 'polar bear' ]
+then
+    echo ROAR
 elif [ $1 == 'coelacanth' ]
 then
     echo SEE-YA-LATER
