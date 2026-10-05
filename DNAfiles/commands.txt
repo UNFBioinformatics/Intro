@@ -1,0 +1,25 @@
+    1  cd DNAfiles/
+    2  ls
+    3  echo "ELizabeth Espinosa Gamez- DNA e" > README
+    4  cat README 
+    5  grep "^#CHROM" header.vcf > VariantsHeader_Filea.vcf
+    6  grap "^#CHROM" header.vcf > VariantsHeader_Filee.vcf
+    7  grep -v "^#" DNApractice-Lab2e.vcf >> VariantsHeader_Filee.vcf
+    8  head -3 VariantsHeader_Filee.vcf
+    9  cat header.vcf 
+   10  grep "#CHROM" header.vcf >VariantsHeader_Filee.vcf
+   11  grep -v "^#" DNApractice-Lab2e.vcf >> VariantsHeader_Filee.vcf
+   12  head -3 VariantsHeader_File.vcf
+   13  head -3 VariantsHeader_Filee.vcf 
+   14  grep -v "^#" DNApractice-Lab2e.vcf | wc -l
+   15  echo "981" > allVare.txt
+   16  cat allVare.txt 
+   17  grep -v "^#" DNApractice-Lab2e.vcf | cut -f3
+   18  grep -p "^[^\t]+\t[^\t]+\t\.\t" DNApractice-Lab2e.vcf | grep -p "\t[^\t]*AC=2(;|$)" > BestVariants_Groupe.vcf
+   19  awk -f '\t' '$3=="." && $8 ~ / (^|:)AC=2(;|$)/' DNApractice-Lab2e.vcf > BestVariants_Groupe.vcf
+   20  grep -v "^#" DNApractice-Lab2e.vcf | grep $'\t\.\t' | grep-E $'\t[^[:space:]]*AC=2(;|$)' > BeastVariants_Groupe.vcf
+   21  grep -v "^#" DNApractice-Lab2e.vcf | grep $'\t\.\t' | grep "AC=2" > BestVariants_Groupe.vcf
+   22  wc -l BestVariants_Groupe.vcf 
+   23  echo "Best variants (no ID and AC=2) : 1" >> README
+   24  cat README 
+   25  history > commands.txt
