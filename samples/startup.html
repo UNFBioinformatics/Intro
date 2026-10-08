@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.9.37">
+<meta name="generator" content="quarto-1.10.18">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -12,10 +12,13 @@
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
 */
-code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
-div.columns{display: flex; gap: min(4vw, 1.5em);}
-div.column{flex: auto; overflow-x: auto;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
@@ -68,10 +71,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="startup_files/libs/quarto-html/tippy.umd.min.js"></script>
 <script src="startup_files/libs/quarto-html/anchor.min.js"></script>
 <link href="startup_files/libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="startup_files/libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="startup_files/libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="startup_files/libs/bootstrap/bootstrap.min.js"></script>
 <link href="startup_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="startup_files/libs/bootstrap/bootstrap-de9ea4695b5809f5b49b6072e50bb385.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="startup_files/libs/bootstrap/bootstrap-badea9d7f631b609ca82bbf21f37a353.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 
 
 </head>
@@ -101,8 +104,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="title" class="level2">
-<h2 class="anchored" data-anchor-id="title">Title</h2>
+<section id="changing-the-text-on-the-first-title-line" class="level2">
+<h2 class="anchored" data-anchor-id="changing-the-text-on-the-first-title-line">Changing the text on the first title line</h2>
+<p>There is only one frame showing with the file so I can see the content and one with the command line. Project Quarto The advantage of this kind of project is that you can render groups of documents and it is a sandalone system so you do not need to install extra packages etc. I found this information from the Google AI overview as my outside source. The purpose of a Markdown file is “to keep explanations for computational problems and the code we use to solve them next to each other in the same document.” When using preview, an html file is generated.</p>
+<p>summary statistics: Min. 1st Qu. Median Mean 3rd Qu. Max. -2.24170 -0.69933 -0.02684 0.04619 0.61731 3.55607 Preview executed the code and exported the summary statistics into the file.</p>
 <p>The purpose of a Markdown file is to keep explanations for computational problems and the code we use to solve them next to each other in the same document. This is where you can write description about your project and the data you are working with.</p>
 <p>How many frames do you see in this space and what you they do?</p>
 <p>Next up: Let’s make a space for writing code that R can understand:</p>
@@ -121,16 +126,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
-<section id="instructions" class="level2">
-<h2 class="anchored" data-anchor-id="instructions">Instructions</h2>
+<section id="changing-the-text-on-the-second-title-line" class="level2">
+<h2 class="anchored" data-anchor-id="changing-the-text-on-the-second-title-line">Changing the text on the second title line</h2>
 <p>We are outside of the code because the code chunk starts with <code>{r} and ends with the same</code> mark. Only things inbetween the three accent marks (they are calle ‘grave’ marks) is seen to be code by the computer.</p>
 <p>NOTE: The grave accent is the key at the top left of the keyboard, NOT an apostrophe. It also has the tilde (~) mark on it.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">#We started another piece of code! Look how we can go back and forth between writing explainations and writing code! </span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">rnorm</span>(<span class="dv">100</span>)) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>    Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
--2.84642 -0.67528  0.07226 -0.01462  0.70677  2.24040 </code></pre>
+<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+-2.5767 -0.6616 -0.1253 -0.1031  0.5890  2.2054 </code></pre>
 </div>
 </div>
 </section>

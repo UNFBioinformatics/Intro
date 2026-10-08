@@ -2,7 +2,21 @@
 title: Startup in R with Project Quarto! 
 format: html
 ---
-## Title 
+## Changing the text on the first title line 
+There is only one frame showing with the file so I can see the content and one with the command line. 
+Project Quarto
+The advantage of this kind of project is that you can render groups of documents and it is a sandalone system so you do not need to install extra packages etc. I found this information from the Google AI overview as my outside source. 
+The purpose of a Markdown file is "to keep explanations for computational problems and the code we use to solve them next to each other in the same document."
+When using preview, an html file is generated. 
+
+summary statistics:
+Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
+-2.24170 -0.69933 -0.02684  0.04619  0.61731  3.55607 
+Preview executed the code and exported the summary statistics into the file. 
+After previewing the file again:
+  Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+-2.5767 -0.6616 -0.1253 -0.1031  0.5890  2.2054 
+The summary statistics changed likely because the rnorm code is generating random numbers so each time you preview the file, it executes that code slightly different. 
 
 The purpose of a Markdown file is to keep explanations for computational problems and the code we use to solve them next to each other in the same document. This is where you can write description about your project and the data you are working with. 
 
@@ -19,7 +33,7 @@ install.packages("rmarkdown")
 print("Hello, World!")
 ```
 
-## Instructions
+## Changing the text on the second title line
 
 We are outside of the code because the code chunk starts with ```{r} and ends with the same ``` mark. Only things inbetween the three accent marks (they are calle 'grave' marks) is seen to be code by the computer. 
 
