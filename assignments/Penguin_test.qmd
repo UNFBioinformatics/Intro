@@ -1,0 +1,15 @@
+---
+title: Penguins in R with Project Quarto! 
+format: html
+---
+## The Palmer Penguins 
+
+Introducing the Palmer Penguins!  
+
+```{r}
+install.packages("palmerpenguins") 
+
+library("palmerpenguins")
+
+head(penguins)
+```
