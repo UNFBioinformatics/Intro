@@ -1,37 +1,36 @@
 ---
-title: Exploring R with Quarto 
+title: Brooke's first R notebook
 format: html
 ---
-## Notebook layout and purpose
+## Exploring my first notebook
+1. how many frames do you see and what kind of information is each showing you?
+There are three main frames in this workspace: the left sidebar which shows the file explorer, listing repository files and folders; the central editor which shows the Markdown text and R code in startup.qmd; and the bottom panel that contains tabs for problems, output, debug console, ports, comments, and most importantly, the terminal to generate commands. 
 
-I see three main frames before opening Preview. The Explorer on the left lists the repository files and folders. The central editor shows the Markdown text, document settings, and R code in startup.qmd. The terminal at the bottom accepts shell or R commands and displays their output. Opening Preview adds a fourth area for the rendered document.
+2. what kind of R project is associated with the '.qmd' extension?
+the .qmd extension identifies a Quarto markdown document that may contain written explanations and executable code written in the R programming language. Quarto can render the document to formats such as html, pdf, or docx.
 
-The .qmd extension identifies a Quarto Markdown document. This notebook uses the R programming language. Quarto keeps explanatory text, executable code, and computed results together and can render the document to formats such as HTML, PDF, or Word. This makes an analysis easier to explain, reproduce, and update (Quarto, n.d.).
+3. what is the advantage provided by this kind of R project? 
+Quarto keeps written explanations, executable R code, and the results of that code in a document that is easily accessible from your local computer and can be rendered to a variety of formats.
 
-From the original file, verbatim: "The purpose of a Markdown file is to keep explanations for computational problems and the code we use to solve them next to each other in the same document."
+4. from the file verbatim, what is the purpose of a Markdown file?
+The purpose of a Markdown file is to keep explanations for computational problems and the code we use to solve them next to each other in the same document.
 
+5. What kind of file is generated after Preview is opened? What does it contain?
+it is an html file (a webpage). 
 
-## Preview observations
+6.   
+Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+-2.5238 -0.5892  0.1018  0.1169  0.9050  2.4178 
+The preview button ran the R code and generated an html webpage showing explanations, code, and results. 
 
-Preview generated an HTML file named startup.html. It executed the R code chunks and combined the Markdown explanations, code, and results into a formatted document. The first successful Preview and the next Preview produced the following summary statistics:
-
-| Preview run | Minimum | First quartile | Median | Mean | Third quartile | Maximum |
-| --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| First | -1.99191 | -0.65005 | -0.01333 | -0.05444 | 0.53039 | 1.95614 |
-| Second | -2.72346 | -0.47834 | 0.22464 | 0.01169 | 0.69564 | 2.01884 |
-
-The statistics changed because each Preview reran summary(rnorm(100)). In R, rnorm(100) generates 100 pseudorandom values from a normal distribution with mean 0 and standard deviation 1. The summary function then reports the six statistics shown above. The notebook does not reset a fixed random seed, so the second render used a new sample. The differences reflect random sampling, not a change in the underlying normal distribution (Quarto, n.d.; R Core Team, n.d.-a, n.d.-b). These two runs were recorded before this explanation was added; later renders may display different values.
-
-The purpose of a Markdown file is to keep explanations for computational problems and the code we use to solve them next to each other in the same document. This is where you can write description about your project and the data you are working with. 
-
-How many frames do you see in this space and what you they do? 
+7. 
+     Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
+-2.164766 -0.760207  0.001474 -0.023305  0.659898  3.009391 
+the summary statistics changes because the code was run again, generating a new set of random numbers.
+rnorm(100)generates 100 random numbers from a normal distribution. 
+summary() calculates the minimum, first quartile, median, mean, maximum, and third quartile of those randomly generated numbers.
 
 Next up: Let's make a space for writing code that R can understand: 
-
-```{r}
-if (!requireNamespace("rmarkdown", quietly = TRUE)) {
-  install.packages("rmarkdown", repos = "https://cloud.r-project.org")
-} 
 
 #The pound sign controls titles outside of the code sections; it allows you to make comments when you are *INSIDE* code spaces 
 
@@ -50,13 +49,3 @@ NOTE: The grave accent is the key at the top left of the keyboard, NOT an apostr
 #We started another piece of code! Look how we can go back and forth between writing explainations and writing code! 
 summary(rnorm(100)) 
 ```
-
-## References
-
-Quarto. (n.d.). *Using R*. https://quarto.org/docs/computations/r.html
-
-R Core Team. (n.d.-a). *The normal distribution*. R documentation. https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Normal.html
-
-R Core Team. (n.d.-b). *Random number generation*. R documentation. https://stat.ethz.ch/R-manual/R-devel/library/base/html/Random.html
-
-UNFBioinformatics. (n.d.). *startup.qmd* [Quarto Markdown file]. GitHub. https://github.com/UNFBioinformatics/Intro/blob/df6d2babc9a7a7467a37cea3ff0c64f6bcdcc14b/samples/startup.qmd

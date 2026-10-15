@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Exploring R with Quarto</title>
+<title>Brooke’s first R notebook</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -87,7 +87,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Exploring R with Quarto</h1>
+<h1 class="title">Brooke’s first R notebook</h1>
 </div>
 
 
@@ -104,8 +104,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="notebook-layout-and-purpose" class="level2">
-<h2 class="anchored" data-anchor-id="notebook-layout-and-purpose">Notebook layout and purpose</h2>
+<section id="exploring-my-first-notebook" class="level2">
+<h2 class="anchored" data-anchor-id="exploring-my-first-notebook">Exploring my first notebook</h2>
+<ol type="1">
+<li><p>how many frames do you see and what kind of information is each showing you? There are three main frames in this workspace: the left sidebar which shows the file explorer, listing repository files and folders; the central editor which shows the Markdown text and R code in startup.qmd; and the bottom panel that also contains tabs for problems, output, debug console, ports, and comments. The bottom panel also contains tabs such as problems, output, debug console, ports, and comments, all of which regard different aspectas of information.</p></li>
+<li><p>what kind of R project is associated with the ‘.qmd’ extension? the .qmd extension identifies a Quarto markdown document that may contain written explanations and executable code written in the R programming language. Quarto can render the document to formats such as html, pdf, or docx.</p></li>
+<li><p>what is the advantage provided by this kind of R project? Quarto keeps written explanations, executable R code, and the results of that code in a document that is easily accessible from your local computer and can be rendered to a variety of formats.</p></li>
+<li><p>from the file verbatim, what is the purpose of a Markdown file? The purpose of a Markdown file is to keep explanations for computational problems and the code we use to solve them next to each other in the same document.</p></li>
+<li><p>What kind of file is generated after Preview is opened? What does it contain? it is an html file (a webpage).</p></li>
+<li><p>Min. 1st Qu. Median Mean 3rd Qu. Max. -2.5238 -0.5892 0.1018 0.1169 0.9050 2.4178 The preview button ran the R code and generated an gyml webpage showing explanations, code, and results.</p></li>
+<li><p>after hitting the preview a second time, what happened?</p></li>
+</ol>
 <p>I see three main frames before opening Preview. The Explorer on the left lists the repository files and folders. The central editor shows the Markdown text, document settings, and R code in startup.qmd. The terminal at the bottom accepts shell or R commands and displays their output. Opening Preview adds a fourth area for the rendered document.</p>
 <p>The .qmd extension identifies a Quarto Markdown document. This notebook uses the R programming language. Quarto keeps explanatory text, executable code, and computed results together and can render the document to formats such as HTML, PDF, or Word. This makes an analysis easier to explain, reproduce, and update (Quarto, n.d.).</p>
 <p>From the original file, verbatim: “The purpose of a Markdown file is to keep explanations for computational problems and the code we use to solve them next to each other in the same document.”</p>
@@ -181,8 +190,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">#We started another piece of code! Look how we can go back and forth between writing explainations and writing code! </span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">rnorm</span>(<span class="dv">100</span>)) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>    Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
--2.35393 -0.62114  0.06476  0.03381  0.74824  2.31164 </code></pre>
+<pre><code>     Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
+-2.164766 -0.760207  0.001474 -0.023305  0.659898  3.009391 </code></pre>
 </div>
 </div>
 </section>
