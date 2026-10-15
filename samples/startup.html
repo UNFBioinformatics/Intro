@@ -2,20 +2,23 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.9.37">
+<meta name="generator" content="quarto-1.10.18">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Startup in R with Project Quarto!</title>
+<title>Exploring R with Quarto</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
 */
-code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
-div.columns{display: flex; gap: min(4vw, 1.5em);}
-div.column{flex: auto; overflow-x: auto;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
@@ -68,10 +71,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="startup_files/libs/quarto-html/tippy.umd.min.js"></script>
 <script src="startup_files/libs/quarto-html/anchor.min.js"></script>
 <link href="startup_files/libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="startup_files/libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="startup_files/libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="startup_files/libs/bootstrap/bootstrap.min.js"></script>
 <link href="startup_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="startup_files/libs/bootstrap/bootstrap-de9ea4695b5809f5b49b6072e50bb385.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="startup_files/libs/bootstrap/bootstrap-badea9d7f631b609ca82bbf21f37a353.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 
 
 </head>
@@ -84,7 +87,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Startup in R with Project Quarto!</h1>
+<h1 class="title">Exploring R with Quarto</h1>
 </div>
 
 
@@ -101,21 +104,70 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="title" class="level2">
-<h2 class="anchored" data-anchor-id="title">Title</h2>
+<section id="notebook-layout-and-purpose" class="level2">
+<h2 class="anchored" data-anchor-id="notebook-layout-and-purpose">Notebook layout and purpose</h2>
+<p>I see three main frames before opening Preview. The Explorer on the left lists the repository files and folders. The central editor shows the Markdown text, document settings, and R code in startup.qmd. The terminal at the bottom accepts shell or R commands and displays their output. Opening Preview adds a fourth area for the rendered document.</p>
+<p>The .qmd extension identifies a Quarto Markdown document. This notebook uses the R programming language. Quarto keeps explanatory text, executable code, and computed results together and can render the document to formats such as HTML, PDF, or Word. This makes an analysis easier to explain, reproduce, and update (Quarto, n.d.).</p>
+<p>From the original file, verbatim: “The purpose of a Markdown file is to keep explanations for computational problems and the code we use to solve them next to each other in the same document.”</p>
+</section>
+<section id="preview-observations" class="level2">
+<h2 class="anchored" data-anchor-id="preview-observations">Preview observations</h2>
+<p>Preview generated an HTML file named startup.html. It executed the R code chunks and combined the Markdown explanations, code, and results into a formatted document. The first successful Preview and the next Preview produced the following summary statistics:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 11%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Preview run</th>
+<th style="text-align: right;">Minimum</th>
+<th style="text-align: right;">First quartile</th>
+<th style="text-align: right;">Median</th>
+<th style="text-align: right;">Mean</th>
+<th style="text-align: right;">Third quartile</th>
+<th style="text-align: right;">Maximum</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>First</td>
+<td style="text-align: right;">-1.99191</td>
+<td style="text-align: right;">-0.65005</td>
+<td style="text-align: right;">-0.01333</td>
+<td style="text-align: right;">-0.05444</td>
+<td style="text-align: right;">0.53039</td>
+<td style="text-align: right;">1.95614</td>
+</tr>
+<tr class="even">
+<td>Second</td>
+<td style="text-align: right;">-2.72346</td>
+<td style="text-align: right;">-0.47834</td>
+<td style="text-align: right;">0.22464</td>
+<td style="text-align: right;">0.01169</td>
+<td style="text-align: right;">0.69564</td>
+<td style="text-align: right;">2.01884</td>
+</tr>
+</tbody>
+</table>
+<p>The statistics changed because each Preview reran summary(rnorm(100)). In R, rnorm(100) generates 100 pseudorandom values from a normal distribution with mean 0 and standard deviation 1. The summary function then reports the six statistics shown above. The notebook does not reset a fixed random seed, so the second render used a new sample. The differences reflect random sampling, not a change in the underlying normal distribution (Quarto, n.d.; R Core Team, n.d.-a, n.d.-b). These two runs were recorded before this explanation was added; later renders may display different values.</p>
 <p>The purpose of a Markdown file is to keep explanations for computational problems and the code we use to solve them next to each other in the same document. This is where you can write description about your project and the data you are working with.</p>
 <p>How many frames do you see in this space and what you they do?</p>
 <p>Next up: Let’s make a space for writing code that R can understand:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"rmarkdown"</span>) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Installing package into '/usr/local/lib/R/site-library'
-(as 'lib' is unspecified)</code></pre>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">#The pound sign controls titles outside of the code sections; it allows you to make comments when you are *INSIDE* code spaces </span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co">#Our first piece of code. Lets say hello: </span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">"Hello, World!"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">requireNamespace</span>(<span class="st">"rmarkdown"</span>, <span class="at">quietly =</span> <span class="cn">TRUE</span>)) {</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">install.packages</span>(<span class="st">"rmarkdown"</span>, <span class="at">repos =</span> <span class="st">"https://cloud.r-project.org"</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>} </span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co">#The pound sign controls titles outside of the code sections; it allows you to make comments when you are *INSIDE* code spaces </span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co">#Our first piece of code. Lets say hello: </span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">"Hello, World!"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "Hello, World!"</code></pre>
 </div>
@@ -126,13 +178,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>We are outside of the code because the code chunk starts with <code>{r} and ends with the same</code> mark. Only things inbetween the three accent marks (they are calle ‘grave’ marks) is seen to be code by the computer.</p>
 <p>NOTE: The grave accent is the key at the top left of the keyboard, NOT an apostrophe. It also has the tilde (~) mark on it.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">#We started another piece of code! Look how we can go back and forth between writing explainations and writing code! </span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">rnorm</span>(<span class="dv">100</span>)) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">#We started another piece of code! Look how we can go back and forth between writing explainations and writing code! </span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">rnorm</span>(<span class="dv">100</span>)) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>    Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
--2.84642 -0.67528  0.07226 -0.01462  0.70677  2.24040 </code></pre>
+-2.01694 -0.68024 -0.12670  0.02684  0.74340  2.89701 </code></pre>
 </div>
 </div>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">References</h2>
+<p>Quarto. (n.d.). <em>Using R</em>. https://quarto.org/docs/computations/r.html</p>
+<p>R Core Team. (n.d.-a). <em>The normal distribution</em>. R documentation. https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Normal.html</p>
+<p>R Core Team. (n.d.-b). <em>Random number generation</em>. R documentation. https://stat.ethz.ch/R-manual/R-devel/library/base/html/Random.html</p>
+<p>UNFBioinformatics. (n.d.). <em>startup.qmd</em> [Quarto Markdown file]. GitHub. https://github.com/UNFBioinformatics/Intro/blob/df6d2babc9a7a7467a37cea3ff0c64f6bcdcc14b/samples/startup.qmd</p>
 </section>
 
 </main>

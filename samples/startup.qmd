@@ -1,8 +1,26 @@
 ---
-title: Startup in R with Project Quarto! 
+title: Exploring R with Quarto 
 format: html
 ---
-## Title 
+## Notebook layout and purpose
+
+I see three main frames before opening Preview. The Explorer on the left lists the repository files and folders. The central editor shows the Markdown text, document settings, and R code in startup.qmd. The terminal at the bottom accepts shell or R commands and displays their output. Opening Preview adds a fourth area for the rendered document.
+
+The .qmd extension identifies a Quarto Markdown document. This notebook uses the R programming language. Quarto keeps explanatory text, executable code, and computed results together and can render the document to formats such as HTML, PDF, or Word. This makes an analysis easier to explain, reproduce, and update (Quarto, n.d.).
+
+From the original file, verbatim: "The purpose of a Markdown file is to keep explanations for computational problems and the code we use to solve them next to each other in the same document."
+
+
+## Preview observations
+
+Preview generated an HTML file named startup.html. It executed the R code chunks and combined the Markdown explanations, code, and results into a formatted document. The first successful Preview and the next Preview produced the following summary statistics:
+
+| Preview run | Minimum | First quartile | Median | Mean | Third quartile | Maximum |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| First | -1.99191 | -0.65005 | -0.01333 | -0.05444 | 0.53039 | 1.95614 |
+| Second | -2.72346 | -0.47834 | 0.22464 | 0.01169 | 0.69564 | 2.01884 |
+
+The statistics changed because each Preview reran summary(rnorm(100)). In R, rnorm(100) generates 100 pseudorandom values from a normal distribution with mean 0 and standard deviation 1. The summary function then reports the six statistics shown above. The notebook does not reset a fixed random seed, so the second render used a new sample. The differences reflect random sampling, not a change in the underlying normal distribution (Quarto, n.d.; R Core Team, n.d.-a, n.d.-b). These two runs were recorded before this explanation was added; later renders may display different values.
 
 The purpose of a Markdown file is to keep explanations for computational problems and the code we use to solve them next to each other in the same document. This is where you can write description about your project and the data you are working with. 
 
@@ -11,7 +29,9 @@ How many frames do you see in this space and what you they do?
 Next up: Let's make a space for writing code that R can understand: 
 
 ```{r}
-install.packages("rmarkdown") 
+if (!requireNamespace("rmarkdown", quietly = TRUE)) {
+  install.packages("rmarkdown", repos = "https://cloud.r-project.org")
+} 
 
 #The pound sign controls titles outside of the code sections; it allows you to make comments when you are *INSIDE* code spaces 
 
@@ -30,3 +50,13 @@ NOTE: The grave accent is the key at the top left of the keyboard, NOT an apostr
 #We started another piece of code! Look how we can go back and forth between writing explainations and writing code! 
 summary(rnorm(100)) 
 ```
+
+## References
+
+Quarto. (n.d.). *Using R*. https://quarto.org/docs/computations/r.html
+
+R Core Team. (n.d.-a). *The normal distribution*. R documentation. https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Normal.html
+
+R Core Team. (n.d.-b). *Random number generation*. R documentation. https://stat.ethz.ch/R-manual/R-devel/library/base/html/Random.html
+
+UNFBioinformatics. (n.d.). *startup.qmd* [Quarto Markdown file]. GitHub. https://github.com/UNFBioinformatics/Intro/blob/df6d2babc9a7a7467a37cea3ff0c64f6bcdcc14b/samples/startup.qmd
