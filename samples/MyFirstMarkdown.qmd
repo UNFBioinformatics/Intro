@@ -253,7 +253,7 @@ nrow(diacompare)
 ggplot(data = diacompare, aes(x = carat, y = price)) +
   geom_point(alpha = 0.4, size = 2) +
   theme_classic()
-
+#I selected diamonds with an Ideal cut, G color, and VS2 clarity from the full data set which produced 910 diamonds. Ensuring these three variables remained constant allowed me to analyze the relationship between carat and price more effectively. the plot shows a clear positive correlation between carat and price, which was expected. I was not surprised by the results, as larger diamonds typically command higher prices.
 ```
 
 
