@@ -1,0 +1,25 @@
+    1  cd /workspaces/Intro/DNAfiles
+    2  ls
+    3  mv README_brooke_a README
+    4  mv README README Brooke_b
+    5  cd README
+    6  printf 'Brooke McNeil\nDataset letter: a\n' > README
+    7  grep -m 1 '^#CHROM' header.vcf
+    8  wc -c header.vcf
+    9  head -n 5 header.vcf
+   10  find /workspaces/Intro -type f -iname '*header*' -size +0c
+   11  head -n 3 /workspaces/Intro/DNAfiles/DNApractice-Lab2a.vcf
+   12  cat /workspaces/Intro/README.md
+   13  grep -v "^#" DNApractice-Lab2a.vcf | wc -l > allVara.txt
+   14  head allVara.txt
+   15  grep "^#CHROM" header.vcf > VariantsHeader_Filea.vcf
+   16  grep -v "^#" DNApractice-Lab2a.vcf >> VariantsHeader_Filea.vcf
+   17  head -3 VariantsHeader_Filea.vcf
+   18  wc -l VariantsHeader_Filea.vcf
+   19  grep -v "rs" DNApractice-Lab2a.vcf | grep -P "\tAC=2;" > BestVariants_Groupa.vcf
+   20  wc -l BestVariants_Groupa.vcf
+   21  grep -v "rs" DNApractice-Lab2a.vcf | head -3
+   22  wc -l BestVariants_Groupa.vcf >> README
+   23  head README
+   24  Header reconstructed from the assignment example; sampleIDme is the example sample label.
+   25  history > commands.txt
