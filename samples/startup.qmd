@@ -3,7 +3,10 @@ title: Startup in R with Project Quarto!
 format: html
 ---
 ## Title 
-
+How many frames you see and what kind of information each is showing you.  [1pt] Two code frames, the first frame is the R code with Hello World and the second frame has R code that generates 100 random values.
+What kind of R Project is associated with the '.qmd' extension? [1pt] Associated with a Quarto R Project
+What is the advantage provided by this kind of R project? [1pt] Allows us to combine explanations, documentations and R code in one same document.
+From the file verbatim, What is the purpose of a Markdown file? [1pt] The purpose of a Markdown file is to keep explanations for computational problems and the code we use to solve them next to each other in the same document. 
 The purpose of a Markdown file is to keep explanations for computational problems and the code we use to solve them next to each other in the same document. This is where you can write description about your project and the data you are working with. 
 
 How many frames do you see in this space and what you they do? 

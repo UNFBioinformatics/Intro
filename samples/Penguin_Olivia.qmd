@@ -1,0 +1,100 @@
+---
+title: "Exploring the Palmer Penguins Dataset"
+author: "Olivia Hagedoorn"
+format: html
+---
+
+## Setup
+
+Load the `palmerpenguins` package to access the penguin dataset.
+
+```{r}
+# Load the package containing the Palmer Penguins dataset.
+library(palmerpenguins)
+```
+
+## Introduction
+
+The Palmer Penguins dataset contains information about three penguin species: Adelie, Chinstrap, and Gentoo. The data were collected near Palmer Station in Antarctica, across three islands including Biscoe, Dream, and Torgersen. The dataset was collected from 2007 to 2009 through research conducted by Dr. Kristen Gorman and the Palmer Station Long Term Ecological Research program. The data included measurements such as bill length, bill depth, flipper length, and body mass, along with information about species, island, sex, and study year. This data has also been used to investigate differences in body size between penguin species and sexes.
+
+For this dataset i hope to explore how the penguins characteristics vary from species, sexes, and islands. I will look at the structure of the dataset and determine whether the different groups are equally represented. This will help me to better understand the data and maybe look for relationships in the measurements.
+
+## Exploratory Analysis
+
+### 1. Number of Columns, Data Types, and Number of Penguins
+
+```{r}
+# Display the structure of the dataset.
+str(penguins)
+
+# Count the number of columns.
+ncol(penguins)
+
+# Count the number of penguins represented by rows.
+nrow(penguins)
+```
+
+The dataset contains eight columns and 344 rows. Each row represents one penguin observation.
+
+Examples of the different data types include:
+
+- `species`: factor
+- `bill_length_mm`: numeric
+- `year`: integer
+
+### 2. Representation of Male and Female Penguins
+
+```{r}
+# Count male and female penguins, including missing sex values.
+table(penguins$sex, useNA = "ifany")
+
+# Create a dataframe containing only male penguins.
+pmale <- subset(penguins, sex == "male")
+
+# Create a dataframe containing only female penguins.
+pfemale <- subset(penguins, sex == "female")
+
+# Compare the numbers of male and female penguins.
+nrow(pmale)
+nrow(pfemale)
+```
+
+The numbers of male and female penguins are similar but not equal. Some observations have missing sex information, so these should be considered when comparing the groups.
+
+### 3. Representation of Penguin Species
+
+```{r}
+# Count the number of observations for each species.
+table(penguins$species)
+
+# Create separate dataframes for each species.
+pAdel <- subset(penguins, species == "Adelie")
+pChin <- subset(penguins, species == "Chinstrap")
+pGen <- subset(penguins, species == "Gentoo")
+
+# Compare the numbers of penguins in each species.
+nrow(pAdel)
+nrow(pChin)
+nrow(pGen)
+```
+
+The species are not equally represented in the dataset. Adelie penguins have the most observations, followed by Gentoo and Chinstrap penguins.
+
+### 4. Representation of Penguins by Island
+
+```{r}
+# Count the number of observations from each island.
+table(penguins$island)
+
+# Create separate dataframes for each island.
+iBis <- subset(penguins, island == "Biscoe")
+iDream <- subset(penguins, island == "Dream")
+iTorg <- subset(penguins, island == "Torgersen")
+
+# Compare the numbers of penguins from each island.
+nrow(iBis)
+nrow(iDream)
+nrow(iTorg)
+```
+
+The islands are not equally represented in the dataset. Biscoe has the most observations, followed by Dream and Torgersen.
