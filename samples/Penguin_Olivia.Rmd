@@ -1,0 +1,192 @@
+
+---
+title: "Exploring the Palmer Penguins Dataset"
+author: "Olivia Hagedoorn"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(palmerpenguins)
+library(ggplot2)
+library(dplyr)
+
+data("penguins")
+```
+
+## Introduction
+
+The Palmer Penguins dataset contains measurements of penguins observed near Palmer Station in Antarctica. It includes three species: Adelie, Chinstrap, and Gentoo, along with information about the islands where they were observed, their sex, and physical measurements such as bill length, bill depth, flipper length, and body mass.
+The goal of this analysis is to explore how physical measurements differ between male and female penguins and among the three species. I will also examine which species are found on each island and use statistical tests to evaluate differences in selected measurements.
+
+
+### Number of columns and data types
+
+```{r}
+# Display the dimensions of the dataset.
+dim(penguins)
+
+# Count the number of columns.
+ncol(penguins)
+
+# Inspect column names and data types.
+str(penguins)
+
+# Give one example of each data type present.
+# Numeric examples: bill_length_mm and bill_depth_mm
+# Integer examples: flipper_length_mm, body_mass_g, and year
+# Factor examples: species, island, and sex
+```
+
+The dataset contains eight columns. The columns include numeric,
+integer, and factor data types.
+
+### Number of penguins
+
+```{r}
+# Count all rows in the dataset.
+nrow(penguins)
+```
+
+There are 344 penguin records in the original dataset.
+
+### Sex representation
+
+```{r}
+# Count penguins by sex, including missing values.
+table(penguins$sex, useNA = "ifany")
+
+# Create separate dataframes for male and female penguins.
+pmale <- penguins %>%
+  filter(sex == "male")
+
+pfemale <- penguins %>%
+  filter(sex == "female")
+
+# Compare the number of records in each dataframe.
+nrow(pmale)
+nrow(pfemale)
+```
+
+The dataset contains 168 male penguins and 165 female penguins.
+There are also 11 records with missing sex information. Therefore,
+the recorded male and female counts are similar but not exactly equal.
+
+### Species representation
+
+```{r}
+# Count the number of records for each species.
+table(penguins$species)
+
+# Create separate dataframes for each species.
+pAdel <- penguins %>%
+  filter(species == "Adelie")
+
+pChin <- penguins %>%
+  filter(species == "Chinstrap")
+
+pGen <- penguins %>%
+  filter(species == "Gentoo")
+
+# Compare the number of records.
+nrow(pAdel)
+nrow(pChin)
+nrow(pGen)
+```
+
+The dataset contains 152 Adelie, 68 Chinstrap, and 124 Gentoo
+penguins. The species are not equally represented.
+
+### Island representation
+
+```{r}
+# Count the number of penguins from each island.
+table(penguins$island)
+
+# Create separate dataframes for each island.
+iBis <- penguins %>%
+  filter(island == "Biscoe")
+
+iDream <- penguins %>%
+  filter(island == "Dream")
+
+iTorg <- penguins %>%
+  filter(island == "Torgersen")
+
+# Compare the number of records.
+nrow(iBis)
+nrow(iDream)
+nrow(iTorg)
+```
+
+Biscoe has 168 penguins, Dream has 124, and Torgersen has 52.
+Therefore, the islands are not equally represented.
+
+### Final Sex - Part A
+```{r FINALsex}
+sex_data <- penguins %>%
+  filter(!is.na(sex), !is.na(body_mass_g))
+
+sex_test <- t.test(body_mass_g ~ sex, data = sex_data)
+sex_p <- sex_test$p.value
+
+FINALsex <- ggplot(sex_data, aes(x = sex, y = body_mass_g, fill = sex)) +
+  geom_boxplot() +
+  labs(
+    title = "Body Mass by Sex",
+    x = "Sex",
+    y = "Body mass (g)",
+    subtitle = paste("Welch t-test p-value:", signif(sex_p, 3))
+  ) +
+  scale_fill_brewer(palette = "Set2") +
+  theme_minimal() +
+  theme(legend.position = "none")
+
+FINALsex
+sex_test
+```
+
+The Welch two-sample t test compared mean body mass between male and female penguins. Male penguins had a higher mean body mass (4,545.7g) than female penguins (3,862.3g). The p value was approximately 4.79 × 10⁻¹⁶, which is below 0.05. Therefore, the results provide strong evidence of a statistically significant difference in mean body mass between the sexes.
+### Final Species — Part B
+```{r FINALspecies}
+species_data <- penguins %>%
+  filter(!is.na(species), !is.na(bill_length_mm))
+
+species_test <- aov(bill_length_mm ~ species, data = species_data)
+species_summary <- summary(species_test)
+species_p <- species_summary[[1]][["Pr(>F)"]][1]
+
+FINALspecies <- ggplot(
+  species_data,
+  aes(x = species, y = bill_length_mm, fill = species)
+) +
+  geom_boxplot() +
+  labs(
+    title = "Bill Length by Species",
+    x = "Species",
+    y = "Bill length (mm)",
+    subtitle = paste("ANOVA p-value:", signif(species_p, 3))
+  ) +
+  scale_fill_brewer(palette = "Set2") +
+  theme_minimal() +
+  theme(legend.position = "none")
+
+FINALspecies
+species_summary
+```
+A one way ANOVA tested whether mean bill length differed among Adelie, Chinstrap, and Gentoo penguins. The test produced an F statistic of 410.6 and a p-value below 2×10⁻¹⁶. Because the p value is below 0.05, the results provide strong evidence that mean bill length differs among the three species. The ANOVA does not identify which specific species differ from one another.
+
+### Final Island — Part C
+```{r FINALisland}
+FINALisland <- ggplot(penguins, aes(x = island, fill = species)) +
+  geom_bar() +
+  labs(
+    title = "Penguin Species by Island",
+    x = "Island",
+    y = "Number of penguins",
+    fill = "Species"
+  ) +
+  scale_fill_brewer(palette = "Set2") +
+  theme_minimal()
+
+FINALisland
+```
