@@ -18,12 +18,12 @@ One of the biological applications we've seen before is transcriptomics (or RNA-
 
 #Normally, we would check and see if we already have the Bioconductor manager installed. If not, install it, otherwise proceed). I did this part on the R command line using a terminal. 
 
-#if (!require("BiocManager", quietly = TRUE))
-#    install.packages("BiocManager")
+if (!require("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
 
 #The transcriptomic package that we want to look at is also already installed locally in CoCal
 
-#BiocManager::install("RNAseq123")
+BiocManager::install("RNAseq123")
 
 ```
 
@@ -96,7 +96,7 @@ files <- c("GSM1545535_10_6_5_11.txt", "GSM1545536_9_6_5_11.txt", "GSM1545538_pu
 #for(i in paste(files, ".gz", sep=""))
 #  R.utils::gunzip(i, overwrite=TRUE)
 
-#NOTE: In practice, this is NOT what I did. Here in coCal, we also have the terminal available to us in the same place as the files. I chose to use the command line to gunzip these files. 
+#NOTE: In practice, this is NOT what I did. Here, we also have the terminal available to us in the same place as the files. I chose to use the command line to gunzip these files. 
 
 #Test yourself: What command line instruction would you use to gunzip a whole bunch of files all at once? 
 
