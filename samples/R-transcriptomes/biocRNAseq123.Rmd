@@ -24,6 +24,7 @@ if (!require("BiocManager", quietly = TRUE))
 #The transcriptomic package that we want to look at is also already installed locally in CoCal
 
 BiocManager::install("RNAseq123")
+BiocManager::install("Mus.musculus", ask=FALSE, update=FALSE)
 
 ```
 
@@ -34,16 +35,16 @@ Vignettes are like the --help or man pages in bash, but MUCH nicer and typically
 If a vignette exists for a package, you can view it (in a web browser) using the browseVignettes() function with the package name, like below.  
 
 ```{r 123Vignette}
-browseVignettes("RNAseq123")
+#library(RNAseq123)
+#browseVignettes("RNAseq123")
 ```
 
 After you install the packages, you'll still need to load the libraries to use them. 
 
 ```{r ExploreLibs}
 
-library(RNAseq123)
 library(limma)
-library(Glimma)
+#library(Glimma)
 library(edgeR)
 library(Mus.musculus)
 
@@ -190,7 +191,7 @@ Look at the output after running the following code chunk.
   <li>What do you notice about how many 'keys' there are in x and how many entries there are in the new data? Does it make sense? 
 </ol>
 
-```{r adding2airways}
+```{r adding2mammary}
 geneid <- rownames(x)
 genes <- select(Mus.musculus, keys=geneid, columns=c("SYMBOL", "TXCHROM"), keytype="ENTREZID")
 genes <- genes[!duplicated(genes$ENTREZID),]
