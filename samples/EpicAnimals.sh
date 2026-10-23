@@ -1,35 +1,47 @@
 #!/bin/bash
+printf "What animal do you want to hear the sound of?"
 
-if [ $1 = 'cat' ]
+read animal
+if [ $animal == 'cat' ]
 then
     echo MEOW
-elif [ $1 == 'dog' ]
+elif [ $animal == 'dog' ]
 then
     echo WOOF
-elif [ $1 == 'cow' ]
+elif [ $animal == 'cow' ]
 then
     echo MOO
-elif [ $1 == 'horse' ]
+elif [ $animal == 'horse' ]
 then
     echo NEIGH
-elif [ $1 == 'owl' ]
+elif [ $animal == 'owl' ]
 then
     echo HOOT HOOT
-elif [ $1 == 'pig' ]
+elif [ $animal == 'pig' ]
 then
     echo OINK
-elif [ $1 == 'jaguar' ]
+elif [ $animal == 'jaguar' ]
 then
     echo Duuuval
-elif [ $1 == 'zebra' ]
+elif [ $animal == 'zebra' ]
 then
     echo NEIGHzzzz
-elif [ $1 == 'polar bear' ]
+elif [ $animal == 'polar bear' ]
 then
     echo ROAR
-elif [ $1 == 'coelacanth' ]
+elif [ $animal == 'coelacanth' ]
 then
     echo SEE-YA-LATER
 else
-    echo That animal does not have an epic sound. Prove me wrong.
+    echo That animal does not have an epic sound. Try Again. 
+fi
+printf "Do you want to hear another animal sound? (y/n)"
+read input
+if [ $input == 'y' ]
+then
+    bash EpicAnimals.sh
+fi
+if [ $input == 'n' ]
+then
+    echo "Thanks for playing!"
 fi

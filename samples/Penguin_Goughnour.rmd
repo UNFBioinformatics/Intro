@@ -1,0 +1,14 @@
+---
+title: Penguins Dataset in R
+format: html
+author: "Samuel Goughnour"
+---
+```
+library(palmerpenguins)
+#insert introduction commentary here
+```
+```
+ncolumns(penguins)
+```
+
+
