@@ -3,12 +3,24 @@ title: Penguins Dataset in R
 format: html
 author: "Samuel Goughnour"
 ---
-```
+```{r}
 library(palmerpenguins)
 #insert introduction commentary here
 ```
-```
-ncolumns(penguins)
+```{r}
+ncol(penguins)
+nrow(penguins)
+pmale <- penguins[penguins$sex == "male",]
+pfemale <- penguins[penguins$sex == "female",]
+nrow(pmale)
+nrow(pfemale)
+padel <- penguins[penguins$species == "Adelie",]
+pchin <- penguins[penguins$species == "Chinstrap",]
+pgen <- penguins[penguins$species == "Gentoo",]
+ibis <- penguins[penguins$island == "Biscoe",]
+idream <- penguins[penguins$island == "Dream",]
+itorg <- penguins[penguins$island == "Torgersen",]
+
 ```
 
 
