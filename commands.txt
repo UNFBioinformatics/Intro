@@ -1,0 +1,34 @@
+    1  ls
+    2  ```bash
+    3  ./infinite.sh
+    4  start
+    5  infinite.sh
+    6  run infinite.sh
+    7  start
+    8  infinite.sh
+    9  ```bash
+   10  ./infinite.sh
+   11  /samples/infinite.sh
+   12  cd /samples/startup_files/infinite.sh
+   13  ./samples/infinite.sh
+   14  bash samples/infinite.sh
+   15  bash samples/infinite.shbash samples/infinite.sh
+   16  bash samples/infinite.sh
+   17  save
+   18  bash samples/infinite.sh
+   19  echo "Arthur Moody - Dataset Letter: A" > README
+   20  grep "^#CHROM" header.vcf > VariantsHeader_FileA.vcf
+   21  cat DNApractice_Lab5A.vcf >> VariantsHeader_FileA.vcf
+   22  more readme
+   23  /samples /readme
+   24  more /samples/README
+   25  echo "Arthur Moody - Dataset Letter: A" > Chimpanzee
+   26  more Chimpanzee 
+   27  cat DNApractice_Lab5A.vcf >> VariantsHeader_FileA.vcf
+   28  cat DNApractice_Lab2a.vcf >> VariantsHeader_FileA.vcf
+   29  cat DNAfiles/DNApractice-Lab2a.vcf >> VariantsHeader_Filea.vcf
+   30  wc -l < DNAfiles/DNApractice-Lab2a.vcf > allVara.txt
+   31  grep "\." DNAfiles/DNApractice-Lab2a.vcf | grep "AC=2" > BestVariants_Groupa.vcf
+   32  grep -v "rs" DNAfiles/DNApractice-Lab2a.vcf | grep "AC=2" > BestVariants_Groupa.vcf
+   33  wc -l BestVariants_Groupa.vcf >> Chimpanzee
+   34  history > commands.txt 
