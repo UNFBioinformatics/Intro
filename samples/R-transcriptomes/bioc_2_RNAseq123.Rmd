@@ -1,0 +1,270 @@
+---
+title: "Differentially Expressed Gene Pathways"
+author: "Dr. Mooney"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+## Starting up 
+
+```{r setup, include=FALSE}
+#knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r Bioc123}
+
+#Bioconductor check, skip in cocal
+
+#if (!require("BiocManager", quietly = TRUE))
+#    install.packages("BiocManager")
+    
+```
+
+```{r 123Vignette}
+#browseVignettes("RNAseq123")
+```
+
+After you install the packages, you'll still need to load the libraries to use them. 
+
+```{r ExploreLibs}
+
+#Let's try it quietly now. 
+suppressPackageStartupMessages(library(RNAseq123))
+suppressPackageStartupMessages(library(limma))
+suppressPackageStartupMessages(library(Glimma))
+suppressPackageStartupMessages(library(edgeR))
+suppressPackageStartupMessages(library(Mus.musculus))
+
+#Loading the libraries might force other library dependencies to be loaded (just like for the install)
+
+```
+
+## Introduction
+
+Today, we continue to use the 'RNASeq123' package to analyze an old mouse project (the GSE63310 dataset that the RNAseq123 vignette uses).  
+
+The Vignette demonstrates the important of a process called "normalization", but in fact this dataset does not really need it. The authors created artificial variation in a couple of samples to demonstrate their point. So... we'll skip this today, but you should always take a look at the sample distributions in new analyses. This is a task much better suited for R than for Excel. 
+
+Another task well-suited for R is unsupervised clustering. I agree with the Vignette authors that this is one of <b>THE MOST IMPORTANT</b> exploratory analyses that we perform. It tells us whether replicates of our sample cluster near one another and away from other sample types, thereby providing some observable distinction about the phenotype of interest. If the samples don't separate from each other, it will be hard to find reliable signals that tell us about the underlying biology. 
+
+Some sections from the previous notebooks is re-printed below; skip to the "Unsupervised Clustering" section to pick up the new material. 
+
+## Working with the mammary data 
+
+We are now pros at setting up the GSE63310 'mammary' dataset that the RNAseq123 vignette uses. 
+
+```{r viewMammary}
+
+#files to put into a single place/object for analysis. This will be called a 'DGEList' object
+files <- c("GSM1545535_10_6_5_11.txt", "GSM1545536_9_6_5_11.txt", "GSM1545538_purep53.txt", "GSM1545539_JMS8-2.txt", "GSM1545540_JMS8-3.txt", "GSM1545541_JMS8-4.txt",   "GSM1545542_JMS8-5.txt", "GSM1545544_JMS9-P7c.txt", "GSM1545545_JMS9-P8c.txt")
+
+
+#Make the 'pivot table' in the DGEList object. 
+x <- readDGE(files, columns=c(1,3))
+
+#Nice sample names 
+samplenames <- substring(colnames(x), 12, nchar(colnames(x)))
+colnames(x) <- samplenames
+
+#New Gene ID information: Gene Names and chromosome locations 
+geneid <- rownames(x)
+genes <- select(Mus.musculus, keys=geneid, columns=c("SYMBOL", "TXCHROM"), keytype="ENTREZID")
+genes <- genes[!duplicated(genes$ENTREZID),]
+x$genes <- genes
+
+```
+## Cell Type Labels 
+
+We are comparing gene expression levels among different cell types: 'basal', 'ML', and 'LP'. These are the thre major epithelial cell types in mammary tissue. ML stands for 'mature luminal' cells and LP stands for 'luminal progenitor' cells. 
+
+![Cellular Organization of the mammary duct: basal vs luminal cell types](./images/Cellular-components-of-the-mammary-epithelium.png)
+
+```{r groupLabels}
+#The command below assigns the correct cell types for the samples. 
+group <- as.factor(c("LP", "ML", "Basal", "Basal", "ML", "LP", 
+                     "Basal", "ML", "LP"))
+
+#Add the group labels to the samples in our dataset x
+x$samples$group <- group
+
+
+```
+## Data Transformation 
+
+Gene expression is rarely considered at the level of raw counts because 1) Samples sequenced at a greater depth will result in higher counts and 2) Longer genes will have greater counts. 
+
+
+In this analysis, we use CPM and log-CPM values because they can be calculated using a counts matrix alone without more external resources. 
+
+```{r dataTrans}
+
+#raw counts are converted to CPM and log-CPM values using the cpm functions in edgeR 
+cpm <- cpm(x)
+lcpm <- cpm(x, log=TRUE)
+
+```
+### Remove genes with no counts, or spurious counts
+
+All datasets will include a mix of genes that are expressed and those that are not expressed; 19% of genes in this dataset have zero counts across all nine samples.
+
+```{r noCount}
+#How many genes have no counts in ALL 9 samples?
+tb <- table(rowSums(x$counts==0)==9)
+
+#calculate percent non-expressed genes 
+tb["TRUE"]/(tb["FALSE"]+tb["TRUE"])
+
+```
+The filterByExpr function in the edgeR package provides an automatic way to filter genes. By default, the function keeps genes with about 10 read counts or more in at least three samples in this data.
+
+```{r mamFilter}
+
+#Keep only "well-expressed" genes, rather than only non-zero gene counts.
+keep.exprs <- filterByExpr(x, group=group)
+x2 <- x[keep.exprs,, keep.lib.sizes=FALSE]
+
+```
+
+## Unsupervised clustering Plot 
+
+An unsupervised cluster plot can be made in with the limma package using the plotMDS() function. Limma is a package that was designed to work with older technology (microarrays), but is statistically sound with new sequencing technology even today, and it remains the most popular tool for various RNA-Seq analyses. 
+
+The plot we generate below separates samples based on the leading-fold-change that best represents the largest proportion of variation in the data (regardless of whether that fold change separates sample replicates or not - it is unsupervised after all). In this dataset, we hope that whatever causes the most difference between any two samples will position replicates near each other, and different cell types far away, but we don't bias the output by informing the software of our preference. (There ARE supervised clustering approaches where we might guide selections based on our prior knowledge of the dataset)  
+
+The first dimension (the x-axis) explains the most variation among samples, and subsequent dimensions having smaller and smaller effects. There are infinite dimensions (welcome to the multi-verse!), but plotting dimensions higher than 5 or 6 comes with diminishing returns and is rarely done. If samples cluster by a given factor in any of these dimensions, it suggests that the factor contributes to expression differences and is worth including in mathematical models (typically linear modelling). *We will skip this part!* 
+
+In this dataset, samples cluster by experimental group (cell type) over dimension 1 and 2. The first dimension explains the largest proportion of variation in the data, so this matches our expectation and is good news! Further, the largest transcriptional difference is observed between basal and both luminal cell types over dimension 1. We therefore expect a greater number of differentially expressed genes for comparisons involving basal samples, and relatively small numbers when comparing ML to LP. Datasets where samples do not cluster by experimental group may show little or no evidence of differential expression in the downstream analysis.
+
+
+
+```{r clusterPlot}
+
+#To create the MDS plots, we assign different colours to the factors of interest. Dimensions 1 and 2 are examined using the color grouping defined by cell types.
+col.group <- group
+levels(col.group) <-  brewer.pal(nlevels(col.group), "Set1")
+col.group <- as.character(col.group)
+plotMDS(lcpm, labels=group, col=col.group)
+title(main="Sample groups")
+
+#We skipped the analysis by lane; the group data gets us to the interesting biology
+
+```
+```{r mathStuff}
+# In this chunk, I run the math stuff on the data. Don't worry about this. It shows how awesome R is at making better comparisons than we can do in Excel, but it is too advanced to get into now. Skip ahead to the Differentially Expressed Gene lists in the next section! 
+
+#a math model
+design <- model.matrix(~0+group)
+colnames(design) <- gsub("group", "", colnames(design))
+
+#comprisons between groups 
+contr.matrix <- makeContrasts(
+   BasalvsLP = Basal-LP, 
+   BasalvsML = Basal - ML, 
+   LPvsML = LP - ML, 
+   levels = colnames(design))
+#contr.matrix
+
+#initial data characteristics 
+par(mfrow=c(1,2))
+v <- voom(x, design, plot=TRUE)
+
+#adjust the model (brings mean and variance into alignment with precision weighting) 
+vfit <- lmFit(v, design)
+vfit <- contrasts.fit(vfit, contrasts=contr.matrix)
+efit <- eBayes(vfit)
+
+#The important part is that we want to USE the adjusted 'efit' data model! 
+
+#uncomment to see the plot if you want 
+#plotSA(efit, main="Final model: Mean-variance trend")
+
+
+```
+
+## Differentially Expressed Genes 
+For a quick look at differential expression (DE) levels, the number of significantly up- and down-regulated genes can be summarised in a table. 
+
+As usual, the significance is defined using an adjusted p-value cutoff that is set at 5% by default.  
+
+Some studies require more than an adjusted p-value cut-off. For a stricter definition on significance, one may require smaller p-values (for example, something called a Bonferroni correction), or log-fold-changes (log-FCs) to be above a minimum value.
+
+Notice, the larger numbers of DE genes observed for comparisons involving the basal population are consistent with our observations from the MDS plots.
+
+Also notice these numbers don't quite match the Vignette. That's because we (I) decided to ignore the small batch effect observed from which lane the samples ran on from the sequencing machine. 
+ 
+
+```{r DEGs}
+#DE genes with a basic p-value cut-off 
+summary(decideTests(efit))
+
+#DE genes with stricter fold change cut-offs 
+tfit <- treat(vfit, lfc=1)
+dt <- decideTests(tfit)
+summary(dt)
+
+#Now the numbers are looking more manageable! That's great, but what ARE the genes' names that are different???? 
+
+#Let's get a set of DE genes different between basal and BOTH luminal types (basal vs luminal). 
+
+#The function decideTests(), used above, gives us a way to do this. dt is a 'decide tests' result where 0s represent genes that are not DE, 1s represent genes that are up-regulated, and -1s represent genes that are down-regulated. So below, we pull out all dt genes that are non-zero in both basal vs LP and basal vs ML comparisons, using the which() function. 
+de.common <- which(dt[,1]!=0 & dt[,2]!=0)
+length(de.common)
+
+#plot the intersect
+vennDiagram(dt[,1:2], circle.col=c("turquoise", "salmon"))
+
+#Let's take a look at the first 20 DE genes, exciting!
+head(tfit$genes$SYMBOL[de.common], n=20)
+
+#That's great too, but can we see which genes are MOST DE, with the names and fold changes together? YES! Someone made a function for that too, called "topTreat()". OK, let's look: 
+
+basal.vs.lp <- topTreat(tfit, coef=1, n=Inf)
+basal.vs.ml <- topTreat(tfit, coef=2, n=Inf)
+lp.vs.ml <- topTreat(tfit, coef=3, n=Inf)
+head(basal.vs.lp)
+
+#Great! Of course we want more, let's see a gene set that has some pathways we might recognize. Hopefully they have to do with mammary development (fingers crossed). 
+
+load(system.file("extdata", "mouse_c2_v5p1.rda", package = "RNAseq123"))
+idx <- ids2indices(Mm.c2,id=rownames(v))
+cam.BasalvsLP <- camera(v,idx,design,contrast=contr.matrix[,1])
+head(cam.BasalvsLP,5)
+
+#Notice that many of the same PATHWAYS came up, even though the gene list varied because we didn't do exactly the same steps as in the Vignette! 
+
+```
+## Tasks 
+
+1. Take a closer look at the unsupervised clustering plot.
+<ol type="a">
+  <li>   How much variability in the dataset is represented by dimension 1? 
+  <li> How much variability in the dataset is represented by dimension 2?   <li> Will the variability represented by dimension 3 be higher or lower than dimension 2?
+  <li> If you repeated this experiment with old female mice vs. young female mice, and with pregnant vs virgin mice, what other factors might you want to investigate on the MDS plot (give the factors an appropriate name that you could use as a variable in your code)? 
+  <li> If old mouse samples appeared on the MDS plot at (0,-2) and young mouse samples appear at (0, 2), would you account for this experimental factor in your analysis? 
+</ol>  
+
+
+2. What are the top 10 DE genes between luminal progenitors (LP) and mature luminal (ML) cells, organized by largest fold change? What proportion are upregulated vs downregulated? 
+
+3. What are the top 5 DE pathways between luminal progenitors (LP) and mature luminal (ML) cells?  Explore these pathways (on the internet), and write a short analysis of whether these make sense, comparing and contrasting to the outcomes we saw in lecture for DE pathways between basal and LP cells 
+
+```{r LPvsML}
+  lp.vs.ml <- topTreat(tfit, coef=3, n=Inf)
+head(lp.vs.ml)
+
+load(system.file("extdata", "mouse_c2_v5p1.rda", package = "RNAseq123"))
+idx <- ids2indices(Mm.c2,id=rownames(v))
+cam.LPvsMP <- camera(v,idx,design,contrast=contr.matrix[,3])
+head(cam.LPvsMP,5)
+```
+
+
+### Graduate students: 
+
+4. Go the vignette and find a piece of code in section 6 or 7 that does something that I didn't put in the current analysis. Try it out on your own and put it here. 
+
+```{r trysomethingnew}
+
+```
+ 
