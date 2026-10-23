@@ -1,0 +1,206 @@
+---
+title: "Introduction to RNAseq123"
+author: "Dr. Mooney"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introduction
+
+One of the biological applications we've seen before is transcriptomics (or RNA-Seq data). Let's see if we can use the 'RNASeq123' package to do some analysis 
+
+
+```{r Bioc123}
+
+#Normally, we would check and see if we already have the Bioconductor manager installed. If not, install it, otherwise proceed). I did this part on the R command line using a terminal. 
+
+if (!require("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+
+#The transcriptomic package that we want to look at is also already installed locally in CoCal
+
+BiocManager::install("RNAseq123")
+BiocManager::install("Mus.musculus", ask=FALSE, update=FALSE)
+
+```
+
+## The RNAseq123 Vignette
+
+Vignettes are like the --help or man pages in bash, but MUCH nicer and typically more helpful. 
+
+If a vignette exists for a package, you can view it (in a web browser) using the browseVignettes() function with the package name, like below.  
+
+```{r 123Vignette}
+#library(RNAseq123)
+#browseVignettes("RNAseq123")
+```
+
+After you install the packages, you'll still need to load the libraries to use them. 
+
+```{r ExploreLibs}
+
+library(limma)
+#library(Glimma)
+library(edgeR)
+library(Mus.musculus)
+
+#Loading the libraries might force other library dependencies to be loaded (just like for the install)
+
+```
+Now that we have all the code... 
+
+Let's get some data! 
+
+## A mouse Dataset
+
+We'll be grabbing an RNA-Seq dataset from the data repository GEO. Geo stands for "Gene Expression Omnibus". You can read more about GEO here: 
+https://www.ncbi.nlm.nih.gov/geo/info/overview.html
+
+GEO and SRA (the 'short read archive') are THE PLACES to get RNA datasets. We'll stick to GEO for now. GEO identifiers looks like this: 
+GSE41917
+GSE63310
+etc 
+
+We'll start off with the GSE63310 dataset that the RNAseq123 vignette uses, so we can just follow along for now. 
+```{r mammary}
+#To get the mammary data, I went to the Geo website and downloaded the file 
+#GSE63310_RAW.tar 
+
+#The '.tar' extension on the data is the unix way of saying that this is an archive of files. We will want to unpack that archive to see what's inside. Having one name for a set of files that goes together is much nicer than moving them around individually, or risking them getting seperated. 
+
+#The untar() function below is used to extract the data files from the archive into the current directory. This only needs to be done once. This has been done for you, so the code is commented out. 
+
+#utils::untar("GSE63310_RAW.tar", exdir = ".")
+
+#You will notice there are also a BUNCH of data files with names that start with GSM and end with '.txt.gz'
+
+#The .gz extension on the end indicates that the file is compressed. '.gz' is the linux way of saying something similiar to '.zip' in Windows.
+
+#It is EXTREMELY common in bioinformatics to work with '.tar.gz' files. Archives are nice, as mentioned above, and compression keeps the sizes of the files smaller until we need to use them. When you see these extensions, immediately think to yourself that you will have to 'un-tar' and 'g-un-zip' them. 
+
+#To 'unzip' the compressed files so we can work with them, we will be a little lazy and use the typing that the vignette authors provided. 
+
+files <- c("GSM1545535_10_6_5_11.txt", "GSM1545536_9_6_5_11.txt", "GSM1545538_purep53.txt", "GSM1545539_JMS8-2.txt", "GSM1545540_JMS8-3.txt", "GSM1545541_JMS8-4.txt",   "GSM1545542_JMS8-5.txt", "GSM1545544_JMS9-P7c.txt", "GSM1545545_JMS9-P8c.txt")
+
+#Take a close look! Do you see a familiar function here? 
+
+#...
+
+#That's right, we see the familiar combine function c(). It is used to store the list of file names in the dataset, but WITHOUT the '.gz' extension. It seems like we might be about to do something clever... 
+
+#Now that we have a list of files, we can use some computer logic (like we did in the Magic 8 ball script), to go through the list of file names and 'g-un-zip' them. The vignette code uses a for loop to do this, like below. Again, this only needs to be done once, and it is completed for you. 
+
+#for(i in paste(files, ".gz", sep=""))
+#  R.utils::gunzip(i, overwrite=TRUE)
+
+#NOTE: In practice, this is NOT what I did. Here, we also have the terminal available to us in the same place as the files. I chose to use the command line to gunzip these files. 
+
+#Test yourself: What command line instruction would you use to gunzip a whole bunch of files all at once? 
+
+
+#This is the command I used: 
+
+#gunzip GSM*.gz 
+
+```
+## Working with mammary data 
+
+While it was a little bit of work to get the mammary files ready, this was a LOT easier (and cheaper) than doing the airways experiment ourselves. And now we have the code ready to do this for ANY old data, from anywhere in the WORLD! Thanks, GEO. <3 
+
+Now we are ready to actually take a look inside one of these files and see the data. 
+
+```{r viewMouse}
+
+#First, let's just take a peek in the first file in our list. 
+#We will use a function called read.delim() for this. 
+#read.delim() needs a file name to read from (it must exist in the folder/path), and has some options like the number of rows to show; this option is unfortunately named the same thing as the function nrow(). DO NOT use the parentheses like you do for nrow - they are NOT the same thing here! 
+#Just like we do for dataframe, we can locate a list item like this: 
+#list[]
+
+read.delim(files[1], nrow=5)
+
+#Remember, if you forget what kind of thing a variable is, you can use the str() function to get some more information. 
+
+str(files)
+
+#Take a look at the first five lines in the first file in the list. What kind of information do we have? Does it look even a little like something we've seen before?
+
+#It's pretty cool we can see the gene counts for all the genes in a single sample, but we would really like to process all of the samples together. Fortunately, there is a package that can help us with that. 
+#The package is call "edgeR" and we will use the readDGE() function to process all the samples in the same place. 
+#This place will have a name, that we give it, but it WILL NOT be a dataframe, exactly. The name is simply 'x' here. 
+#Much like we saw with the difference between a KABLE object and a data object, this will be a new thing, a 'DGEList' object. Here, that's a good thing! This package was designed to work with these kinds of objects.   
+
+#Notice that we see the combine function again! 
+#In the readDGE function, this tells it to use column 1 of the data file as a 'key' that all of the samples should have in common. 
+#Then, column 3 is appended to the DGEList$counts field for each sample. 
+#This creates a pivot table, just like we might use in Excel.
+x <- readDGE(files, columns=c(1,3))
+
+#You can use the dim() function to see how many rows and columns the pivot table has. It should have as many rows as there are genes (these are the 'keys') and as many columns as there are samples (in this case, 9)
+dim(x)
+
+#You can also use our familiar head() function to see what this weird 'DGEList' thing looks like.  
+head(x)
+
+```
+
+## Tasks 
+
+1. Run the appropriate command to show the first 10 rows of the second file in the files list. 
+
+
+2. Take a look at the output from the following piece of code. Compare the output to the sample names in 'x'.  
+
+<ol type="a">
+  <li>What do you think the function colnames() does?   
+  <li>What do you think the function substring() does? 
+  <li>Why do we give the substring function the number 12? 
+</ol>
+
+```{r whatsinaname}
+samplenames <- substring(colnames(x), 12, nchar(colnames(x)))
+samplenames
+```
+
+
+3. The samplenames look nice, and we would like to save them in our DGEList named x, instead of what is there now. We can do that with this piece of code: 
+
+```{r brandnewname}
+
+colnames(x) <- samplenames
+
+```
+
+How do we check 'x' to make sure our new names stuck?  
+
+4. Speaking of names, those Entrez geneID's were not very nice, and it would be so great if we had gene names we might recognize. 
+
+Where might a bioinformatician go to get a map between a GeneID and a gene name? 
+
+5. It turns out that this RNAseq123 package includes a Bioc package with a mapping tool particularly useful for this organism (it's a mouse; the package is called mus.musculus). 
+
+Look at the output after running the following code chunk.  
+
+<ol type="a">
+  <li>What information appears in our 'x' data now?    
+  <li>What line of code would you use to display just the new information?
+  <li>What do you notice about how many 'keys' there are in x and how many entries there are in the new data? Does it make sense? 
+</ol>
+
+```{r adding2mammary}
+geneid <- rownames(x)
+genes <- select(Mus.musculus, keys=geneid, columns=c("SYMBOL", "TXCHROM"), keytype="ENTREZID")
+genes <- genes[!duplicated(genes$ENTREZID),]
+x$genes <- genes
+x
+```
+
+### Graduate students: 
+
+6. Take a breather, there will be more questions for you later!
+
+ 
