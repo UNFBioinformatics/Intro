@@ -5,6 +5,7 @@ author: "Samuel Goughnour"
 ---
 ```{r}
 library(palmerpenguins)
+library(ggplot2)
 #insert introduction commentary here
 ```
 ```{r}
@@ -14,13 +15,36 @@ pmale <- penguins[penguins$sex == "male",]
 pfemale <- penguins[penguins$sex == "female",]
 nrow(pmale)
 nrow(pfemale)
+#There are 179 male penguins and 176 female penguins. Pretty even split!
 padel <- penguins[penguins$species == "Adelie",]
 pchin <- penguins[penguins$species == "Chinstrap",]
 pgen <- penguins[penguins$species == "Gentoo",]
+nrow(padel)
+nrow(pchin)
+nrow(pgen)
+#There are 152 Adelie penguins, 68 Chinstrap penguins, and 124 Gentoo penguins. The Adelie penguins are the most common species in this dataset.
 ibis <- penguins[penguins$island == "Biscoe",]
 idream <- penguins[penguins$island == "Dream",]
 itorg <- penguins[penguins$island == "Torgersen",]
+nrow(ibis)
+nrow(idream)
+nrow(itorg)
+#There are 168 penguins on Biscoe, 124 penguins on Dream, and 124 penguins on Torgersen. Biscoe is the most common island in this dataset.
+```
+```{r}
+ggplot(data = penguins, aes(x = sex, y = body_mass_g)) +
+  geom_col(aes(color = species)) +
+  labs(title = "Body Mass of Penguins by Sex",
+       x = "Sex",
+       y = "Body Mass (g)") +
+  theme_minimal()
 
+  ggplot(data = penguins, aes(x = island, y = species)) +
+  geom_boxplot(aes(color = species), size = 3) +
+  labs(title = "Penguin Species by Island",
+       x = "Island",
+       y = "Species") +
+  theme_minimal()
 ```
 
 
