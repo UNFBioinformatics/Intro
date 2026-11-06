@@ -11,7 +11,7 @@
 
 <meta name="author" content="Dr. Mooney" />
 
-<meta name="date" content="2026-10-22" />
+<meta name="date" content="2026-11-06" />
 
 <title>Introduction to RNAseq123</title>
 
@@ -352,7 +352,7 @@ display: none;
 
 <h1 class="title toc-ignore">Introduction to RNAseq123</h1>
 <h4 class="author">Dr. Mooney</h4>
-<h4 class="date">2026-10-22</h4>
+<h4 class="date">2026-11-06</h4>
 
 </div>
 
@@ -373,22 +373,17 @@ BiocManager::install(&quot;RNAseq123&quot;)</code></pre>
 <pre><code>## &#39;getOption(&quot;repos&quot;)&#39; replaces Bioconductor standard repositories, see
 ## &#39;help(&quot;repositories&quot;, package = &quot;BiocManager&quot;)&#39; for details.
 ## Replacement repositories:
-##     CRAN: https://p3m.dev/cran/__linux__/noble/latest</code></pre>
-<pre><code>## Bioconductor version 3.23 (BiocManager 1.30.27), R 4.6.1 (2026-06-24)</code></pre>
-<pre><code>## Installing package(s) &#39;RNAseq123&#39;</code></pre>
-<pre><code>## also installing the dependency &#39;BiocWorkflowTools&#39;</code></pre>
-<pre><code>## Warning in install.packages(...): installation of package &#39;BiocWorkflowTools&#39;
-## had non-zero exit status</code></pre>
-<pre><code>## Warning in install.packages(...): installation of package &#39;RNAseq123&#39; had
-## non-zero exit status</code></pre>
-<pre><code>## Old packages: &#39;class&#39;, &#39;cluster&#39;, &#39;foreign&#39;, &#39;KernSmooth&#39;, &#39;lattice&#39;, &#39;MASS&#39;,
-##   &#39;Matrix&#39;, &#39;nlme&#39;, &#39;nnet&#39;, &#39;spatial&#39;, &#39;survival&#39;</code></pre>
+##     CRAN: https://p3m.dev/cran/__linux__/resolute/latest</code></pre>
+<pre><code>## Bioconductor version 3.23 (BiocManager 1.30.27), R 4.6.2 (2026-10-29)</code></pre>
+<pre><code>## Warning: package(s) not installed when version(s) same as or greater than current; use
+##   `force = TRUE` to re-install: &#39;RNAseq123&#39;</code></pre>
+<pre><code>## Old packages: &#39;mgcv&#39;, &#39;nlme&#39;</code></pre>
 <pre class="r"><code>BiocManager::install(&quot;Mus.musculus&quot;, ask=FALSE, update=FALSE)</code></pre>
 <pre><code>## &#39;getOption(&quot;repos&quot;)&#39; replaces Bioconductor standard repositories, see
 ## &#39;help(&quot;repositories&quot;, package = &quot;BiocManager&quot;)&#39; for details.
 ## Replacement repositories:
-##     CRAN: https://p3m.dev/cran/__linux__/noble/latest</code></pre>
-<pre><code>## Bioconductor version 3.23 (BiocManager 1.30.27), R 4.6.1 (2026-06-24)</code></pre>
+##     CRAN: https://p3m.dev/cran/__linux__/resolute/latest
+## Bioconductor version 3.23 (BiocManager 1.30.27), R 4.6.2 (2026-10-29)</code></pre>
 <pre><code>## Warning: package(s) not installed when version(s) same as or greater than current; use
 ##   `force = TRUE` to re-install: &#39;Mus.musculus&#39;</code></pre>
 </div>
@@ -596,10 +591,28 @@ head(x)</code></pre>
 <div id="tasks" class="section level2">
 <h2>Tasks</h2>
 <ol style="list-style-type: decimal">
-<li><p>Run the appropriate command to show the first 10 rows of the
-second file in the files list.</p></li>
-<li><p>Take a look at the output from the following piece of code.
-Compare the output to the sample names in ‘x’.</p></li>
+<li>Run the appropriate command to show the first 10 rows of the second
+file in the files list.</li>
+</ol>
+<pre class="r"><code>read.delim(files[2], nrows = 10)</code></pre>
+<pre><code>##     EntrezID GeneLength Count
+## 1     497097       3634     2
+## 2  100503874       3259     0
+## 3  100038431       1634     0
+## 4      19888       9747     1
+## 5      20671       3130     1
+## 6      27395       4203   771
+## 7      18777       2433  1722
+## 8  100503730        799     8
+## 9      21399       2847   977
+## 10     58175       2241   358</code></pre>
+<ol start="2" style="list-style-type: decimal">
+<li>Take a look at the output from the following piece of code. Compare
+the output to the sample names in ‘x’.<br />
+They are abbreviations of the column names in x. Column names gives the
+output of the column names and substring makes it an abbreviated
+version. We give substring the number 12 because we want it to start at
+the twelfth character.</li>
 </ol>
 <ol type="a">
 <li>
@@ -620,13 +633,12 @@ DGEList named x, instead of what is there now. We can do that with this
 piece of code:</li>
 </ol>
 <pre class="r"><code>colnames(x) &lt;- samplenames</code></pre>
-<p>How do we check ‘x’ to make sure our new names stuck?</p>
-<ol start="4" style="list-style-type: decimal">
-<li>Speaking of names, those Entrez geneID’s were not very nice, and it
-would be so great if we had gene names we might recognize.</li>
-</ol>
+<p>How do we check ‘x’ to make sure our new names stuck?<br />
+Run the colnames command to see if it gives the output of the new names.
+4. Speaking of names, those Entrez geneID’s were not very nice, and it
+would be so great if we had gene names we might recognize.</p>
 <p>Where might a bioinformatician go to get a map between a GeneID and a
-gene name?</p>
+gene name? Biomart</p>
 <ol start="5" style="list-style-type: decimal">
 <li>It turns out that this RNAseq123 package includes a Bioc package
 with a mapping tool particularly useful for this organism (it’s a mouse;
@@ -643,6 +655,7 @@ What line of code would you use to display just the new information?
 What do you notice about how many ‘keys’ there are in x and how many
 entries there are in the new data? Does it make sense?
 </ol>
+<p>X is now the gene names that was stored in the row originally.</p>
 <pre class="r"><code>geneid &lt;- rownames(x)
 genes &lt;- select(Mus.musculus, keys=geneid, columns=c(&quot;SYMBOL&quot;, &quot;TXCHROM&quot;), keytype=&quot;ENTREZID&quot;)</code></pre>
 <pre><code>## &#39;select()&#39; returned 1:many mapping between keys and columns</code></pre>

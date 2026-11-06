@@ -151,9 +151,12 @@ head(x)
 ## Tasks 
 
 1. Run the appropriate command to show the first 10 rows of the second file in the files list. 
-
+```{r}
+read.delim(files[2], nrows = 10)
+```
 
 2. Take a look at the output from the following piece of code. Compare the output to the sample names in 'x'.  
+They are abbreviations of the column names in x. Column names gives the output of the column names and substring makes it an abbreviated version. We give substring the number 12 because we want it to start at the twelfth character. 
 
 <ol type="a">
   <li>What do you think the function colnames() does?   
@@ -176,10 +179,11 @@ colnames(x) <- samplenames
 ```
 
 How do we check 'x' to make sure our new names stuck?  
-
+Run the colnames command to see if it gives the output of the new names. 
 4. Speaking of names, those Entrez geneID's were not very nice, and it would be so great if we had gene names we might recognize. 
 
 Where might a bioinformatician go to get a map between a GeneID and a gene name? 
+Biomart
 
 5. It turns out that this RNAseq123 package includes a Bioc package with a mapping tool particularly useful for this organism (it's a mouse; the package is called mus.musculus). 
 
@@ -190,7 +194,7 @@ Look at the output after running the following code chunk.
   <li>What line of code would you use to display just the new information?
   <li>What do you notice about how many 'keys' there are in x and how many entries there are in the new data? Does it make sense? 
 </ol>
-
+X is now the gene names that was stored in the row originally. 
 ```{r adding2mammary}
 geneid <- rownames(x)
 genes <- select(Mus.musculus, keys=geneid, columns=c("SYMBOL", "TXCHROM"), keytype="ENTREZID")
