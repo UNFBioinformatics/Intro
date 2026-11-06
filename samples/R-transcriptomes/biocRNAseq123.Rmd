@@ -28,6 +28,8 @@ BiocManager::install("Mus.musculus", ask=FALSE, update=FALSE)
 
 ```
 
+If the installation fails while compiling `Rhtslib` with `bzlib.h: No such file or directory`, install the bzip2 development headers first (on Debian or Ubuntu, run `sudo apt-get install libbz2-dev`), restart R, and retry the installation.
+
 ## The RNAseq123 Vignette
 
 Vignettes are like the --help or man pages in bash, but MUCH nicer and typically more helpful. 
@@ -152,13 +154,16 @@ head(x)
 
 1. Run the appropriate command to show the first 10 rows of the second file in the files list. 
 
+read.delim(files[2], nrow = 10)
 
 2. Take a look at the output from the following piece of code. Compare the output to the sample names in 'x'.  
 
+
+
 <ol type="a">
-  <li>What do you think the function colnames() does?   
-  <li>What do you think the function substring() does? 
-  <li>Why do we give the substring function the number 12? 
+  <li>What do you think the function colnames() does? returns the column names of an object.  
+  <li>What do you think the function substring() does? extracts part of a character string.
+  <li>Why do we give the substring function the number 12? tells R where to extract, removing shared GSM identifier prefix.
 </ol>
 
 ```{r whatsinaname}
@@ -176,7 +181,7 @@ colnames(x) <- samplenames
 ```
 
 How do we check 'x' to make sure our new names stuck?  
-
+colnames(x)
 4. Speaking of names, those Entrez geneID's were not very nice, and it would be so great if we had gene names we might recognize. 
 
 Where might a bioinformatician go to get a map between a GeneID and a gene name? 
@@ -186,9 +191,9 @@ Where might a bioinformatician go to get a map between a GeneID and a gene name?
 Look at the output after running the following code chunk.  
 
 <ol type="a">
-  <li>What information appears in our 'x' data now?    
-  <li>What line of code would you use to display just the new information?
-  <li>What do you notice about how many 'keys' there are in x and how many entries there are in the new data? Does it make sense? 
+  <li>What information appears in our 'x' data now? gene name and chromosome location   
+  <li>What line of code would you use to display just the new information? x$genes
+  <li>What do you notice about how many 'keys' there are in x and how many entries there are in the new data? Does it make sense? less entries than gene ids because some gene ids dont have a matching annotation.
 </ol>
 
 ```{r adding2mammary}
