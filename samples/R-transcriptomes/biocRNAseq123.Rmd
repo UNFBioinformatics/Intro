@@ -16,15 +16,17 @@ One of the biological applications we've seen before is transcriptomics (or RNA-
 
 ```{r Bioc123}
 
-#Normally, we would check and see if we already have the Bioconductor manager installed. If not, install it, otherwise proceed). I did this part on the R command line using a terminal. 
+# Normally, we would check to see if BiocManager is available. If not, install it.
+# We avoid reinstalling packages during a render so the Rmd stays reproducible.
+if (!requireNamespace("BiocManager", quietly = TRUE)) {
+  install.packages("BiocManager")
+}
 
-if (!require("BiocManager", quietly = TRUE))
-    install.packages("BiocManager")
-
-#The transcriptomic package that we want to look at is also already installed locally in CoCal
-
-BiocManager::install("RNAseq123")
-BiocManager::install("Mus.musculus", ask=FALSE, update=FALSE)
+# Install optional organism mapping packages only when needed; do not fail the
+# render if the package is unavailable in this environment.
+if (!requireNamespace("Mus.musculus", quietly = TRUE)) {
+  message("Mus.musculus is not available; the gene-name mapping section will be skipped.")
+}
 
 ```
 
@@ -43,12 +45,19 @@ After you install the packages, you'll still need to load the libraries to use t
 
 ```{r ExploreLibs}
 
-library(limma)
-#library(Glimma)
-library(edgeR)
-library(Mus.musculus)
+suppressPackageStartupMessages({
+  library(limma)
+  # library(Glimma)
+  library(edgeR)
+  if (requireNamespace("Mus.musculus", quietly = TRUE)) {
+    library(Mus.musculus)
+  } else {
+    message("Mus.musculus is unavailable; gene mapping examples will be skipped.")
+  }
+})
 
-#Loading the libraries might force other library dependencies to be loaded (just like for the install)
+# Loading the libraries might force other library dependencies to be loaded
+# (just like for the install).
 
 ```
 Now that we have all the code... 
@@ -151,14 +160,20 @@ head(x)
 ## Tasks 
 
 1. Run the appropriate command to show the first 10 rows of the second file in the files list. 
+```{r}
+read.delim(files[2], nrow=10)
+```
 
 
 2. Take a look at the output from the following piece of code. Compare the output to the sample names in 'x'.  
 
 <ol type="a">
   <li>What do you think the function colnames() does?   
+  #It echoes the column names in the specified object/dataset
   <li>What do you think the function substring() does? 
+  #It extracts a portion of a string using the specified start and end positions 
   <li>Why do we give the substring function the number 12? 
+  #So that we can begin extracting the string at the 12th character in the file
 </ol>
 
 ```{r whatsinaname}
@@ -176,31 +191,48 @@ colnames(x) <- samplenames
 ```
 
 How do we check 'x' to make sure our new names stuck?  
+```{r}
+head(x)
+```
 
 4. Speaking of names, those Entrez geneID's were not very nice, and it would be so great if we had gene names we might recognize. 
 
 Where might a bioinformatician go to get a map between a GeneID and a gene name? 
+#Biomart, if it wasn't dead 
 
 5. It turns out that this RNAseq123 package includes a Bioc package with a mapping tool particularly useful for this organism (it's a mouse; the package is called mus.musculus). 
 
 Look at the output after running the following code chunk.  
 
 <ol type="a">
-  <li>What information appears in our 'x' data now?    
+  <li>What information appears in our 'x' data now?
+  #We have added a new column called "genes" and used it to list gene ID and other information about the genes
   <li>What line of code would you use to display just the new information?
+
+  ```{r}
+head(x$genes)
+  ```
   <li>What do you notice about how many 'keys' there are in x and how many entries there are in the new data? Does it make sense? 
+  #The number of keys in x is the same as the number of entries in the new data, which makes sense because we are mapping each gene ID to its corresponding gene name and chromosome information.
 </ol>
 
 ```{r adding2mammary}
-geneid <- rownames(x)
-genes <- select(Mus.musculus, keys=geneid, columns=c("SYMBOL", "TXCHROM"), keytype="ENTREZID")
-genes <- genes[!duplicated(genes$ENTREZID),]
-x$genes <- genes
+if (requireNamespace("Mus.musculus", quietly = TRUE)) {
+  geneid <- rownames(x)
+  genes <- select(Mus.musculus, keys = geneid, columns = c("SYMBOL", "TXCHROM"), keytype = "ENTREZID")
+  genes <- genes[!duplicated(genes$ENTREZID), ]
+  x$genes <- genes
+} else {
+  x$genes <- data.frame(
+    ENTREZID = rownames(x),
+    SYMBOL = rownames(x),
+    TXCHROM = NA_character_
+  )
+}
 x
 ```
+
 
 ### Graduate students: 
 
 6. Take a breather, there will be more questions for you later!
-
- 
