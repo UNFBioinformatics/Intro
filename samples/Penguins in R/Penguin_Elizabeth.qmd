@@ -1,0 +1,190 @@
+---
+title: Palmer Penguins
+format: html
+author: Elizabeth Espinosa Gamez
+---
+
+```{r setup}
+#| include: false
+#Install packages if needed (only run this once)
+install.packages("ggplot2")
+install.packages("palmerpenguins")
+
+#Load packages
+library(palmerpenguins)
+library(ggplot2)
+library(dplyr)
+
+#Load data set
+data("penguins")
+
+#View the dataset
+head(penguins)
+```
+## Introduction
+This study examines the ecological sexual dimorphism among three co-existing Antarctic penguin species in relation to changing winter sea ice condition. Sexual dimorphism is the difference in body size and foraging habits between sexes. The three co-existing species are Adelie, Chinstrap and Gentoo penguins. Some of the key findings was the size difference; the males are structurally larger than females across all three species. When the body mass is excluded, the Chinstraps are the most sexually dimorphic species. From all three species, the Chinstrap and Gentoo penguins show sex-specific foraging niches. In these both species the males are slightly enriched in nitrogen isotopes, which indicates they feed at a slightly higher trophic level than females. The annual variations in sea ice can alter what the penguins eat. The Adelie penguin diets are the most tightly linked to sea ice levels, while Chinstrap diets are the least affected. It was also noticed that see conditions do not alter the foraging differences between males and females in any of the three species. Th extend of a species' structural size difference between sexes corresponds directly to how differently they forage. However, because the dietary gaps between males and females are small, both sexes within each species are expected to respond similarly to future climates and habitat alterations in the Southern Ocean.
+
+## Exploratory analysis
+
+## 1. How many data columns are in 'penguins'?
+```{r}
+#Find the number of columns in the penguin data set. 
+ncol(penguins)
+
+#Check the data types of every column 
+str(penguins)
+
+#Exaple of columns representing each data type: 
+#Numeric: bill_lenght_mm
+#Integer: year
+#Factor: island
+
+```
+
+## 2. Provide the name of a column for each data type in the data set.
+``` {r}
+#Display an example of each data type in the penguin dataset.
+
+#Factor
+class(penguins$species)
+
+#Numeric
+class(penguins$bill_len)
+
+#Integer
+class(penguins$year)
+
+```
+
+## 3. How many penguins do we have data for?
+``` {r}
+#Count the total numer of penguins in the dataset.
+nrow(penguins)
+```
+
+## 4. Do we have equal representations of males and females in the data set? 
+``` {r}
+#Create a dataframe containing only male penguins.
+pmale <- subset(penguins, sex == "male")
+
+#Create a dataframe containing only female penguins.
+pfemale <- subset(penguins, sex == "female")
+
+#Count the number of penguins in each dataframe. 
+nrow(pmale)
+nrow(pfemale)
+
+#Compare the numbers 
+table(penguins$sex)
+
+```
+
+## 5. Do we have equal reprensentation of each species in the data set?
+``` {r}
+#Create a dataframe containing only Adelie penguins.
+pAdel <- subset(penguins, species == "Adelie")
+
+#Create a dataframe containing only Chinstrap penguins.
+pChin <- subset(penguins, species == "Chinstrap")
+
+#Create a dataframe containing only Gentoo penguins.
+pGen <- subset(penguins, species == "Gentoo")
+
+#Count the number of penguins in each dataframe.
+nrow(pAdel)
+nrow(pChin)
+nrow(pGen)
+
+#Compare the representations of each species of each species
+table(penguins$species)
+```
+
+## 6. Do we have equal reprensentation of each island in the data set?
+``` {r}
+#Create a dataframe containing only penguins from Biscoe island.
+iBis <- subset(penguins, island == "Biscoe")
+
+#Create a dataframe containing only penguins from Dream island.
+iDream <- subset(penguins, island == "Dream")
+
+#Create a dataframe containing only penguins from Torgersen island.
+iTorg <- subset(penguins, island == "Torgersen")
+
+#Count the number of penguins in each dataframe.
+nrow(iBis)
+nrow(iDream)
+nrow(iTorg)
+
+#Compare the representations of each island
+table(penguins$island)
+```
+
+## Data Visualization
+
+## 1. Use the ggplot package to create plots that help show the following and use at least two distinct types of plots.
+    a. What measures values in the data set most clearly distingush male and female penguins? 
+    b. What measured values in the data set most clearly distinguish each of the species of penguins?
+    c. Which penguins species inhabit each of the Antartic island sites?
+
+
+```{r FINALsex1}
+#Finla sex
+ggplot(data = penguins, aes(x = sex, y = body_mass_g, fill = sex)) + geom_boxplot() + labs( title = "Body Mass Differences Between Male and female Penguins", x = "sex", y = "Body Mass (g)", fill = "sex") + theme_classic()
+```
+
+```{r Finalspecies1}
+#Final species
+ggplot(data = penguins, aes(x = species, y = bill_length_mm, fill = species)) + geom_boxplot() + labs( title = "Bill Lenght Differences Among Penguin Species", x = "Species", y = "Bill Lenght (mm)", fill = "Species") + theme_classic()
+
+```
+```{r FINALisland}
+#Show the number of penguins of each species on each island.
+ggplot(penguins, aes(x = island, fill = species)) + geom_bar() + labs( title= "Penguin Species Across Islands", x = "Island", y = "Number of Penguins", fill = "Species") + theme_classic()
+```
+
+## 2. For the final plots, use at least two additional style functions to update the visual appeal of your graphic. The design choice is yours; refer back to our guidelins for visual representation of quantitative data for help with using goos design principles. 
+```{r FINALsex2}
+ggplot(data = penguins, aes(x = sex, y = body_mass_g, fill = sex)) + geom_boxplot() + labs( title = "Body Mass Differences Between Male and Female Penguins", x = "Sex", y = "Body Mass(g)", fill = "Sex") + scale_fill_brewer(palette = "Pastel1") + theme_classic() + theme(plot.tittle = element_text(size = 14, face = "bold", hjust = 0.5), axis.title = element_text(size = 12), legend.position = "right")
+```
+```{r FINALspecies2}
+ggplot(data = penguins, aes(x = species, y = bill_length_mm, fill = species)) + geom_boxplot() + labs(title = "Bill Length Differences Among Penguin Species", x = "Penguin Species", y = "Bill Length (mm)", fill = "Spceies") + scale_fill_brewer(palette = "Pastel1") + theme_classic() + theme(plot.tittle = element_text(size = 14, face = "bold", hjust = 0.5), axis.title = element_text(size = 12), legend.position = "right")
+```
+
+## Statistical Support
+
+## 1. For 'FINALsex' and 'FINALspecies', add an appropriate statistical test to your code chunk. 
+
+```{r FINALsex Stats}
+ggplot(data = penguins, aes(x = sex, y = body_mass_g, fill = sex)) + geom_boxplot() + labs( title = "Body Mass Differences Between Male and Female Penguins", x = "Sex", y = "Body Mass(g)", fill = "Sex") + scale_fill_brewer(palette = "Pastel1") + theme_classic() + theme(plot.tittle = element_text(size = 14, face = "bold", hjust = 0.5), axis.title = element_text(size = 12), legend.position = "right")
+
+#Statiatical test comparing male and female body mass
+wilcox.test(body_mass_g ~ sex, data = penguins)
+```
+
+The Wilcoxon rank sum test was used to compare body mass between male and female penguins. The independent variable was sex and the dependent variable was body mass in grams. The test produced a p-value that indicates whether the body mass distributions differ between the two groups. If the p-value is less than 0.05, the difference is statistically significant, which suggest that the body mass distributions difference between male and female penguins. 
+
+```{r FINALspecies}
+ggplot(data = penguins, aes(x = species, y = bill_length_mm, fill = species)) + geom_boxplot() + labs(title = "Bill Length Differences Among Penguin Species", x = "Penguin Species", y = "Bill Length (mm)", fill = "Spceies") + scale_fill_brewer(palette = "Pastel1") + theme_classic() + theme(plot.tittle = element_text(size = 14, face = "bold", hjust = 0.5), axis.title = element_text(size = 12), legend.position = "right")
+
+#Statistical test comparing bill length among penguin species
+kruskal.test(bill_length_mm ~ species, data = penguins)
+```
+
+The Kruskal-Wallis test was used to compare body mass among Adelie, Chinstrap and Gentoo penguins. The independent variable was species, and the dependent variable was body mass in grams. The test produces an H statistic and ap-value. The H statistic reflects differences in the ranks of body mass amoung the species, while the p-value indicates whether the differences are statistically significant. If the p-value is less than 0.05, at least one species has a different body mass distribution from others.
+
+## 2. Using the information from your statistical test, add a statistical feature to your plot. This could be a text that denotates statistically significant values, a regression line that fits the data with its formula and R^2 value, or something else. 
+```{r}
+#Calculate Wilcoxon test p-value
+sex_test <- wilcox.test(body_mass_g ~ sex, data = penguins) 
+sex_p_value <- sex_test$p.value
+
+ggplot(data = penguins, aes(x = sex, y = body_mass_g, fill = sex)) + geom_boxplot() + labs( title = "Body Mass Differences Between Male and Female Penguins", x = "Sex", y = "Body Mass(g)", fill = "Sex") + scale_fill_brewer(palette = "Pastel1") + annotate( "text", x = 1.5, y = max(penguins$body_mass_g, na.rm = TRUE)+ 250, label = paste("Wilcoxon p-value =", signif(sex_p_value, 3))) + theme_classic() + theme(plot.title = element_text(size = 14, face = "bold", hjust = 0.5), axis.title = element_text(size = 12), legend.position = "right")
+
+#Display statistical test results
+sex_test
+```
+
+
+
+
+
