@@ -238,17 +238,18 @@ head(cam.BasalvsLP,5)
 
 1. Take a closer look at the unsupervised clustering plot.
 <ol type="a">
-  <li>   How much variability in the dataset is represented by dimension 1? 
-  <li> How much variability in the dataset is represented by dimension 2?   <li> Will the variability represented by dimension 3 be higher or lower than dimension 2?
-  <li> If you repeated this experiment with old female mice vs. young female mice, and with pregnant vs virgin mice, what other factors might you want to investigate on the MDS plot (give the factors an appropriate name that you could use as a variable in your code)? 
-  <li> If old mouse samples appeared on the MDS plot at (0,-2) and young mouse samples appear at (0, 2), would you account for this experimental factor in your analysis? 
+  <li>   How much variability in the dataset is represented by dimension 1? 72%
+  <li> How much variability in the dataset is represented by dimension 2? 13%
+  <li> Will the variability represented by dimension 3 be higher or lower than dimension 2? Lower
+  <li> If you repeated this experiment with old female mice vs. young female mice, and with pregnant vs virgin mice, what other factors might you want to investigate on the MDS plot (give the factors an appropriate name that you could use as a variable in your code)? Age or pregnancy status 
+  <li> If old mouse samples appeared on the MDS plot at (0,-2) and young mouse samples appear at (0, 2), would you account for this experimental factor in your analysis? Yes i would account for this factor in my analysis since old and young mice would cluster seperately.
 </ol>  
 
 
 2. What are the top 10 DE genes between luminal progenitors (LP) and mature luminal (ML) cells, organized by largest fold change? What proportion are upregulated vs downregulated? 
-
+The top 10 DE genes were Lao1, Dppa1, Csn1s2a, Cyp4x1, D1x2, Slitrk4, Spp1, Krt71, 231005J8Rik, and Csn2. 80% were upregulated in LP and 20% were downregulated in LP.
 3. What are the top 5 DE pathways between luminal progenitors (LP) and mature luminal (ML) cells?  Explore these pathways (on the internet), and write a short analysis of whether these make sense, comparing and contrasting to the outcomes we saw in lecture for DE pathways between basal and LP cells 
-
+The top 5 pathways were LIM_MAMMARY_LUMINAL_MATURE_UP, LIM_MAMMARY_LUMINAL_MATURE_DN, REACTOME_RESPIRATORY_ELECTRON_TRANSPORT, LIM_MAMMARY_LUMINAL_PROGENITOR_UP, REACTOME_RESPIRATORY_ELECTRON_TRANSPORT_ATP_SYNTHESIS_BY_CHEMIOSMOTIC_COUPLING_AND_HEAT_PRODUCTION_BY_UNCOUPLING_PROTEINS
 ```{r LPvsML}
   lp.vs.ml <- topTreat(tfit, coef=3, n=Inf)
 head(lp.vs.ml)
