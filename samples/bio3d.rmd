@@ -1,0 +1,13 @@
+library(bio3d)
+
+pdb <- read.pdb("3AGY")
+ca <- pdb$atom[pdb$calpha, c("chain", "resno", "resid", "b")]
+
+# Exact B-factor for the atom labeled in your screenshot
+subset(ca, chain == "D" & resno == 637)
+
+# Low and high reference points for the C-alpha atoms in this entry
+quantile(ca$b, c(0.25, 0.75), na.rm = TRUE)
+
+# Look up the second spot by chain and residue number
+View(ca)
