@@ -237,26 +237,34 @@ head(cam.BasalvsLP,5)
 ## Tasks 
 
 1. Take a closer look at the unsupervised clustering plot.
+
 <ol type="a">
   <li>   How much variability in the dataset is represented by dimension 1? 
-  <li> How much variability in the dataset is represented by dimension 2?   <li> Will the variability represented by dimension 3 be higher or lower than dimension 2?
+  - The variability in the dataset represented by dimension 1 is the 72%.
+  <li> How much variability in the dataset is represented by dimension 2?  
+  - The variability in the dataset represented by dimension 2 is the 13%. 
+  <li> Will the variability represented by dimension 3 be higher or lower than dimension 2?
+  - The variability represented by dimension 3 will be lower than dimension 2 because each subsequent dimension explains a smaller proportion of the overall variation in the dataset. 
   <li> If you repeated this experiment with old female mice vs. young female mice, and with pregnant vs virgin mice, what other factors might you want to investigate on the MDS plot (give the factors an appropriate name that you could use as a variable in your code)? 
+  - I would investigate the age and pregnancy status of the mice because this could inluence the gene expression. I would use variables like the age group to compare old and young mice and pregnancy status to compare pregnant and virgin mice. 
   <li> If old mouse samples appeared on the MDS plot at (0,-2) and young mouse samples appear at (0, 2), would you account for this experimental factor in your analysis? 
+  - Yes, I would account for the age in the analysis beause the separation between old and young mouse samples suggests that age may influence gene expression. Including age as an experimental factor would help identify differences in gene expression associated with aging.  
 </ol>  
 
 
 2. What are the top 10 DE genes between luminal progenitors (LP) and mature luminal (ML) cells, organized by largest fold change? What proportion are upregulated vs downregulated? 
 
+
 3. What are the top 5 DE pathways between luminal progenitors (LP) and mature luminal (ML) cells?  Explore these pathways (on the internet), and write a short analysis of whether these make sense, comparing and contrasting to the outcomes we saw in lecture for DE pathways between basal and LP cells 
 
-```{r LPvsML}
+```{r LPvsMLpathways}
   lp.vs.ml <- topTreat(tfit, coef=3, n=Inf)
 head(lp.vs.ml)
 
 load(system.file("extdata", "mouse_c2_v5p1.rda", package = "RNAseq123"))
 idx <- ids2indices(Mm.c2,id=rownames(v))
 cam.LPvsMP <- camera(v,idx,design,contrast=contr.matrix[,3])
-head(cam.LPvsMP,5)
+head(cam.LPvsMP,10)
 ```
 
 

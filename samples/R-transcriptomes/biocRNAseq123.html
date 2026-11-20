@@ -11,7 +11,7 @@
 
 <meta name="author" content="Dr. Mooney" />
 
-<meta name="date" content="2026-10-22" />
+<meta name="date" content="2026-11-12" />
 
 <title>Introduction to RNAseq123</title>
 
@@ -352,7 +352,7 @@ display: none;
 
 <h1 class="title toc-ignore">Introduction to RNAseq123</h1>
 <h4 class="author">Dr. Mooney</h4>
-<h4 class="date">2026-10-22</h4>
+<h4 class="date">2026-11-12</h4>
 
 </div>
 
@@ -375,20 +375,17 @@ BiocManager::install(&quot;RNAseq123&quot;)</code></pre>
 ## Replacement repositories:
 ##     CRAN: https://p3m.dev/cran/__linux__/noble/latest</code></pre>
 <pre><code>## Bioconductor version 3.23 (BiocManager 1.30.27), R 4.6.1 (2026-06-24)</code></pre>
-<pre><code>## Installing package(s) &#39;RNAseq123&#39;</code></pre>
-<pre><code>## also installing the dependency &#39;BiocWorkflowTools&#39;</code></pre>
-<pre><code>## Warning in install.packages(...): installation of package &#39;BiocWorkflowTools&#39;
-## had non-zero exit status</code></pre>
-<pre><code>## Warning in install.packages(...): installation of package &#39;RNAseq123&#39; had
-## non-zero exit status</code></pre>
-<pre><code>## Old packages: &#39;class&#39;, &#39;cluster&#39;, &#39;foreign&#39;, &#39;KernSmooth&#39;, &#39;lattice&#39;, &#39;MASS&#39;,
-##   &#39;Matrix&#39;, &#39;nlme&#39;, &#39;nnet&#39;, &#39;spatial&#39;, &#39;survival&#39;</code></pre>
+<pre><code>## Warning: package(s) not installed when version(s) same as or greater than current; use
+##   `force = TRUE` to re-install: &#39;RNAseq123&#39;</code></pre>
+<pre><code>## Old packages: &#39;languageserver&#39;, &#39;otel&#39;, &#39;pak&#39;, &#39;class&#39;, &#39;cluster&#39;, &#39;foreign&#39;,
+##   &#39;KernSmooth&#39;, &#39;lattice&#39;, &#39;MASS&#39;, &#39;Matrix&#39;, &#39;mgcv&#39;, &#39;nlme&#39;, &#39;nnet&#39;, &#39;spatial&#39;,
+##   &#39;survival&#39;</code></pre>
 <pre class="r"><code>BiocManager::install(&quot;Mus.musculus&quot;, ask=FALSE, update=FALSE)</code></pre>
 <pre><code>## &#39;getOption(&quot;repos&quot;)&#39; replaces Bioconductor standard repositories, see
 ## &#39;help(&quot;repositories&quot;, package = &quot;BiocManager&quot;)&#39; for details.
 ## Replacement repositories:
-##     CRAN: https://p3m.dev/cran/__linux__/noble/latest</code></pre>
-<pre><code>## Bioconductor version 3.23 (BiocManager 1.30.27), R 4.6.1 (2026-06-24)</code></pre>
+##     CRAN: https://p3m.dev/cran/__linux__/noble/latest
+## Bioconductor version 3.23 (BiocManager 1.30.27), R 4.6.1 (2026-06-24)</code></pre>
 <pre><code>## Warning: package(s) not installed when version(s) same as or greater than current; use
 ##   `force = TRUE` to re-install: &#39;Mus.musculus&#39;</code></pre>
 </div>
@@ -596,21 +593,45 @@ head(x)</code></pre>
 <div id="tasks" class="section level2">
 <h2>Tasks</h2>
 <ol style="list-style-type: decimal">
-<li><p>Run the appropriate command to show the first 10 rows of the
-second file in the files list.</p></li>
-<li><p>Take a look at the output from the following piece of code.
-Compare the output to the sample names in ‘x’.</p></li>
+<li>Run the appropriate command to show the first 10 rows of the second
+file in the files list.</li>
+</ol>
+<pre class="r"><code>#Display the first 10 rows of the second file in the existing sample list
+read.delim(files[2], nrow = 10)</code></pre>
+<pre><code>##     EntrezID GeneLength Count
+## 1     497097       3634     2
+## 2  100503874       3259     0
+## 3  100038431       1634     0
+## 4      19888       9747     1
+## 5      20671       3130     1
+## 6      27395       4203   771
+## 7      18777       2433  1722
+## 8  100503730        799     8
+## 9      21399       2847   977
+## 10     58175       2241   358</code></pre>
+<ol start="2" style="list-style-type: decimal">
+<li>Take a look at the output from the following piece of code. Compare
+the output to the sample names in ‘x’.</li>
 </ol>
 <ol type="a">
 <li>
-What do you think the function colnames() does?<br />
+What do you think the function colnames() does? - The colnames()
+function retrieves the names of the columns in a dataset.<br />
 
 <li>
-What do you think the function substring() does?
+What do you think the function substring() does? - The substring()
+function extracts a portion of the character string by specifying the
+starting and ending positions.
 <li>
-Why do we give the substring function the number 12?
+Why do we give the substring function the number 12? - We use 12 because
+we want to remove the first 11 characters of each original sample name
+and keep the remaining characters. THis removes the longer GEo
+identification prefix and gives us shorter, easier-to-read sample names.
 </ol>
-<pre class="r"><code>samplenames &lt;- substring(colnames(x), 12, nchar(colnames(x)))
+<pre class="r"><code>#Extract the smaple names from the columns of x
+samplenames &lt;- substring(colnames(x), 12, nchar(colnames(x)))
+
+#Display the new sample names
 samplenames</code></pre>
 <pre><code>## [1] &quot;10_6_5_11&quot; &quot;9_6_5_11&quot;  &quot;purep53&quot;   &quot;JMS8-2&quot;    &quot;JMS8-3&quot;    &quot;JMS8-4&quot;   
 ## [7] &quot;JMS8-5&quot;    &quot;JMS9-P7c&quot;  &quot;JMS9-P8c&quot;</code></pre>
@@ -619,14 +640,28 @@ samplenames</code></pre>
 DGEList named x, instead of what is there now. We can do that with this
 piece of code:</li>
 </ol>
-<pre class="r"><code>colnames(x) &lt;- samplenames</code></pre>
-<p>How do we check ‘x’ to make sure our new names stuck?</p>
+<pre class="r"><code>#Replace the original column names with the new sample names
+colnames(x) &lt;- samplenames 
+
+#Display the updated column to make sure they were saved
+colnames(x)</code></pre>
+<pre><code>## [1] &quot;10_6_5_11&quot; &quot;9_6_5_11&quot;  &quot;purep53&quot;   &quot;JMS8-2&quot;    &quot;JMS8-3&quot;    &quot;JMS8-4&quot;   
+## [7] &quot;JMS8-5&quot;    &quot;JMS9-P7c&quot;  &quot;JMS9-P8c&quot;</code></pre>
+<p>How do we check ‘x’ to make sure our new names stuck?<br />
+- We can use the colnames() functions to display the column names of the
+DGEList object after replacing them. If the new sample names appear
+instead of the original names, we know that the changes were
+successfully saved.</p>
 <ol start="4" style="list-style-type: decimal">
 <li>Speaking of names, those Entrez geneID’s were not very nice, and it
 would be so great if we had gene names we might recognize.</li>
 </ol>
 <p>Where might a bioinformatician go to get a map between a GeneID and a
-gene name?</p>
+gene name? - A bioinformatician can use databases such as NCBI Gnene or
+Ensembl to find mapping between Entrez Gene IDs and gene names. These
+data bases provide information about genes including their indetifiers,
+symbols and chromosome locations. Bioconductor also provides annotation
+packages that can be used in R to retrievethis information.</p>
 <ol start="5" style="list-style-type: decimal">
 <li>It turns out that this RNAseq123 package includes a Bioc package
 with a mapping tool particularly useful for this organism (it’s a mouse;
@@ -636,18 +671,40 @@ the package is called mus.musculus).</li>
 <ol type="a">
 <li>
 What information appears in our ‘x’ data now?<br />
+- The “x” data now contains additional gene annotation information,
+including the Entrez Gene IDs, gene symbols and chromosome locations.
+This information allows us to identify the genes more easily instead of
+only seeing their numerical identification codes.<br />
 
 <li>
-What line of code would you use to display just the new information?
+What line of code would you use to display just the new information? -
+To display only the gene annotation information that was added to the
+DGEList object or we can use one to display only the first few rows od
+the new gene information.
 <li>
 What do you notice about how many ‘keys’ there are in x and how many
-entries there are in the new data? Does it make sense?
+entries there are in the new data? Does it make sense? - The number of
+entries in the new gene annotation data may be smaller than the number
+of the gene IDs in the original dataset. This is because some Entrez
+Gene Ids may not have matching annotation information in the
+Mus.musculus database. The code also removes duplicate Entrez Gene IDs
+to ensure that each ID appears only once. Therefore it makes sense that
+the number of entreis in the new annotation data may be lower than the
+original number of gene IDs.
 </ol>
-<pre class="r"><code>geneid &lt;- rownames(x)
+<pre class="r"><code>#Get the Entrez Gene IDs from x
+geneid &lt;- rownames(x)
+
+#Retrieve the gene symbols and chromosome information
 genes &lt;- select(Mus.musculus, keys=geneid, columns=c(&quot;SYMBOL&quot;, &quot;TXCHROM&quot;), keytype=&quot;ENTREZID&quot;)</code></pre>
 <pre><code>## &#39;select()&#39; returned 1:many mapping between keys and columns</code></pre>
-<pre class="r"><code>genes &lt;- genes[!duplicated(genes$ENTREZID),]
+<pre class="r"><code>#Remove duplicated Entrez Gene IDs
+genes &lt;- genes[!duplicated(genes$ENTREZID),]
+
+#Add the gene information to the DGEList object
 x$genes &lt;- genes
+
+#Display the updated dataset 
 x</code></pre>
 <pre><code>## An object of class &quot;DGEList&quot;
 ## $samples
@@ -687,12 +744,6 @@ x</code></pre>
 ## 4     19888     Rp1    chr1
 ## 5     20671   Sox17    chr1
 ## 27174 more rows ...</code></pre>
-<div id="graduate-students" class="section level3">
-<h3>Graduate students:</h3>
-<ol start="6" style="list-style-type: decimal">
-<li>Take a breather, there will be more questions for you later!</li>
-</ol>
-</div>
 </div>
 
 

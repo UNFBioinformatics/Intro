@@ -151,18 +151,27 @@ head(x)
 ## Tasks 
 
 1. Run the appropriate command to show the first 10 rows of the second file in the files list. 
-
+```{r}
+#Display the first 10 rows of the second file in the existing sample list
+read.delim(files[2], nrow = 10)
+```
 
 2. Take a look at the output from the following piece of code. Compare the output to the sample names in 'x'.  
 
 <ol type="a">
-  <li>What do you think the function colnames() does?   
+  <li>What do you think the function colnames() does? 
+  - The colnames() function retrieves the names of the columns in a dataset.   
   <li>What do you think the function substring() does? 
+  - The substring() function extracts a portion of the character string by specifying the starting and ending positions. 
   <li>Why do we give the substring function the number 12? 
+  -  We use 12 because we want to remove the first 11 characters of each original sample name and keep the remaining characters. THis removes the longer GEo identification prefix and gives us shorter, easier-to-read sample names. 
 </ol>
 
 ```{r whatsinaname}
+#Extract the smaple names from the columns of x
 samplenames <- substring(colnames(x), 12, nchar(colnames(x)))
+
+#Display the new sample names
 samplenames
 ```
 
@@ -170,37 +179,49 @@ samplenames
 3. The samplenames look nice, and we would like to save them in our DGEList named x, instead of what is there now. We can do that with this piece of code: 
 
 ```{r brandnewname}
+#Replace the original column names with the new sample names
+colnames(x) <- samplenames 
 
-colnames(x) <- samplenames
+#Display the updated column to make sure they were saved
+colnames(x)
 
 ```
 
 How do we check 'x' to make sure our new names stuck?  
+- We can use the colnames() functions to display the column names of the DGEList object after replacing them. If the new sample names appear instead of the original names, we know that the changes were successfully saved. 
 
 4. Speaking of names, those Entrez geneID's were not very nice, and it would be so great if we had gene names we might recognize. 
 
 Where might a bioinformatician go to get a map between a GeneID and a gene name? 
+- A bioinformatician can use databases such as NCBI Gnene or Ensembl to find mapping between Entrez Gene IDs and gene names. These data bases provide information about genes including their indetifiers, symbols and chromosome locations. Bioconductor also provides annotation packages that can be used in R to retrievethis information.
 
 5. It turns out that this RNAseq123 package includes a Bioc package with a mapping tool particularly useful for this organism (it's a mouse; the package is called mus.musculus). 
 
 Look at the output after running the following code chunk.  
 
 <ol type="a">
-  <li>What information appears in our 'x' data now?    
+  <li>What information appears in our 'x' data now?  
+  - The "x" data now contains additional gene annotation information, including the Entrez Gene IDs, gene symbols and chromosome locations. This information allows us to identify the genes more easily instead of only seeing their numerical identification codes.   
   <li>What line of code would you use to display just the new information?
+  - To display only the gene annotation information that was added to the DGEList object or we can use one to display only the first few rows od the new gene information. 
   <li>What do you notice about how many 'keys' there are in x and how many entries there are in the new data? Does it make sense? 
+  - The number of entries in the new gene annotation data may be smaller than the number of the gene IDs in the original dataset. This is because some Entrez Gene Ids may not have matching annotation information in the Mus.musculus database. The code also removes duplicate Entrez Gene IDs to ensure that each ID appears only once. Therefore it makes sense that the number of entreis in the new annotation data may be lower than the original number of gene IDs. 
 </ol>
 
 ```{r adding2mammary}
+
+#Get the Entrez Gene IDs from x
 geneid <- rownames(x)
+
+#Retrieve the gene symbols and chromosome information
 genes <- select(Mus.musculus, keys=geneid, columns=c("SYMBOL", "TXCHROM"), keytype="ENTREZID")
+
+#Remove duplicated Entrez Gene IDs
 genes <- genes[!duplicated(genes$ENTREZID),]
+
+#Add the gene information to the DGEList object
 x$genes <- genes
+
+#Display the updated dataset 
 x
 ```
-
-### Graduate students: 
-
-6. Take a breather, there will be more questions for you later!
-
- 
