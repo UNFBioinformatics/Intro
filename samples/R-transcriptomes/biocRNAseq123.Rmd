@@ -83,7 +83,8 @@ We'll start off with the GSE63310 dataset that the RNAseq123 vignette uses, so w
 
 #The untar() function below is used to extract the data files from the archive into the current directory. This only needs to be done once. This has been done for you, so the code is commented out. 
 
-#utils::untar("GSE63310_RAW.tar", exdir = ".")
+utils::untar("GSE57465_RAW.tar", exdir = ".")
+
 
 #You will notice there are also a BUNCH of data files with names that start with GSM and end with '.txt.gz'
 

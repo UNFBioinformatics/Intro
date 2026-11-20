@@ -6,6 +6,8 @@ author: "Samuel Goughnour"
 ```{r}
 library(palmerpenguins)
 library(ggplot2)
+library(maps)
+library(sf)
 #insert introduction commentary here
 ```
 ```{r}
@@ -29,22 +31,150 @@ itorg <- penguins[penguins$island == "Torgersen",]
 nrow(ibis)
 nrow(idream)
 nrow(itorg)
-#There are 168 penguins on Biscoe, 124 penguins on Dream, and 124 penguins on Torgersen. Biscoe is the most common island in this dataset.
+#There are 168 penguins on Biscoe, 124 penguins on Dream, and 52 penguins on Torgersen. Biscoe is the most common island in this dataset.
 ```
 ```{r}
 ggplot(data = penguins, aes(x = sex, y = body_mass_g)) +
-  geom_col(aes(color = species)) +
+  geom_col(aes(color = sex)) +
   labs(title = "Body Mass of Penguins by Sex",
        x = "Sex",
        y = "Body Mass (g)") +
   theme_minimal()
-
+ggplot(data = penguins, aes(x = species, y = flipper_length_mm)) +
+  geom_col(aes(color = species)) +
+  labs(title = "Flipper Length of Penguins by Species",
+       x = "Species",
+       y = "Flipper Length (mm)") +
+  theme_minimal()
   ggplot(data = penguins, aes(x = island, y = species)) +
-  geom_boxplot(aes(color = species), size = 3) +
+  geom_col(aes(color = species), size = 3) +
   labs(title = "Penguin Species by Island",
        x = "Island",
        y = "Species") +
   theme_minimal()
 ```
+```{r FINALsex}
+ggplot(data = penguins, aes(x = sex, y = body_mass_g)) +
+  geom_boxplot(aes(color = sex), width = 0.3, show.legend = FALSE) +
+  scale_color_manual(values = c("#ff5ea6","#4e86ff")) +
+  labs(x = "Sex",
+       y = "Body Mass (g)") +
+  theme_minimal()
+```
+
+```{r FINALspecies}
+ggplot(data = penguins, aes(x = species, y = flipper_length_mm)) +
+  geom_boxplot(aes(color = species), width = 0.3, show.legend = FALSE) +
+  scale_color_manual(values = c("#d72a0b","#3f9c09","#0ca0a0")) +
+  labs(x = "Species",
+       y = "Flipper Length (mm)") +
+  theme_minimal()
+```
+
+```{r FINALisland}
+ggplot(data = penguins, aes(x = species, y = island)) +
+  geom_boxplot(aes(color = species), width = 0.3, show.legend = FALSE) +
+  geom_jitter(aes(color = species), alpha = 0.5, show.legend = FALSE, position = position_jitter(width = 0.2, seed = 0)) +
+  scale_color_manual(values = c("#f99010","#a119f6","#0ca0a0")) +
+  labs(x = "Species",
+       y = "Island") +
+  theme_minimal()
+```
 
 
+```{r ANTARCTICA_AI BUILT}
+#This map was built entirely by the sidebar AI, I'm just trying to see what the packages can do
+antarctica_map <- maps::map("world", regions = "Antarctica", fill = TRUE, plot = FALSE)
+valid_points <- !is.na(antarctica_map$x) & !is.na(antarctica_map$y)
+segments <- split(
+  which(valid_points),
+  cumsum(!valid_points)[valid_points] + 1
+)
+
+antarctica_sf <- sf::st_sf(
+  name = antarctica_map$names,
+  geometry = sf::st_sfc(
+    lapply(segments, function(index) {
+      sf::st_polygon(list(cbind(antarctica_map$x[index], antarctica_map$y[index])))
+    }),
+    crs = 4326
+  )
+)
+antarctica_sf <- sf::st_transform(antarctica_sf, crs = 3031)
+
+island_coordinates <- data.frame(
+  island = c("Biscoe", "Dream", "Torgersen"),
+  longitude = c(-65.500, -64.233, -64.083),
+  latitude = c(-65.433, -64.733, -64.767)
+)
+penguin_counts <- as.data.frame(table(penguins$island, penguins$species))
+names(penguin_counts) <- c("island", "species", "count")
+penguin_counts <- subset(penguin_counts, count > 0)
+penguin_counts <- merge(penguin_counts, island_coordinates, by = "island")
+
+island_locations <- sf::st_as_sf(
+  island_coordinates,
+  coords = c("longitude", "latitude"),
+  crs = 4326
+)
+island_locations <- sf::st_transform(island_locations, crs = 3031)
+penguin_points_sf <- sf::st_as_sf(
+  penguin_counts,
+  coords = c("longitude", "latitude"),
+  crs = 4326
+)
+penguin_points_sf <- sf::st_transform(penguin_points_sf, crs = 3031)
+point_coordinates <- sf::st_coordinates(penguin_points_sf)
+penguin_points <- sf::st_drop_geometry(penguin_points_sf)
+penguin_points$x <- point_coordinates[, "X"] +
+  (match(penguin_points$species, c("Adelie", "Chinstrap", "Gentoo")) - 2) * 20000
+penguin_points$y <- point_coordinates[, "Y"]
+
+ggplot() +
+  geom_sf(data = antarctica_sf, fill = "#e6f2f7", color = "#3b6173", linewidth = 0.25) +
+  geom_point(
+    data = penguin_points,
+    aes(x = x, y = y, color = species, size = count),
+    alpha = 0.85
+  ) +
+  geom_text(
+    data = penguin_points,
+    aes(x = x, y = y, label = count, color = species),
+    vjust = -0.8,
+    size = 3,
+    show.legend = FALSE
+  ) +
+  geom_sf_text(
+    data = island_locations,
+    aes(label = island),
+    nudge_y = 60000,
+    size = 3,
+    color = "black"
+  ) +
+  scale_color_manual(values = c(Adelie = "#d72a0b", Chinstrap = "#3f9c09", Gentoo = "#0ca0a0")) +
+  scale_size_continuous(name = "Penguin count", range = c(3, 8)) +
+  coord_sf(
+    crs = sf::st_crs(3031),
+    xlim = c(-3000000, -1800000),
+    ylim = c(500000, 1900000),
+    expand = FALSE
+  ) +
+  labs(title = "Penguin species by island",
+       subtitle = "Approximate island locations; marker sizes and labels show counts",
+       x = "Easting (m)",
+       y = "Northing (m)") +
+  theme_minimal()
+#okay, that is admittedly pretty cool. Let's see what I can learn from it
+```
+
+```{r FINALantarctica}
+#It seems like the "geom_map" function recomended in the assignment description is an outdated version of the "geom_sf" function? When I hover over a "geom_map" function, the description basically says that one should use the "geom_sf" function instead.
+ggplot() +
+     geom_sf(data = antarctica_sf, fill = "#e6f2f7", color = "#3b6173", linewidth = 0.25) 
+#Tada, a map of Antarctica. Let's plot one from the ADD. 
+shapefile<- "https://ramadda.data.bas.ac.uk/repository/entry/get/add_streams_v7.3.zip?entryid=synth%3A6a4d6fa2-d713-45ab-a30a-7130795e29d2%3AL2FkZF9zdHJlYW1zX3Y3LjMuemlw"
+#This should be a map of Antarctic streams from the ADD. I use the sf::st_read function to read the shapefile?
+antarctic_streams <- sf::st_read(shapefile, quiet = TRUE)   
+ggplot() +
+  geom_sf(data = antarctic_streams, fill = "#e6f2f7", color = "#3b6173", linewidth = 0.25) 
+```
