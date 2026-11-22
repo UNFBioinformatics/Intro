@@ -1,0 +1,175 @@
+---
+title: "Human Progeria Notebook Final Project"
+author: "Jess Galub"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introduction
+
+This is my final project for bioinformatics. Using the template of the mouse notebook, I am investigating the differential expression of human progeria genes. 
+
+
+```{r Bioc123}
+BiocManager::install("Homo.sapiens")
+#Packages were installed. 
+
+```
+
+## The RNAseq123 Vignette
+
+Vignettes are like the --help or man pages in bash, but MUCH nicer and typically more helpful. 
+
+If a vignette exists for a package, you can view it (in a web browser) using the browseVignettes() function with the package name, like below.  
+
+```{r 123Vignette}
+#library(RNAseq123)
+#browseVignettes("RNAseq123")
+```
+
+After you install the packages, you'll still need to load the libraries to use them. 
+#included the Homo.sapiens package and replaced the mouse package 
+```{r ExploreLibs}
+
+library(limma)
+library(edgeR)
+library(Homo.sapiens)
+
+#Loading the libraries might force other library dependencies to be loaded (just like for the install)
+
+```
+Now that we have all the code... 
+
+Let's get some data! 
+
+## A human progeria dataset
+
+We'll be grabbing an RNA-Seq dataset from the data repository GEO. Geo stands for "Gene Expression Omnibus". You can read more about GEO here: 
+https://www.ncbi.nlm.nih.gov/geo/info/overview.html
+
+From GEO, I used the GSE206684_RAW.tar file. I downloaded it into GitHub using this code: wget -O data/progeria/GSE206684_RAW.tar "https://ftp.ncbi.nlm.nih.gov/geo/series/GSE206nnn/GSE206684/suppl/GSE206684_RAW.tar"
+Then, I extracted the files using the tar command: tar -xvf data/progeria/GSE206684_RAW.tar and the files were in .tsv.gz format. 
+Then, I wanted them in .tsv format, so to do this I entered *.tsv.gz 
+
+The human progeria dataset has 11 individuals from the ages 2-20. The datasets contain skin samples from these individuals. The genotype is HGPS which stands for Hutchinson-Gilford Progeria Syndrome. 
+Progeria is basically a condition where rapid aging occurs. 
+```
+# The codes to download and extract the files and make sure it shows all 11 individuals. 
+
+```{r progeria_files}
+files <- list.files(
+  "../../data/progeria",
+  pattern = "\\.tsv$",
+  full.names = TRUE
+)
+
+length(files)
+basename(files)
+
+```
+
+## Working with human progeria data
+
+# Look at the first five rows of the first sample
+read.delim(files[1], header = FALSE, nrows = 5)
+
+# Check the file list
+str(files)
+
+# Check the first few gene counts
+head(read.delim(files[1], header = FALSE))
+
+# Combining the progeria samples so that it's not 11 separate files and they can be analyzed together. 
+```{r combine_samples}
+x <- readDGE(files, columns = c(1, 2))
+dim(x)
+head(x)
+```
+next, we want to take all the sample names and store them as column names and then repeat those column names so we can see them and verify that they are what we are looking for.
+```{r whatsinaname}
+samplenames <- basename(files)
+samplenames
+``` 
+
+```{r brandnewname}
+
+colnames(x) <- samplenames
+colnames(x)
+
+```
+next, we want to take the rownames and store them as gene symbols. then, we want to look up information about the gene symbols, etc. in the human progeria data set. 
+## Human Gene Annotation
+```{r human_annotation}
+gene_symbols <- rownames(x)
+
+human_genes <- select(
+  Homo.sapiens,
+  keys = unique(gene_symbols),
+  columns = c("ENTREZID", "TXNAME"),
+  keytype = "SYMBOL"
+)
+
+head(human_genes)
+```
+we use c as the combine function to combine all the different ages information so it can be analyzed together. 
+```{r sample_info}
+sample_info <- data.frame(
+  sample = basename(files),
+  age = c(20, 14, 20, 10, 3, 2, 8, 17, 4, 8, 2)
+)
+```
+making the pca plot
+# PCA Analysis 
+```{r PCA}
+# Normalize the gene counts
+x <- calcNormFactors(x)
+
+# Convert counts to log values
+logCPM <- cpm(x, log = TRUE, prior.count = 2)
+
+# Perform PCA
+pca <- prcomp(t(logCPM))
+
+# Color samples by age group
+sample_colors <- ifelse(sample_info$age <= 8, "blue", "red")
+
+# Make the PCA plot
+plot(pca$x[,1], pca$x[,2],
+     col = sample_colors,
+     pch = 19,
+     xlab = "PC1",
+     ylab = "PC2",
+     main = "PCA of Progeria Samples by Age")
+
+legend("topright",
+       legend = c("Age 2–8", "Age 10–20"),
+       col = c("blue", "red"),
+       pch = 19)
+```
+
+## Differential Gene Expression
+```{r differential_expression}
+# Divide samples into younger and older groups
+sample_info$age_group <- factor(
+  ifelse(sample_info$age <= 8, "Younger", "Older"),
+  levels = c("Younger", "Older")
+)
+
+# Create the analysis design
+design <- model.matrix(~ age_group, data = sample_info)
+
+# Run the differential expression analysis
+x <- estimateDisp(x, design)
+fit <- glmQLFit(x, design)
+results <- glmQLFTest(fit, coef = 2)
+
+# Display the top 20 differentially expressed genes
+topTags(results, n = 20)
+```
+
+## Interpretation of Results
+The PCA plot was done to investigate whether the younger age groups and older age groups showed a difference in gene expression. Because the adjusted p-values (FDR) are all greater than 0.05, there is not a signficant difference between the age groups and the gene expression. Based on the PCA plot, we can see that the age groups do cluster generally, however, not signifcantly based on the statistical analysis. 
