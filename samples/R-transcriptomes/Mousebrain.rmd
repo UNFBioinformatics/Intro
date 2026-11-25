@@ -1,0 +1,69 @@
+---
+title: "mouse brain transcriptome analysis"
+author: "Waspinator"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introduction
+
+One of the biological applications we've seen before is transcriptomics (or RNA-Seq data). Let's see if we can use the 'RNASeq123' package to do some analysis 
+
+
+```{r Bioc123}
+
+# Normally, we would check to see if BiocManager is available. If not, install it.
+# We avoid reinstalling packages during a render so the Rmd stays reproducible.
+if (!requireNamespace("BiocManager", quietly = TRUE)) {
+  install.packages("BiocManager")
+}
+
+# Install optional organism mapping packages only when needed; do not fail the
+# render if the package is unavailable in this environment.
+if (!requireNamespace("Mus.musculus", quietly = TRUE)) {
+  message("Mus.musculus is not available; the gene-name mapping section will be skipped.")
+}
+
+```
+
+## The RNAseq123 Vignette
+
+Vignettes are like the --help or man pages in bash, but MUCH nicer and typically more helpful. 
+
+If a vignette exists for a package, you can view it (in a web browser) using the browseVignettes() function with the package name, like below.  
+
+```{r 123Vignette}
+#library(RNAseq123)
+#browseVignettes("RNAseq123")
+```
+
+After you install the packages, you'll still need to load the libraries to use them. 
+
+```{r ExploreLibs}
+
+suppressPackageStartupMessages({
+  library(limma)
+  # library(Glimma)
+  library(edgeR)
+  if (requireNamespace("Mus.musculus", quietly = TRUE)) {
+    library(Mus.musculus)
+  } else {
+    message("Mus.musculus is unavailable; gene mapping examples will be skipped.")
+  }
+})
+#files <- ("GPL6887_MouseWG-6_V2_0_R3_11278593_A.txt")
+#read.delim(files[1], nrow=20)
+# Loading the libraries might force other library dependencies to be loaded
+# (just like for the install).
+#tail(read.delim(files[1])
+
+gset <- GEOquery::getGEO("GSE57465", GSEMatrix = TRUE, getGPL = FALSE)
+if (length(gset) > 1) idx <- grep("GPL6887", attr(gset, "names")) else idx <- 1
+gset <- gset[[idx]]
+expression <- Biobase::exprs(gset)
+head(expression[, c(1, 3), drop = FALSE])
+```

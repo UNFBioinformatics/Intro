@@ -83,7 +83,7 @@ We'll start off with the GSE63310 dataset that the RNAseq123 vignette uses, so w
 
 #The untar() function below is used to extract the data files from the archive into the current directory. This only needs to be done once. This has been done for you, so the code is commented out. 
 
-utils::untar("GSE57465_RAW.tar", exdir = ".")
+#utils::untar("GSE57465_RAW.tar", exdir = ".")
 
 
 #You will notice there are also a BUNCH of data files with names that start with GSM and end with '.txt.gz'
@@ -94,8 +94,7 @@ utils::untar("GSE57465_RAW.tar", exdir = ".")
 
 #To 'unzip' the compressed files so we can work with them, we will be a little lazy and use the typing that the vignette authors provided. 
 
-files <- c("GSM1545535_10_6_5_11.txt", "GSM1545536_9_6_5_11.txt", "GSM1545538_purep53.txt", "GSM1545539_JMS8-2.txt", "GSM1545540_JMS8-3.txt", "GSM1545541_JMS8-4.txt",   "GSM1545542_JMS8-5.txt", "GSM1545544_JMS9-P7c.txt", "GSM1545545_JMS9-P8c.txt")
-
+files <- ("GPL6887_MouseWG-6_V2_0_R0_20043751_A.txt")
 #Take a close look! Do you see a familiar function here? 
 
 #...

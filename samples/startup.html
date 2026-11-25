@@ -2,20 +2,23 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.9.37">
+<meta name="generator" content="quarto-1.10.18">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Startup in R with Project Quarto!</title>
+<title>Changed Startup in R with Project Quarto!</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
 */
-code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
-div.columns{display: flex; gap: min(4vw, 1.5em);}
-div.column{flex: auto; overflow-x: auto;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
@@ -68,10 +71,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="startup_files/libs/quarto-html/tippy.umd.min.js"></script>
 <script src="startup_files/libs/quarto-html/anchor.min.js"></script>
 <link href="startup_files/libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="startup_files/libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="startup_files/libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="startup_files/libs/bootstrap/bootstrap.min.js"></script>
 <link href="startup_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="startup_files/libs/bootstrap/bootstrap-de9ea4695b5809f5b49b6072e50bb385.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="startup_files/libs/bootstrap/bootstrap-badea9d7f631b609ca82bbf21f37a353.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 
 
 </head>
@@ -84,7 +87,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Startup in R with Project Quarto!</h1>
+<h1 class="title">Changed Startup in R with Project Quarto!</h1>
 </div>
 
 
@@ -101,10 +104,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="title" class="level2">
-<h2 class="anchored" data-anchor-id="title">Title</h2>
+<section id="changed-title" class="level2">
+<h2 class="anchored" data-anchor-id="changed-title">Changed Title</h2>
 <p>The purpose of a Markdown file is to keep explanations for computational problems and the code we use to solve them next to each other in the same document. This is where you can write description about your project and the data you are working with.</p>
-<p>How many frames do you see in this space and what you they do?</p>
+<p>##How many frames do you see in this space and what you they do? ##I see two frames. The first frame is for writing comments and code and the other is for previewing the results of the code. ##What kind of R Project is associated with the ‘.qmd’ extension? ##The ‘.qmd’ extension is associated with a Quarto project. ##What is the advantage provided by this kind of R project? ##The advantage of a Quarto project is that it allows you to combine code and explanations in the same document, making it easier to understand and reproduce analyses. ##From the file verbatim, what is the purpose of a Markdown file? ##The purpose of a Markdown file is to keep explanations for computational problems and the code we use to solve them next to each other in the same document.</p>
+<p>##Find the preview button in the upper right of the editing frame and click it.What kind of file is generated? ##An HTML file is generated when you click the ‘Preview button ##Make note of the summary statistics shown and what you think the ’Preview’ button did. ##The summary statistics are “Min. 1st Qu. Median Mean 3rd Qu. Max. -2.8967 -0.8202 -0.1037 -0.1523 0.5051 3.0685.” Looking up what the rnormfunction does, it provides the summary statistics of a random normal distribution. The ‘Preview’ button runs the code and displays the output in the preview frame. These will change when I run the code again, as the random numbers generated will be different each time.</p>
 <p>Next up: Let’s make a space for writing code that R can understand:</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"rmarkdown"</span>) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -130,7 +134,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">rnorm</span>(<span class="dv">100</span>)) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>    Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
--2.84642 -0.67528  0.07226 -0.01462  0.70677  2.24040 </code></pre>
+-2.86191 -0.83004  0.00282 -0.07117  0.54520  2.08625 </code></pre>
 </div>
 </div>
 </section>
