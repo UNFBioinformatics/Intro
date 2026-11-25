@@ -8,8 +8,11 @@ library(palmerpenguins)
 library(ggplot2)
 library(maps)
 library(sf)
-#insert introduction commentary here
+library(ggpubr)
 ```
+Introduction:
+The palmer penguins dataset is a dataset that contains information about three species of penguins (Adelie, Chinstrap, and Gentoo) that were observed on three islands in the Palmer Archipelago, Antarctica. The dataset includes measurements of various physical characteristics of the penguins, such as body mass, flipper length, and bill length, as well as information about their sex and the island they were observed on. The dataset is often used for data analysis and visualization exercises in R.
+By analysing the dataset, we can probably gain insights about sexual dimorphism among the penguins, as that was the topic being explored in the 2014 paper. 
 ```{r}
 ncol(penguins)
 nrow(penguins)
@@ -34,43 +37,76 @@ nrow(itorg)
 #There are 168 penguins on Biscoe, 124 penguins on Dream, and 52 penguins on Torgersen. Biscoe is the most common island in this dataset.
 ```
 ```{r}
-ggplot(data = penguins, aes(x = sex, y = body_mass_g)) +
+ggplot(
+  data = subset(penguins, !is.na(sex) & !is.na(body_mass_g)),
+  aes(x = sex, y = body_mass_g)
+) +
   geom_col(aes(color = sex)) +
   labs(title = "Body Mass of Penguins by Sex",
        x = "Sex",
        y = "Body Mass (g)") +
   theme_minimal()
-ggplot(data = penguins, aes(x = species, y = flipper_length_mm)) +
+ggplot(
+  data = subset(penguins, !is.na(species) & !is.na(flipper_length_mm)),
+  aes(x = species, y = flipper_length_mm)
+) +
   geom_col(aes(color = species)) +
   labs(title = "Flipper Length of Penguins by Species",
        x = "Species",
        y = "Flipper Length (mm)") +
   theme_minimal()
-  ggplot(data = penguins, aes(x = island, y = species)) +
-  geom_col(aes(color = species), size = 3) +
+ggplot(data = penguins, aes(x = island, y = species)) +
+  geom_count(aes(color = species)) +
   labs(title = "Penguin Species by Island",
        x = "Island",
        y = "Species") +
   theme_minimal()
 ```
 ```{r FINALsex}
-ggplot(data = penguins, aes(x = sex, y = body_mass_g)) +
+sex_data <- subset(penguins, !is.na(sex) & !is.na(body_mass_g))
+t.test(body_mass_g ~ sex, data = sex_data)
+
+ggplot(data = sex_data, aes(x = sex, y = body_mass_g)) +
   geom_boxplot(aes(color = sex), width = 0.3, show.legend = FALSE) +
   scale_color_manual(values = c("#ff5ea6","#4e86ff")) +
   labs(x = "Sex",
        y = "Body Mass (g)") +
+  ggpubr::stat_compare_means(
+    comparisons = list(c("female", "male")),
+    method = "t.test",
+    label = "p.format",
+    label.y = max(sex_data$body_mass_g, na.rm = TRUE) + 500
+  ) +
   theme_minimal()
 ```
-
+A t-test uses the means of two groups to determine if they are statistically different from each other. The two groups being tested here are the body masses of the male and female penguins. In a T-test, the null hypothesis is that the means of the two groups are equal, while the alternative hypothesis is that they are statistically different. The p-value is the probability of observing the data if the null hypothesis is true. A low p-value (typically less than 0.05) indicates that the groups are statistically different
+In this case, the p-value is incredibly low, indicating that the body masses of male and female penguins are statistically different, with male penguins being heavier on average. 
+The ggpubr package makes it easy to add the results of statistical tests to ggplot2 visualizations. The stat_compare_means() function adds a layer to the plot that displays the p-value of the t-test. 
+This code also removes penguins without a recorded sex by subsetting the data to only include rows where the sex is not "NA". 
 ```{r FINALspecies}
-ggplot(data = penguins, aes(x = species, y = flipper_length_mm)) +
+species_data <- subset(
+  penguins,
+  !is.na(species) & !is.na(flipper_length_mm)
+)
+oneway.test(flipper_length_mm ~ species, data = species_data)
+
+ggplot(data = species_data, aes(x = species, y = flipper_length_mm)) +
   geom_boxplot(aes(color = species), width = 0.3, show.legend = FALSE) +
   scale_color_manual(values = c("#d72a0b","#3f9c09","#0ca0a0")) +
   labs(x = "Species",
        y = "Flipper Length (mm)") +
+  ggpubr::geom_pwc(
+    method = "t_test",
+    p.adjust.method = "holm",
+    label = "p.adj.signif"
+  ) +
   theme_minimal()
 ```
-
+Pairwise t-tests are a statistical test used to determine if there are significant differences between the means of three or more groups. 
+In this case, the groups being compared are the flipper lengths of the three penguin species (Adelie, Chinstrap, and Gentoo). The null hypothesis is that all group means are equal, while the alternative hypothesis is that at least one group mean is different. 
+The p-value once again indicates the probability of observing the data if the null hypothesis is true. A low p-value (typically less than 0.05) suggests that there are significant differences between the groups.
+In this case, the p-value is also incredibly low, indicating that there are significant differences in flipper lengths among the three penguin species. 
+The ggpubr package is used to add the results of pairwise t-tests to the plot, with Holm's method for p-value adjustment to account for multiple comparisons.
 ```{r FINALisland}
 ggplot(data = penguins, aes(x = species, y = island)) +
   geom_boxplot(aes(color = species), width = 0.3, show.legend = FALSE) +
@@ -83,7 +119,7 @@ ggplot(data = penguins, aes(x = species, y = island)) +
 
 
 ```{r ANTARCTICA_AI BUILT}
-#This map was built entirely by the sidebar AI, I'm just trying to see what the packages can do
+#This map was built entirely by the sidebar AI, I'm just trying to see what the packages can do. It told me it was getting the coordinates of the islands from wikipedia. 
 antarctica_map <- maps::map("world", regions = "Antarctica", fill = TRUE, plot = FALSE)
 valid_points <- !is.na(antarctica_map$x) & !is.na(antarctica_map$y)
 segments <- split(
@@ -169,12 +205,33 @@ ggplot() +
 
 ```{r FINALantarctica}
 #It seems like the "geom_map" function recomended in the assignment description is an outdated version of the "geom_sf" function? When I hover over a "geom_map" function, the description basically says that one should use the "geom_sf" function instead.
+
+zip_file <- "add_streams_v7.3.zip"
+extract_dir <- "add_streams_v7.3"
+
+dir.create(extract_dir, showWarnings = FALSE)
+utils::unzip(zip_file, exdir = extract_dir)
+
+shapefile <- file.path(extract_dir, "add_streams_v7.3.shp")
+antarctic_streams <- sf::st_read(shapefile, quiet = TRUE)
 ggplot() +
-     geom_sf(data = antarctica_sf, fill = "#e6f2f7", color = "#3b6173", linewidth = 0.25) 
-#Tada, a map of Antarctica. Let's plot one from the ADD. 
-shapefile<- "https://ramadda.data.bas.ac.uk/repository/entry/get/add_streams_v7.3.zip?entryid=synth%3A6a4d6fa2-d713-45ab-a30a-7130795e29d2%3AL2FkZF9zdHJlYW1zX3Y3LjMuemlw"
-#This should be a map of Antarctic streams from the ADD. I use the sf::st_read function to read the shapefile?
-antarctic_streams <- sf::st_read(shapefile, quiet = TRUE)   
-ggplot() +
-  geom_sf(data = antarctic_streams, fill = "#e6f2f7", color = "#3b6173", linewidth = 0.25) 
+  geom_sf(
+    data = antarctica_sf,
+    fill = "#e6f2f7",
+    color = "#3b6173",
+    linewidth = 0.25
+  ) +
+  geom_sf(
+    data = antarctic_streams,
+    color = "#bb254d", #funky color to make them stand out
+    linewidth = 0.5
+  ) +
+  coord_sf(crs = sf::st_crs(3031), 
+  xlim = c(-3000000, -1800000),
+  ylim = c(500000, 1900000), 
+  expand = FALSE ) +
+  labs(title = "Antarctic streams") +
+  theme_minimal()
+  #The coordinates of the streams are approximately the same as the coordinates of the penguin islands, so I'll use similar ones to the AI-dirived map above. 
+  #That IS in fact a very incomplete dataset of Antarctic streams. But it works! 
 ```
